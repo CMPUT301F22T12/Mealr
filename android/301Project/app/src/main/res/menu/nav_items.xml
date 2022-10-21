@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_ingredients"
+        android:icon="@drawable/fridge"
+        android:title="Ingredients" />
+    <item
+        android:id="@+id/action_meal_plan"
+        android:icon="@drawable/meal"
+        android:title="Meal Plan" />
+</menu>
