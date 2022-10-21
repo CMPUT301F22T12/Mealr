@@ -8,7 +8,7 @@
 
     <FrameLayout
         android:id="@+id/nav_content"
-        android:layout_width="411dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomNav"
         app:layout_constraintEnd_toEndOf="parent"
