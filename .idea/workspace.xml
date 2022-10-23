@@ -5,15 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="46b0da1b-551c-4842-89e8-670ee65fb3d1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/android/301Project/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/android/301Project/app/src/main/java/com/example/a301project/NavActivity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/android/301Project/app/src/main/res/layout/activity_nav.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/301Project/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/301Project/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/301Project/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/301Project/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/301Project/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/301Project/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/301Project/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/301Project/build.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android/301Project/app/src/main/java/com/example/a301project/Ingredient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,6 +26,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
     <property name="cidr.known.project.marker" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/android/301Project" />
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -55,6 +49,5 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
 </project>
