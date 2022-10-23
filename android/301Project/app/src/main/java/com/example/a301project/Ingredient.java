@@ -18,5 +18,29 @@ public class Ingredient {
         this.amount = amount;
     }
 
+    String getName() {return this.name;}
+    String getbbd() {return this.bbd;}
+    String getLocation() {return this.location;}
+    Integer getAmount() {return this.amount;}
+    String getUnit() {return this.unit;}
 
+    // setters used to edit attributes for existing food object
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setBbd(String bbd) {
+        this.bbd = bbd;
+    }
+
+    public void setLocation(String location) {this.location = location;}
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public void setAmount(Integer Amount) {
+        this.amount = amount;
+    }
 }
+
