@@ -8,8 +8,10 @@
         android:id="@+id/ingredient_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="15dp"
+        android:padding="10dp"
         android:text="Ingredient"
+        android:layout_marginLeft="0dp"
+        android:layout_weight="0.16"
         android:textSize="15dp">
 
     </TextView>
@@ -18,7 +20,8 @@
         android:id="@+id/location_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="15dp"
+        android:padding="10dp"
+        android:layout_weight="0.16"
         android:text="Location"
         android:textSize="15dp">
 
@@ -28,28 +31,32 @@
         android:id="@+id/bbd_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
+        android:layout_weight="0.16"
+        android:padding="10dp"
         android:text="bbd"
         android:textSize="15dp"/>
     <TextView
         android:id="@+id/amount_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
+        android:padding="10dp"
+        android:layout_weight="0.16"
         android:text="amount"
         android:textSize="15dp"/>
     <TextView
         android:id="@+id/unit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
+        android:layout_weight="0.16"
+        android:padding="10dp"
         android:text="unit"
         android:textSize="15dp"/>
     <TextView
         android:id="@+id/category_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
+        android:layout_weight="0.16"
+        android:padding="10dp"
         android:text="category"
         android:textSize="15dp"/>
 
