@@ -5,7 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="46b0da1b-551c-4842-89e8-670ee65fb3d1" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/android/301Project/app/src/main/res/layout/ingredient_content.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/301Project/app/src/main/java/com/example/a301project/IngredientActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/301Project/app/src/main/java/com/example/a301project/IngredientActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/301Project/app/src/main/res/layout/activity_ingredient.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/301Project/app/src/main/res/layout/activity_ingredient.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

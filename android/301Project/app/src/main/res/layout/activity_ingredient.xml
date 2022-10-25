@@ -6,10 +6,89 @@
     android:orientation="vertical"
     tools:context=".IngredientActivity">
 
-    <TextView
-        android:id="@+id/ingredientTextView"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="IngredientActivity"
-        android:textSize="40dp" />
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/ingredientTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:text="     My Ingredients"
+            android:textSize="40dp" />
+
+        <TextView
+            android:id="@+id/IngredientNameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/ingredientTextView"
+            android:layout_marginBottom="-39dp"
+            android:paddingRight="15dp"
+            android:text="Name"
+            android:textSize="15dp"/>
+        <TextView
+            android:id="@+id/IngredientLocationText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/ingredientTextView"
+            android:layout_toRightOf="@+id/IngredientNameText"
+            android:layout_marginBottom="-39dp"
+            android:paddingRight="15dp"
+            android:text="Location"
+            android:textSize="15dp"/>
+        <TextView
+            android:id="@+id/IngredientbbdText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/ingredientTextView"
+            android:layout_toRightOf="@+id/IngredientLocationText"
+            android:layout_marginBottom="-39dp"
+            android:paddingRight="15dp"
+            android:text="Best Before"
+            android:textSize="15dp"/>
+
+        <TextView
+            android:id="@+id/IngredientAmountText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/ingredientTextView"
+            android:layout_toRightOf="@+id/IngredientbbdText"
+            android:layout_marginBottom="-39dp"
+            android:paddingRight="15dp"
+            android:text="Amount"
+            android:textSize="15dp"/>
+
+        <TextView
+            android:id="@+id/IngredientUnitText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/ingredientTextView"
+            android:layout_toRightOf="@+id/IngredientAmountText"
+            android:layout_marginBottom="-39dp"
+            android:paddingRight="15dp"
+            android:text="Unit"
+            android:textSize="15dp"/>
+
+        <TextView
+            android:id="@+id/IngredientCategoryText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/ingredientTextView"
+            android:layout_toRightOf="@+id/IngredientUnitText"
+            android:layout_marginBottom="-39dp"
+            android:paddingRight="15dp"
+            android:text="Category"
+            android:textSize="15dp"/>
+
+        <ListView
+            android:id="@+id/IngredientList"
+            android:layout_width="match_parent"
+            android:layout_height="598dp"
+            android:layout_alignTop="@+id/IngredientNameText"
+            android:layout_marginTop="32dp"
+            android:choiceMode="singleChoice"
+            android:listSelector="@android:color/darker_gray" />
+    </RelativeLayout>
+
 </LinearLayout>
