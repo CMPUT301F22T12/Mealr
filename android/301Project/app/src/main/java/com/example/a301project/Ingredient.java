@@ -8,7 +8,7 @@ public class Ingredient {
     private String unit;
     private int amount;
 
-    public Ingredient(String name, String location, String bbd, String category, String unit, int amount) {
+    public Ingredient(String name, String location, String bbd, int amount, String unit, String category) {
         // constructor
         this.name = name;
         this.location = location;
@@ -23,6 +23,7 @@ public class Ingredient {
     String getLocation() {return this.location;}
     Integer getAmount() {return this.amount;}
     String getUnit() {return this.unit;}
+    String getCategory() {return this.category;}
 
     // setters used to edit attributes for existing food object
     public void setName(String name) {
@@ -41,6 +42,10 @@ public class Ingredient {
 
     public void setAmount(Integer Amount) {
         this.amount = amount;
+    }
+
+    public void setCategory(String Category) {
+        this.category = category;
     }
 }
 
