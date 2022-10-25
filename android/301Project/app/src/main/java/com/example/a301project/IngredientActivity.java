@@ -1,7 +1,9 @@
 package com.example.a301project;
 
 import android.os.Bundle;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -11,6 +13,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 
 public class IngredientActivity extends NavActivity {
+    IngredientController ingredientController;
     ListView ingredientList;
     ArrayAdapter<Ingredient> ingredientAdapter;
     ArrayList<Ingredient> dataList;
@@ -43,7 +46,12 @@ public class IngredientActivity extends NavActivity {
         ingredientAdapter = new CustomList(this,dataList);
         ingredientList.setAdapter(ingredientAdapter);
 
-
+        ingredientList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                // view ingredient details when you click on it
+            }
+        });
 
         // Set the correct button to be selected
         bottomNav.getMenu().findItem(R.id.action_ingredients).setChecked(true);
