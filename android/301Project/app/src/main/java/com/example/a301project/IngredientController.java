@@ -20,7 +20,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 
-public class IngredientController implements View.OnClickListener {
+public class IngredientController {
     // connect to firebase and handles add and delete
     String collectionName = "Ingredient";
     FirebaseFirestore db;
@@ -83,10 +83,5 @@ public class IngredientController implements View.OnClickListener {
                         Log.w(TAG, "Could not delete document with ID: " + id,e);
                     }
                 });
-    }
-
-    @Override
-    public void onClick(View view) {
-        // TODO: Finish onClick() method
     }
 }
