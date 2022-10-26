@@ -8,7 +8,7 @@ public class Ingredient {
     private String unit;
     private int amount;
 
-    public Ingredient(String name, String location, String bbd, int amount, String unit, String category) {
+    public Ingredient(String name, int amount, String bbd, String location, String unit, String category) {
         // constructor
         this.name = name;
         this.location = location;

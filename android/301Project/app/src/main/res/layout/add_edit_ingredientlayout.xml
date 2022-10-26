@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/edit_name"
+        android:layout_width="400dp"
+        android:layout_height="97dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:hint="Ingredient Name"
+        android:padding="30dp"
+        android:textSize="35dp"></EditText>
+
+    <TextView
+        android:id="@+id/amount_label"
+        android:layout_width="166dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edit_name"
+        android:layout_padding="100dp"
+        android:paddingLeft="50dp"
+        android:text="Amount"
+        android:textSize="20dp" />
+
+
+    <EditText
+        android:id="@+id/edit_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edit_name"
+        android:layout_marginStart="82dp"
+        android:layout_marginLeft="82dp"
+        android:layout_marginTop="-9dp"
+        android:layout_toEndOf="@+id/amount_label"
+        android:layout_toRightOf="@+id/amount_label"
+        android:hint="integer"></EditText>
+
+    <TextView
+        android:id="@+id/bbd_label"
+        android:layout_width="wrap_content"
+        android:layout_height="37dp"
+        android:layout_below="@+id/amount_label"
+        android:layout_marginTop="12dp"
+        android:paddingLeft="50dp"
+        android:layout_padding="100dp"
+        android:text="Best Before Date"
+        android:textSize="20dp" />
+
+    <EditText
+        android:id="@+id/edit_bbd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edit_amount"
+        android:layout_marginLeft="47dp"
+        android:layout_marginTop="-7dp"
+        android:layout_toRightOf="@+id/bbd_label"
+        android:hint="best before"></EditText>
+
+    <TextView
+        android:id="@+id/location_label"
+        android:layout_width="wrap_content"
+        android:layout_height="37dp"
+        android:paddingLeft="50dp"
+        android:layout_below="@+id/bbd_label"
+        android:layout_marginTop="12dp"
+        android:layout_padding="100dp"
+        android:text="Location"
+        android:textSize="20dp" />
+
+    <EditText
+        android:id="@+id/edit_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edit_bbd"
+        android:layout_marginLeft="120dp"
+        android:layout_marginTop="9dp"
+        android:layout_toRightOf="@+id/location_label"
+        android:hint="location"></EditText>
+
+    <TextView
+        android:id="@+id/unit_label"
+        android:layout_width="wrap_content"
+        android:layout_height="37dp"
+        android:paddingLeft="50dp"
+        android:layout_below="@+id/location_label"
+        android:layout_marginTop="12dp"
+        android:layout_padding="100dp"
+        android:text="Unit"
+        android:textSize="20dp" />
+
+    <EditText
+        android:id="@+id/edit_unit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edit_location"
+        android:layout_marginLeft="163dp"
+        android:layout_marginTop="0dp"
+        android:layout_toRightOf="@+id/unit_label"
+        android:hint="unit"></EditText>
+
+    <TextView
+        android:id="@+id/category_label"
+        android:layout_width="wrap_content"
+        android:layout_height="37dp"
+        android:layout_below="@+id/unit_label"
+        android:paddingLeft="50dp"
+        android:layout_marginTop="12dp"
+        android:layout_padding="100dp"
+        android:text="Category"
+        android:textSize="20dp" />
+
+    <EditText
+        android:id="@+id/edit_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edit_unit"
+        android:layout_marginLeft="117dp"
+        android:layout_marginTop="1dp"
+        android:layout_toRightOf="@+id/category_label"
+        android:hint="category"></EditText>
+
+
+</RelativeLayout>
