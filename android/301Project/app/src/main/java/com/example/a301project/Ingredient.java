@@ -1,6 +1,8 @@
 package com.example.a301project;
 
-public class Ingredient {
+import java.io.Serializable;
+
+public class Ingredient implements Serializable {
     private String name;
     private String location;
     private String bbd;
@@ -8,7 +10,7 @@ public class Ingredient {
     private String unit;
     private int amount;
 
-    public Ingredient(String name, String location, String bbd, int amount, String unit, String category) {
+    public Ingredient(String name, int amount, String bbd, String location, String unit, String category) {
         // constructor
         this.name = name;
         this.location = location;
