@@ -11,40 +11,29 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/ingredientTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="15dp"
-            android:text="     My Ingredients"
-            android:textSize="40dp" />
-
-        <TextView
             android:id="@+id/IngredientNameText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/ingredientTextView"
             android:layout_marginBottom="-39dp"
-            android:paddingRight="15dp"
+            android:paddingRight="14dp"
             android:text="Name"
             android:textSize="15dp"/>
         <TextView
             android:id="@+id/IngredientLocationText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/ingredientTextView"
             android:layout_toRightOf="@+id/IngredientNameText"
             android:layout_marginBottom="-39dp"
-            android:paddingRight="15dp"
+            android:paddingRight="14dp"
             android:text="Location"
             android:textSize="15dp"/>
         <TextView
             android:id="@+id/IngredientbbdText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/ingredientTextView"
             android:layout_toRightOf="@+id/IngredientLocationText"
             android:layout_marginBottom="-39dp"
-            android:paddingRight="15dp"
+            android:paddingRight="14dp"
             android:text="Best Before"
             android:textSize="15dp"/>
 
@@ -52,10 +41,9 @@
             android:id="@+id/IngredientAmountText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/ingredientTextView"
             android:layout_toRightOf="@+id/IngredientbbdText"
             android:layout_marginBottom="-39dp"
-            android:paddingRight="15dp"
+            android:paddingRight="14dp"
             android:text="Amount"
             android:textSize="15dp"/>
 
@@ -63,10 +51,9 @@
             android:id="@+id/IngredientUnitText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/ingredientTextView"
             android:layout_toRightOf="@+id/IngredientAmountText"
             android:layout_marginBottom="-39dp"
-            android:paddingRight="15dp"
+            android:paddingRight="8dp"
             android:text="Unit"
             android:textSize="15dp"/>
 
@@ -74,10 +61,9 @@
             android:id="@+id/IngredientCategoryText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/ingredientTextView"
             android:layout_toRightOf="@+id/IngredientUnitText"
             android:layout_marginBottom="-39dp"
-            android:paddingRight="15dp"
+            android:paddingRight="12dp"
             android:text="Category"
             android:textSize="15dp"/>
 

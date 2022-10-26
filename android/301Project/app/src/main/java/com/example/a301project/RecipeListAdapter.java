@@ -31,7 +31,7 @@ public class RecipeListAdapter extends ArrayAdapter<Recipe> {
 
         View view = convertView;
         if (view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.ingredient_content, parent, false);
+            view = LayoutInflater.from(context).inflate(R.layout.recipe_row_layout, parent, false);
         }
 
         // Find the views

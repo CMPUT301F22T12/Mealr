@@ -7,11 +7,11 @@ public class Recipe {
     private String category;
     private String comments;
     private String photo;
-    private Integer prepTime;
-    private Integer servings;
+    private Long prepTime;
+    private Long servings;
     private ArrayList<Ingredient> ingredients;
 
-    public Recipe(String title, String category, String comments, String photo, Integer prepTime, Integer servings, ArrayList<Ingredient> ingredients) {
+    public Recipe(String title, String category, String comments, String photo, Long prepTime, Long servings, ArrayList<Ingredient> ingredients) {
         this.title = title;
         this.category = category;
         this.comments = comments;
@@ -53,19 +53,19 @@ public class Recipe {
         this.photo = photo;
     }
 
-    public Integer getPrepTime() {
+    public Long getPrepTime() {
         return prepTime;
     }
 
-    public void setPrepTime(Integer prepTime) {
+    public void setPrepTime(Long prepTime) {
         this.prepTime = prepTime;
     }
 
-    public Integer getServings() {
+    public Long getServings() {
         return servings;
     }
 
-    public void setServings(Integer servings) {
+    public void setServings(Long servings) {
         this.servings = servings;
     }
 

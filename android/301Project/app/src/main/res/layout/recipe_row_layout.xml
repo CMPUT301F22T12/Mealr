@@ -3,7 +3,6 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:weightSum="100">
-
     <TextView
         android:id="@+id/r_titleTextView"
         android:layout_width="0dp"
@@ -11,7 +10,8 @@
         android:layout_gravity="center"
         android:layout_weight="20"
         android:text="Title"
-        android:textSize="25dp" />
+        android:padding="3dp"
+        android:textSize="15dp" />
 
     <TextView
         android:id="@+id/r_prepTimeTextView"
@@ -20,7 +20,7 @@
         android:layout_gravity="center"
         android:layout_weight="20"
         android:text="Prep Time"
-        android:textSize="25dp" />
+        android:textSize="15dp" />
 
     <TextView
         android:id="@+id/r_servingsTextView"
@@ -29,7 +29,7 @@
         android:layout_gravity="center"
         android:layout_weight="20"
         android:text="Servings"
-        android:textSize="25dp" />
+        android:textSize="15dp" />
 
     <TextView
         android:id="@+id/r_categoryTextView"
@@ -38,7 +38,7 @@
         android:layout_gravity="center"
         android:layout_weight="20"
         android:text="Category"
-        android:textSize="25dp" />
+        android:textSize="15dp" />
 
     <TextView
         android:id="@+id/r_photoTextView"
@@ -46,6 +46,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_weight="20"
-        android:text="TODO"
-        android:textSize="25dp" />
+        android:text="Photo"
+        android:textSize="15dp" />
 </LinearLayout>
