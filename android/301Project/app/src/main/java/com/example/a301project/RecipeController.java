@@ -15,6 +15,12 @@ public class RecipeController {
         this.cr = db.collection("Recipe");
     }
 
+    /**
+     * Gets all recipes from Firebase
+     *
+     * @param s successHandler function to be called on success with
+     *          the ArrayList of Recipes
+     */
     public void getRecipes(successHandler s) {
         cr.get().addOnSuccessListener(queryDocumentSnapshots -> {
             ArrayList<Recipe> res = new ArrayList<>();
