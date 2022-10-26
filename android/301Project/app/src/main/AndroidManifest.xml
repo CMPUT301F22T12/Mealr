@@ -13,14 +13,19 @@
         android:theme="@style/Theme.301Project"
         tools:targetApi="31">
         <activity
+            android:name=".RecipeActivity"
+            android:exported="false"
+            android:label="My Recipes" />
+        <activity
             android:name=".MealPlanActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:label="My Meal Plans" />
         <activity
             android:name=".IngredientActivity"
-            android:exported="true">
+            android:exported="true"
+            android:label="My Ingredients">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
