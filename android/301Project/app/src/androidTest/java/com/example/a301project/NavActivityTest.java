@@ -47,21 +47,58 @@ public class NavActivityTest {
     }
 
     /**
-     * Tests that the IngredientActivity can open
+     * Tests that the IngredientActivity can open when the it's selected in the menu
      */
     @Test
     public void openIngredientActivity() {
-
         // Asserts that the current activity is the NavActivity. Otherwise show "Wrong Activity"
         solo.assertCurrentActivity("Not in NavActivity", NavActivity.class);
 
         // Click on button
-        solo.clickOnButton(R.id.action_ingredients);
+        solo.clickOnMenuItem("Ingredients");
 
         // check if IngredientActivity opens
-        assertTrue(solo.waitForText("My Ingredients"));
+        assertTrue(solo.waitForText("My Ingredients", 1, 2000));
         solo.assertCurrentActivity("Did not open IngredientActivity", IngredientActivity.class);
     }
 
+    /**
+     * Tests that the RecipeActivity can open when the it's selected in the menu
+     */
+    @Test
+    public void openRecipeActivity() {
+        // Asserts that the current activity is the NavActivity. Otherwise show "Wrong Activity"
+        solo.assertCurrentActivity("Not in NavActivity", NavActivity.class);
+
+        // Click on button
+        solo.clickOnMenuItem("Recipes");
+
+        // check if IngredientActivity opens
+        assertTrue(solo.waitForText("My Recipes", 1, 2000));
+        solo.assertCurrentActivity("Did not open RecipeActivity", RecipeActivity.class);
+    }
+
+    /**
+     * Tests that the MealPlanActivity can open when the it's selected in the menu
+     */
+    @Test
+    public void openMealPlanActivity() {
+        // Asserts that the current activity is the NavActivity. Otherwise show "Wrong Activity"
+        solo.assertCurrentActivity("Not in NavActivity", NavActivity.class);
+
+        // Click on button
+        solo.clickOnMenuItem("Meal Plan");
+
+        // check if IngredientActivity opens
+        assertTrue(solo.waitForText("My Meal Plans", 1, 2000));
+        solo.assertCurrentActivity("Did not open MealPlanActivity", MealPlanActivity.class);
+    }
+
+    /**
+     * Tests that the ShoppingListActivity can open when the it's selected in the menu
+     */
+    @Test
+    public void openShoppingListActivity() {
+    }
 
 }
