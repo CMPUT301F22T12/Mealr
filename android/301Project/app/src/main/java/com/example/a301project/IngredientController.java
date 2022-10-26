@@ -3,20 +3,14 @@ package com.example.a301project;
 import static android.content.ContentValues.TAG;
 
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 
@@ -24,12 +18,17 @@ public class IngredientController {
     // connect to firebase and handles add and delete
     String collectionName = "Ingredient";
     FirebaseFirestore db;
-    final CollectionReference collectionReference = db.collection(collectionName);
+    final CollectionReference collectionReference;
 
     public IngredientController() {
         db = FirebaseFirestore.getInstance();
+        collectionReference = db.collection(collectionName);
     }
 
+    /**
+     * Method to add an {@link Ingredient} to the Firebase database
+     * @param ingredient This is the {@link Ingredient} to be added to Firebase
+     */
     public void addIngredient(Ingredient ingredient) {
         // get all required values
         int amount = ingredient.getAmount();
@@ -67,6 +66,10 @@ public class IngredientController {
                 });
     }
 
+    /**
+     * Method to remove an {@link Ingredient} from Firebase using its ID
+     * @param ingredient This is the {@link Ingredient} to be removed from Firebase
+     */
     public void removeIngredient(Ingredient ingredient) {
         String id = ingredient.getId();
         db.collection(collectionName).document(id)
