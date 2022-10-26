@@ -5,9 +5,14 @@
       <map>
         <entry key="../../../../../../../layout/custom_preview.xml" value="0.10696266397578204" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable-xhdpi/menu_book.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable-xhdpi/recipe.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_ingredient.xml" value="0.23744964599609378" />
-        <entry key="app/src/main/res/layout/activity_nav.xml" value="0.17724304199218752" />
+        <entry key="app/src/main/res/layout/activity_ingredient.xml" value="0.20476989746093754" />
+        <entry key="app/src/main/res/layout/activity_meal_plan.xml" value="0.3005128205128205" />
+        <entry key="app/src/main/res/layout/activity_nav.xml" value="0.3077438354492188" />
+        <entry key="app/src/main/res/layout/activity_recipe.xml" value="0.3005128205128205" />
+        <entry key="app/src/main/res/layout/ingredient_content.xml" value="0.3924424469776643" />
         <entry key="app/src/main/res/menu/nav_items.xml" value="0.299468994140625" />
       </map>
     </option>
