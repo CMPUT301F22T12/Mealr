@@ -31,6 +31,8 @@ public class NavActivity extends AppCompatActivity {
 
                 if (id == R.id.action_ingredients) {
                     i = new Intent(NavActivity.this, IngredientActivity.class);
+                } else if (id == R.id.action_recipes) {
+                    i = new Intent(NavActivity.this, RecipeActivity.class);
                 } else if (id == R.id.action_meal_plan) {
                     i = new Intent(NavActivity.this, MealPlanActivity.class);
                 }

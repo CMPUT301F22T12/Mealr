@@ -5,11 +5,4 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MealPlanActivity">
-
-    <TextView
-        android:id="@+id/meal_planTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="MealPlanActivity"
-        android:textSize="40dp" />
 </LinearLayout>
