@@ -39,12 +39,14 @@ public class CustomList extends ArrayAdapter<Ingredient> {
         TextView locationName = view.findViewById(R.id.location_text);
         TextView bbdName = view.findViewById(R.id.bbd_text);
         TextView amountName = view.findViewById(R.id.amount_text);
+        TextView unitName = view.findViewById(R.id.unit_text);
         TextView categoryName = view.findViewById(R.id.category_text);
 
         ingredientName.setText(ingredient.getName());
         locationName.setText(ingredient.getLocation());
         bbdName.setText(ingredient.getbbd());
         amountName.setText(ingredient.getAmount().toString());
+        unitName.setText(ingredient.getUnit());
         categoryName.setText(ingredient.getCategory());
         return view;
     }

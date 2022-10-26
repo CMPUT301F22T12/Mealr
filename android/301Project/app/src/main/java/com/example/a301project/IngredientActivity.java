@@ -30,12 +30,11 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
         // We have to put our layout in the space for the content
         ViewGroup content = findViewById(R.id.nav_content);
         getLayoutInflater().inflate(R.layout.activity_ingredient, content, true);
-        FirebaseFirestore db;
 
         // create list of ingredients
         ingredientList = findViewById(R.id.IngredientList);
         // store units as a sub item in a listview
-        HashMap<String, String> nameUnit = new HashMap<>();
+        //HashMap<String, String> nameUnit = new HashMap<>();
 
         //initialize attributes as empty
         String []ingredients ={"pizza"};
@@ -50,23 +49,23 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
         //initialize dataList
         for (int i=0; i<ingredients.length;i++) {
             dataList.add(new Ingredient(ingredients[i],amounts[i],bbds[i],locations[i],units[i],categories[i]));
-            nameUnit.put(ingredients[i],units[i]);
+            //nameUnit.put(ingredients[i],units[i]);
         }
         // hashmap to map ingredient name and unit as a pair, so that unit can be the subitems in listview
-        List<HashMap<String,String>> sublist = new ArrayList<>();
-        SimpleAdapter simpleAdapter = new SimpleAdapter(this, sublist, R.layout.ingredient_content,
-                new String[]{"Ingredient","Unit"},
-                new int[]{R.id.ingredient_text, R.id.unit_text});
-
-        Iterator it = nameUnit.entrySet().iterator();
-        while (it.hasNext()) {
-            HashMap<String, String> resultMap = new HashMap<>();
-            Map.Entry pair = (Map.Entry)it.next();
-            resultMap.put("Ingredient",pair.getKey().toString());
-            resultMap.put("Unit",pair.getValue().toString());
-            sublist.add(resultMap);
-        }
-        ingredientList.setAdapter(simpleAdapter);
+//        List<HashMap<String,String>> sublist = new ArrayList<>();
+//        SimpleAdapter simpleAdapter = new SimpleAdapter(this, sublist, R.layout.ingredient_content,
+//                new String[]{"Ingredient","Unit"},
+//                new int[]{R.id.ingredient_text, R.id.unit_text});
+//
+//        Iterator it = nameUnit.entrySet().iterator();
+//        while (it.hasNext()) {
+//            HashMap<String, String> resultMap = new HashMap<>();
+//            Map.Entry pair = (Map.Entry)it.next();
+//            resultMap.put("Ingredient",pair.getKey().toString());
+//            resultMap.put("Unit",pair.getValue().toString());
+//            sublist.add(resultMap);
+//        }
+//        ingredientList.setAdapter(simpleAdapter);
 
         ingredientAdapter = new CustomList(this,dataList);
         ingredientList.setAdapter(ingredientAdapter);
