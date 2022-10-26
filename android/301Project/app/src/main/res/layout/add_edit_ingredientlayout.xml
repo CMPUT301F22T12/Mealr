@@ -20,7 +20,6 @@
         android:layout_width="166dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/edit_name"
-        android:layout_padding="100dp"
         android:paddingLeft="50dp"
         android:text="Amount"
         android:textSize="20dp" />
@@ -45,7 +44,6 @@
         android:layout_below="@+id/amount_label"
         android:layout_marginTop="12dp"
         android:paddingLeft="50dp"
-        android:layout_padding="100dp"
         android:text="Best Before Date"
         android:textSize="20dp" />
 
@@ -66,7 +64,6 @@
         android:paddingLeft="50dp"
         android:layout_below="@+id/bbd_label"
         android:layout_marginTop="12dp"
-        android:layout_padding="100dp"
         android:text="Location"
         android:textSize="20dp" />
 
@@ -87,7 +84,6 @@
         android:paddingLeft="50dp"
         android:layout_below="@+id/location_label"
         android:layout_marginTop="12dp"
-        android:layout_padding="100dp"
         android:text="Unit"
         android:textSize="20dp" />
 
@@ -108,7 +104,6 @@
         android:layout_below="@+id/unit_label"
         android:paddingLeft="50dp"
         android:layout_marginTop="12dp"
-        android:layout_padding="100dp"
         android:text="Category"
         android:textSize="20dp" />
 

@@ -17,7 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class IngredientActivity extends NavActivity {
+public class IngredientActivity extends NavActivity implements AddEditIngredientFragment.OnFragmentInteractionListener {
     IngredientController ingredientController;
     ListView ingredientList;
     ArrayAdapter<Ingredient> ingredientAdapter;
@@ -75,10 +75,19 @@ public class IngredientActivity extends NavActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 // view ingredient details when you click on it
+                position = i;
+                Ingredient selected = (Ingredient) adapterView.getItemAtPosition(i);
+                AddEditIngredientFragment.newInstance(ingredientAdapter.getItem(position)).show(getSupportFragmentManager(),"EDIT");
+
             }
         });
 
         // Set the correct button to be selected
         bottomNav.getMenu().findItem(R.id.action_ingredients).setChecked(true);
+    }
+
+    @Override
+    public void onConfirmPressed(Ingredient currentIngredient) {
+        ingredientAdapter.notifyDataSetChanged();
     }
 }
