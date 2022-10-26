@@ -47,6 +47,15 @@ public class NavActivityTest {
     }
 
     /**
+     * Check that the NavActivity opens
+     */
+    @Test
+    public void openNavActivity() {
+        // Asserts that the current activity is the NavActivity. Otherwise show "Wrong Activity"
+        solo.assertCurrentActivity("Not in NavActivity", NavActivity.class);
+    }
+
+    /**
      * Tests that the IngredientActivity can open when the it's selected in the menu
      */
     @Test
