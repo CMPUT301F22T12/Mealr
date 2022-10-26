@@ -6,9 +6,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class IngredientController {
     // connect to firebase and handles add and delete
     FirebaseFirestore db;
+    private CollectionReference cr;
     public IngredientController() {
-        db = FirebaseFirestore.getInstance();
-        final CollectionReference collectionReference = db.collection("Ingredients");
+        this.db = FirebaseFirestore.getInstance();
+        this.cr = db.collection("Ingredient");
     }
 
 }
