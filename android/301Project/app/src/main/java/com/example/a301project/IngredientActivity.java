@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Spinner;
+import android.widget.Switch;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -34,11 +36,13 @@ import java.util.List;
 import java.util.Map;
 
 public class IngredientActivity extends NavActivity implements AddEditIngredientFragment.OnFragmentInteractionListener {
-    IngredientController ingredientController;
-    ListView ingredientList;
-    ArrayAdapter<Ingredient> ingredientAdapter;
-    ArrayList<Ingredient> dataList;
+    private IngredientController ingredientController;
+    private ListView ingredientList;
+    private ArrayAdapter<Ingredient> ingredientAdapter;
+    private Spinner ingredientSpinner;
+    private ArrayList<Ingredient> dataList;
     public int position = -1;
+
     Button addButton;
     Button removeButton;
 
@@ -51,9 +55,7 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
 
         addButton = findViewById(R.id.add_ingredient_button);
         // create list of ingredients
-        ingredientList = findViewById(R.id.IngredientList);
-        // store units as a sub item in a listview
-        //HashMap<String, String> nameUnit = new HashMap<>();
+        ingredientList = findViewById(R.id.ingredientListView);
 
 //        //initialize attributes as empty
 //        String []ingredients ={"pizza"};
@@ -65,11 +67,13 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
 
         dataList = new ArrayList<>();
 
+
 //        //initialize dataList
 //        for (int i=0; i<ingredients.length;i++) {
 //            dataList.add(new Ingredient(ingredients[i],amounts[i],bbds[i],locations[i],units[i],categories[i]));
 //            //nameUnit.put(ingredients[i],units[i]);
 //        }
+
 
         ingredientAdapter = new CustomList(this,dataList);
         ingredientList.setAdapter(ingredientAdapter);
