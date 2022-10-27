@@ -7,7 +7,7 @@
         android:id="@+id/r_titleTextView"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
+        android:layout_gravity="center_vertical"
         android:layout_weight="20"
         android:text="Title"
         android:padding="3dp"
@@ -17,7 +17,7 @@
         android:id="@+id/r_prepTimeTextView"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
+        android:layout_gravity="center_vertical"
         android:layout_weight="20"
         android:text="Prep Time"
         android:textSize="15dp" />
@@ -26,7 +26,7 @@
         android:id="@+id/r_servingsTextView"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
+        android:layout_gravity="center_vertical"
         android:layout_weight="20"
         android:text="Servings"
         android:textSize="15dp" />
@@ -35,7 +35,7 @@
         android:id="@+id/r_categoryTextView"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
+        android:layout_gravity="center_vertical"
         android:layout_weight="20"
         android:text="Category"
         android:textSize="15dp" />
@@ -44,7 +44,7 @@
         android:id="@+id/r_photoTextView"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
+        android:layout_gravity="center_vertical"
         android:layout_weight="20"
         android:text="Photo"
         android:textSize="15dp" />
