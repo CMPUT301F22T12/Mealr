@@ -19,7 +19,8 @@
             android:id="@+id/add_ingredient_button"
             android:layout_width="97dp"
             android:layout_height="40dp"
-            android:text="Add Entry"
+            android:text="Add"
+            android:textAllCaps="false"
             tools:layout_editor_absoluteY="0dp" />
 
         <TextView
@@ -41,6 +42,7 @@
             android:layout_width="127dp"
             android:layout_height="38dp"
             android:text="Ascending"
+            android:textAllCaps="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
