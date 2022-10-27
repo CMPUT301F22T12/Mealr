@@ -35,12 +35,12 @@ public class CustomList extends ArrayAdapter<Ingredient> {
         }
         // list view to display 3 attributes of each food object
         Ingredient ingredient = ingredients.get(position);
-        TextView ingredientName = view.findViewById(R.id.ingredient_text);
-        TextView locationName = view.findViewById(R.id.location_text);
-        TextView bbdName = view.findViewById(R.id.bbd_text);
-        TextView amountName = view.findViewById(R.id.amount_text);
-        TextView unitName = view.findViewById(R.id.unit_text);
-        TextView categoryName = view.findViewById(R.id.category_text);
+        TextView ingredientName = view.findViewById(R.id.i_nameText);
+        TextView locationName = view.findViewById(R.id.i_locationText);
+        TextView bbdName = view.findViewById(R.id.i_bbdText);
+        TextView amountName = view.findViewById(R.id.i_amountText);
+        TextView unitName = view.findViewById(R.id.i_unitText);
+        TextView categoryName = view.findViewById(R.id.i_categoryText);
 
         ingredientName.setText(ingredient.getName());
         locationName.setText(ingredient.getLocation());

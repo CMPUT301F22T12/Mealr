@@ -32,7 +32,7 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
         getLayoutInflater().inflate(R.layout.activity_ingredient, content, true);
 
         // create list of ingredients
-        ingredientList = findViewById(R.id.IngredientList);
+        ingredientList = findViewById(R.id.ingredientListView);
         // store units as a sub item in a listview
         //HashMap<String, String> nameUnit = new HashMap<>();
 

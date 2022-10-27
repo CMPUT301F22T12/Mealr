@@ -1,75 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_weight="0"
-    android:orientation="vertical"
+    android:layout_height="match_parent"
     tools:context=".IngredientActivity">
 
-    <Button
-        android:id="@+id/add_ingredient_button"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ingredientSort"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Add Ingredient">
-    </Button>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/IngredientNameText"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="10dp"
-            android:text="Ingredient"
-            android:textSize="15dp" />
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="Sort By: "
+            app:layout_constraintEnd_toStartOf="@+id/ingredientSortSpinner" />
 
-        <TextView
-            android:id="@+id/IngredientLocationText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/IngredientNameText"
-            android:layout_weight="1"
-            android:padding="10dp"
-            android:text="Location"
-            android:textSize="15dp" />
+        <Spinner
+            android:id="@+id/ingredientSortSpinner"
+            android:layout_width="140dp"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toStartOf="@id/ingredientSortSwitch"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/IngredientbbdText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="-39dp"
-            android:layout_toRightOf="@+id/IngredientLocationText"
-            android:layout_weight="1"
-            android:padding="10dp"
-            android:text="Best Before"
-            android:textSize="15dp" />
+        <Switch
+            android:id="@+id/ingredientSortSwitch"
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:text="Ascending"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <include
+        android:id="@+id/ingredientHeader"
+        layout="@layout/ingredient_content"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:showDividers="end"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ingredientSort" />
 
-        <TextView
-            android:id="@+id/IngredientCategoryText"
-            android:layout_width="90dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="-39dp"
-            android:layout_toRightOf="@+id/IngredientUnitText"
-            android:padding="10dp"
-            android:layout_weight="1"
-            android:text="Category"
-            android:textSize="15dp" />
-
-    </LinearLayout>
     <ListView
-        android:id="@+id/IngredientList"
-        android:layout_width="match_parent"
-        android:layout_height="598dp"
-        android:layout_alignTop="@+id/IngredientNameText"
-        android:layout_marginTop="8dp"
-        android:choiceMode="singleChoice"
-        android:listSelector="@android:color/darker_gray" />
+        android:id="@+id/ingredientListView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ingredientHeader" />
 
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
