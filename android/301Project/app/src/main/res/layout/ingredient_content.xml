@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:weightSum="100">
+    <TextView
+        android:id="@+id/i_nameText"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="15"
+        android:padding="3dp"
+        android:text="Entry"
+        android:textSize="15dp" />
+
+    <TextView
+        android:id="@+id/i_amountText"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="10"
+        android:text="#"
+        android:textSize="15dp" />
+
+    <TextView
+        android:id="@+id/i_unitText"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="15"
+        android:text="Unit"
+        android:textSize="15dp" />
+
+    <TextView
+        android:id="@+id/i_bbdText"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="20"
+        android:text="Best Before"
+        android:textSize="15dp" />
+
+    <TextView
+        android:id="@+id/i_locationText"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="20"
+        android:text="Location"
+        android:textSize="15dp"/>
+    <TextView
+        android:id="@+id/i_categoryText"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="20"
+        android:text="Category"
+        android:textSize="15dp"/>
+
+</LinearLayout>
