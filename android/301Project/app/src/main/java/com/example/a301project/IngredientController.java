@@ -1,15 +1,130 @@
 package com.example.a301project;
 
+import static android.content.ContentValues.TAG;
+
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Map;
 
 public class IngredientController {
     // connect to firebase and handles add and delete
+    String collectionName = "Ingredient";
     FirebaseFirestore db;
-    private CollectionReference cr;
+    final CollectionReference collectionReference;
+
     public IngredientController() {
-        this.db = FirebaseFirestore.getInstance();
-        this.cr = db.collection("Ingredient");
+        db = FirebaseFirestore.getInstance();
+        collectionReference = db.collection(collectionName);
     }
 
+    public static Timestamp convertStringToTimestamp(String bestBefore) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            date = sdf.parse(bestBefore);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return new Timestamp(date);
+    }
+
+    public CollectionReference getCollectionReference() {return this.collectionReference;}
+
+    /**
+     * Method to add an {@link Ingredient} to the Firebase database
+     * @param ingredient This is the {@link Ingredient} to be added to Firebase
+     */
+    public void addIngredient(Ingredient ingredient) {
+        // get all required values
+        int amount = ingredient.getAmount();
+        String bestBefore = ingredient.getbbd();
+        String category = ingredient.getCategory();
+        String location = ingredient.getLocation();
+        String name = ingredient.getName();
+        String unit = ingredient.getUnit();
+
+        // convert string to Timestamp
+        Timestamp bbd = convertStringToTimestamp(bestBefore);
+
+        HashMap<String, Object> data = new HashMap<>();
+        // put all the values into hashmap
+        data.put("Amount", amount);
+        data.put("BestBeforeDate", bbd);
+        data.put("Category", category);
+        data.put("Location", location);
+        data.put("Name", name);
+        data.put("Unit", unit);
+
+        collectionReference
+                .add(data)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        String id = documentReference.getId();
+                        Log.d(TAG, "Added document with ID: " + id);
+                        ingredient.setId(id);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error adding document",e);
+                    }
+                });
+    }
+
+    /**
+     * Method to remove an {@link Ingredient} from Firebase using its ID
+     * @param ingredient This is the {@link Ingredient} to be removed from Firebase
+     */
+    public void removeIngredient(Ingredient ingredient) {
+        String id = ingredient.getId();
+        db.collection(collectionName).document(id)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d(TAG, "Successfully deleted document with ID: " + id);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Could not delete document with ID: " + id,e);
+                    }
+                });
+    }
+
+    public void notifyUpdate(Ingredient ingredient) {
+        Map<String,Object> userMap = new HashMap<>();
+        userMap.put("Name",ingredient.getName());
+        userMap.put("Amount",ingredient.getAmount());
+        userMap.put("BestBeforeDate",convertStringToTimestamp(ingredient.getbbd()));
+        userMap.put("Category",ingredient.getCategory());
+        userMap.put("Unit",ingredient.getUnit());
+        userMap.put("Location",ingredient.getLocation());
+        db.collection(collectionName)
+                .document(ingredient.getId())
+                .update(userMap);
+    }
 }
