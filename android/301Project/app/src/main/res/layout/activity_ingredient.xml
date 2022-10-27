@@ -10,16 +10,17 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ingredientSort"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/add_ingredient_button"
-            android:text="Add Entry"/>
+            android:layout_width="97dp"
+            android:layout_height="40dp"
+            android:text="Add Entry"
+            tools:layout_editor_absoluteY="0dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -30,15 +31,15 @@
 
         <Spinner
             android:id="@+id/ingredientSortSpinner"
-            android:layout_width="140dp"
-            android:layout_height="match_parent"
+            android:layout_width="119dp"
+            android:layout_height="39dp"
             app:layout_constraintEnd_toStartOf="@id/ingredientSortSwitch"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Switch
             android:id="@+id/ingredientSortSwitch"
-            android:layout_width="120dp"
-            android:layout_height="match_parent"
+            android:layout_width="127dp"
+            android:layout_height="38dp"
             android:text="Ascending"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -50,9 +51,23 @@
         android:layout_width="0dp"
         android:layout_height="30dp"
         android:showDividers="end"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ingredientSort" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:showDividers="end"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        android:background="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ingredientHeader"/>
+
+
 
     <ListView
         android:id="@+id/ingredientListView"
