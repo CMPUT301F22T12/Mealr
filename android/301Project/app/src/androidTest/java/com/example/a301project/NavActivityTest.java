@@ -108,6 +108,16 @@ public class NavActivityTest {
      */
     @Test
     public void openShoppingListActivity() {
+        // Asserts that the current activity is the NavActivity. Otherwise show "Wrong Activity"
+        solo.assertCurrentActivity("Not in NavActivity", NavActivity.class);
+
+        // Click on button
+        solo.clickOnMenuItem("Shopping List");
+
+        // check if IngredientActivity opens
+        assertTrue(solo.waitForText("My Shopping List", 1, 2000));
+        solo.assertCurrentActivity("Did not open ShoppingListActivity", ShoppingListActivity.class);
+
     }
 
 }
