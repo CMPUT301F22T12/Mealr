@@ -34,10 +34,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+
+/**
+ * Main Activity class for Ingredients
+ * functionalities for add, edit, delete
+ * initiates an IngredientController object that has access to firebase data
+ * handles sorting of ingredients
+ * @return void
+ */
 
 public class IngredientActivity extends NavActivity implements AddEditIngredientFragment.OnFragmentInteractionListener {
     private IngredientController ingredientController;
@@ -86,11 +91,20 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
         sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                /**
+                 * Method for when spinner item is selected
+                 * sort spinner
+                 * @return void
+                 */
                 sortDataBySpinner();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
+                /**
+                 * Method for when no spinner item is selected
+                 * @return void
+                 */
                 // nothing happens
             }
         });
@@ -98,6 +112,11 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
         sortSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                /**
+                 * Method for when no spinner item is selected
+                 * sort spinner
+                 * @return void
+                 */
                 sortDataBySpinner();
             }
         });
@@ -107,6 +126,11 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
         ingredientList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                /**
+                 * Method for an ingredient is clicked in list view
+                 * open Edit menu
+                 * @return void
+                 */
                 // view ingredient details when you click on it
                 position = i;
                 Ingredient selected = (Ingredient) adapterView.getItemAtPosition(i);
@@ -123,10 +147,16 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
             }
         });
 
+        // ingredient controller to get data from firebase
         ingredientController = new IngredientController();
         CollectionReference collectionReference = ingredientController.getCollectionReference();
         collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
+            /**
+             * Method for retrieving data information from firebase
+             * convert Best before date string to timestamp
+             * @return void
+             */
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 dataList.clear();
                 for(QueryDocumentSnapshot doc: value) {
@@ -160,6 +190,11 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
     }
 
     public void sortDataBySpinner() {
+        /**
+         * Method for sorting ingredients by selected attributes
+         * sort switch will arrange in ascending or descending order
+         * @return void
+         */
         sortSpinner = findViewById(R.id.ingredientSortSpinner);
         sortSwitch = findViewById(R.id.ingredientSortSwitch);
 
@@ -183,17 +218,32 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
     }
 
     public void addIngredient(Ingredient ingredient) {
+        /**
+         * Method for adding ingredients
+         * trigger when Add button clicked
+         * @return void
+         */
         ingredientAdapter.add(ingredient);
         ingredientController.addIngredient(ingredient);
     }
 
     public void deleteIngredient(Ingredient ingredient) {
+        /**
+         * Method for deleting ingredient
+         * attempting to implement recycleview
+         * @return void
+         */
         ingredientAdapter.remove(ingredient);
         ingredientController.removeIngredient(ingredient);
     }
 
     @Override
     public void onConfirmPressed(Ingredient currentIngredient, boolean createNewIngredient) {
+        /**
+         * Method for Add/Edit fragment confirm
+         * checks whether to create new ingredient or to update existing
+         * @return void
+         */
         if (createNewIngredient) {
             addIngredient(currentIngredient);
         }
