@@ -199,12 +199,41 @@ public class IngredientActivityTest {
     }
 
     /**
+     * Add a second ingredient and ensure that both are displayed
+     */
+    @Test
+    public void addSecondIngredient() {
+        // Add first ingredient
+        addIngredient();
+    }
+
+    /**
+     * Click on ingredient and check that edit fragment is shown
+     */
+    @Test
+    public void clickOnIngredient() {
+
+    }
+
+    /**
+     * Click on ingredient and verify that all entries in the edit fragment are shown
+     */
+    @Test
+    public void viewIngredientDetails() {
+
+    }
+
+    /**
      * Test that the error message is shown when trying to add ingredient with empty name
      */
     @Test
-    public void confirmMissingIngredientName() {
+    public void addIngredientWithMissingName() {
 
     }
+
+
+
+
 
 
 
