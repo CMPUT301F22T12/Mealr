@@ -5,14 +5,26 @@ import static android.content.ContentValues.TAG;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.Dictionary;
 import java.util.HashMap;
+import java.util.Map;
 
 public class IngredientController {
     // connect to firebase and handles add and delete
@@ -24,6 +36,19 @@ public class IngredientController {
         db = FirebaseFirestore.getInstance();
         collectionReference = db.collection(collectionName);
     }
+
+    public static Timestamp convertStringToTimestamp(String bestBefore) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            date = sdf.parse(bestBefore);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return new Timestamp(date);
+    }
+
+    public CollectionReference getCollectionReference() {return this.collectionReference;}
 
     /**
      * Method to add an {@link Ingredient} to the Firebase database
@@ -38,11 +63,13 @@ public class IngredientController {
         String name = ingredient.getName();
         String unit = ingredient.getUnit();
 
-        HashMap<String, Object> data = new HashMap<>();
+        // convert string to Timestamp
+        Timestamp bbd = convertStringToTimestamp(bestBefore);
 
+        HashMap<String, Object> data = new HashMap<>();
         // put all the values into hashmap
         data.put("Amount", amount);
-        data.put("BestBeforeDate", bestBefore);
+        data.put("BestBeforeDate", bbd);
         data.put("Category", category);
         data.put("Location", location);
         data.put("Name", name);
@@ -86,5 +113,18 @@ public class IngredientController {
                         Log.w(TAG, "Could not delete document with ID: " + id,e);
                     }
                 });
+    }
+
+    public void notifyUpdate(Ingredient ingredient) {
+        Map<String,Object> userMap = new HashMap<>();
+        userMap.put("Name",ingredient.getName());
+        userMap.put("Amount",ingredient.getAmount());
+        userMap.put("BestBeforeDate",convertStringToTimestamp(ingredient.getbbd()));
+        userMap.put("Category",ingredient.getCategory());
+        userMap.put("Unit",ingredient.getUnit());
+        userMap.put("Location",ingredient.getLocation());
+        db.collection(collectionName)
+                .document(ingredient.getId())
+                .update(userMap);
     }
 }

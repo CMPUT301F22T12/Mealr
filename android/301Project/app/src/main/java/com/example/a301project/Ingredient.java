@@ -48,11 +48,11 @@ public class Ingredient implements Serializable {
         this.unit = unit;
     }
 
-    public void setAmount(Integer Amount) {
+    public void setAmount(Integer amount) {
         this.amount = amount;
     }
 
-    public void setCategory(String Category) {
+    public void setCategory(String category) {
         this.category = category;
     }
 }
