@@ -47,6 +47,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recipeSort" />
 
+    <View
+        android:id="@+id/recipeHeaderDivider"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/black"
+        android:showDividers="end"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recipeHeader" />
+
     <ListView
         android:id="@+id/recipeListView"
         android:layout_width="0dp"
@@ -54,5 +65,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recipeHeader" />
+        app:layout_constraintTop_toBottomOf="@+id/recipeHeaderDivider" />
 </androidx.constraintlayout.widget.ConstraintLayout>
