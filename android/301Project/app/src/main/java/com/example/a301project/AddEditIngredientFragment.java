@@ -1,10 +1,13 @@
 package com.example.a301project;
 
+import static android.content.ContentValues.TAG;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -24,7 +27,7 @@ public class AddEditIngredientFragment extends DialogFragment {
     private OnFragmentInteractionListener listener;
 
     public interface OnFragmentInteractionListener {
-        void onConfirmPressed(Ingredient currentIngredient);
+        void onConfirmPressed(Ingredient currentIngredient, boolean createNewIngredient);
     }
 
     @Override
@@ -38,15 +41,17 @@ public class AddEditIngredientFragment extends DialogFragment {
     }
 
     Ingredient currentIngredient;
+    boolean createNewIngredient;
 
     @Override
     @NonNull
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.add_edit_ingredientlayout, null);
 
-        Bundle ingredient = getArguments();
-        if (ingredient != null) {
-            currentIngredient = (Ingredient) ingredient.get("ingredient");
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            currentIngredient = (Ingredient) bundle.get("ingredient");
+            createNewIngredient = (boolean) bundle.get("createNew");
         }
 
         // set variables
@@ -67,12 +72,11 @@ public class AddEditIngredientFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         return builder
                 .setView(view)
-                .setTitle("Edit Entry")
+                .setTitle("Add/Edit Entry")
                 .setNegativeButton("Cancel",null)
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
                         // retrieve text from the text boxes
                         String ingredientName = AddEditIngredientFragment.this.ingredientName.getText().toString();
                         String bestbefore = AddEditIngredientFragment.this.bbdName.getText().toString();
@@ -80,6 +84,7 @@ public class AddEditIngredientFragment extends DialogFragment {
                         String amount = AddEditIngredientFragment.this.amountName.getText().toString();
                         String unit = AddEditIngredientFragment.this.unitName.getText().toString();
                         String category = AddEditIngredientFragment.this.categoryName.getText().toString();
+                        Log.d(TAG, category);
                         Integer intAmount = Integer.valueOf(amount);
 
                         // set the name of the current food as the edited fields
@@ -91,19 +96,19 @@ public class AddEditIngredientFragment extends DialogFragment {
                         currentIngredient.setCategory(category);
 
 
-                        listener.onConfirmPressed(currentIngredient);
+                        listener.onConfirmPressed(currentIngredient, createNewIngredient);
                     }
                 }).create();
 
     }
-    static AddEditIngredientFragment newInstance(Ingredient ingredient) {
+    static AddEditIngredientFragment newInstance(Ingredient ingredient, boolean createNew) {
         Bundle args = new Bundle();
         args.putSerializable("ingredient",ingredient);
+        args.putSerializable("createNew", createNew);
 
         AddEditIngredientFragment fragment = new AddEditIngredientFragment();
         fragment.setArguments(args);
         return fragment;
-
     }
 }
 

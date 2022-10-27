@@ -5,13 +5,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
-import com.google.firebase.firestore.FirebaseFirestore;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -23,6 +39,8 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
     ArrayAdapter<Ingredient> ingredientAdapter;
     ArrayList<Ingredient> dataList;
     public int position = -1;
+    Button addButton;
+    Button removeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,41 +49,27 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
         ViewGroup content = findViewById(R.id.nav_content);
         getLayoutInflater().inflate(R.layout.activity_ingredient, content, true);
 
+        addButton = findViewById(R.id.add_ingredient_button);
         // create list of ingredients
         ingredientList = findViewById(R.id.IngredientList);
         // store units as a sub item in a listview
         //HashMap<String, String> nameUnit = new HashMap<>();
 
-        //initialize attributes as empty
-        String []ingredients ={"pizza"};
-        String []locations = {"bed"};
-        String []bbds = {"2022-12-01"};
-        Integer []amounts = {1};
-        String []units = {"slice"};
-        String []categories = {"lunch"};
+//        //initialize attributes as empty
+//        String []ingredients ={"pizza"};
+//        String []locations = {"bed"};
+//        String []bbds = {"2022-12-01"};
+//        Integer []amounts = {1};
+//        String []units = {"slice"};
+//        String []categories = {"lunch"};
 
         dataList = new ArrayList<>();
 
-        //initialize dataList
-        for (int i=0; i<ingredients.length;i++) {
-            dataList.add(new Ingredient(ingredients[i],amounts[i],bbds[i],locations[i],units[i],categories[i]));
-            //nameUnit.put(ingredients[i],units[i]);
-        }
-        // hashmap to map ingredient name and unit as a pair, so that unit can be the subitems in listview
-//        List<HashMap<String,String>> sublist = new ArrayList<>();
-//        SimpleAdapter simpleAdapter = new SimpleAdapter(this, sublist, R.layout.ingredient_content,
-//                new String[]{"Ingredient","Unit"},
-//                new int[]{R.id.ingredient_text, R.id.unit_text});
-//
-//        Iterator it = nameUnit.entrySet().iterator();
-//        while (it.hasNext()) {
-//            HashMap<String, String> resultMap = new HashMap<>();
-//            Map.Entry pair = (Map.Entry)it.next();
-//            resultMap.put("Ingredient",pair.getKey().toString());
-//            resultMap.put("Unit",pair.getValue().toString());
-//            sublist.add(resultMap);
+//        //initialize dataList
+//        for (int i=0; i<ingredients.length;i++) {
+//            dataList.add(new Ingredient(ingredients[i],amounts[i],bbds[i],locations[i],units[i],categories[i]));
+//            //nameUnit.put(ingredients[i],units[i]);
 //        }
-//        ingredientList.setAdapter(simpleAdapter);
 
         ingredientAdapter = new CustomList(this,dataList);
         ingredientList.setAdapter(ingredientAdapter);
@@ -76,8 +80,47 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
                 // view ingredient details when you click on it
                 position = i;
                 Ingredient selected = (Ingredient) adapterView.getItemAtPosition(i);
-                AddEditIngredientFragment.newInstance(ingredientAdapter.getItem(position)).show(getSupportFragmentManager(),"EDIT");
+                AddEditIngredientFragment.newInstance(ingredientAdapter.getItem(position),false).show(getSupportFragmentManager(),"EDIT");
+            }
+        });
 
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Ingredient newIngredient = new Ingredient("",1,"","","","");
+                AddEditIngredientFragment.newInstance(newIngredient,true).show(getSupportFragmentManager(),"ADD");
+            }
+        });
+
+        ingredientController = new IngredientController();
+        CollectionReference collectionReference = ingredientController.getCollectionReference();
+        collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                dataList.clear();
+                for(QueryDocumentSnapshot doc: value) {
+                    String id = doc.getId();
+                    String name = (String) doc.getData().get("Name");
+
+                    Timestamp timestamp = (Timestamp) doc.getData().get("BestBeforeDate");
+                    Date date = timestamp.toDate();
+                    String pattern = "yyyy-MM-dd";
+                    DateFormat df = new SimpleDateFormat(pattern);
+                    String bbd = df.format(date);
+
+                    String category = (String) doc.getData().get("Category");
+                    String location = (String) doc.getData().get("Location");
+                    String unit = (String) doc.getData().get("Unit");
+
+                    long amountL = (long) doc.getData().get("Amount");
+                    int amount = (int) amountL;
+
+                    Ingredient newIngredient = new Ingredient(name,amount,bbd,location,unit,category);
+                    newIngredient.setId(id);
+
+                    dataList.add(newIngredient);
+                }
+                ingredientAdapter.notifyDataSetChanged();
             }
         });
 
@@ -85,8 +128,24 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
         bottomNav.getMenu().findItem(R.id.action_ingredients).setChecked(true);
     }
 
+    public void addIngredient(Ingredient ingredient) {
+        ingredientAdapter.add(ingredient);
+        ingredientController.addIngredient(ingredient);
+    }
+
+    public void deleteIngredient(Ingredient ingredient) {
+        ingredientAdapter.remove(ingredient);
+        ingredientController.removeIngredient(ingredient);
+    }
+
     @Override
-    public void onConfirmPressed(Ingredient currentIngredient) {
+    public void onConfirmPressed(Ingredient currentIngredient, boolean createNewIngredient) {
+        if (createNewIngredient) {
+            addIngredient(currentIngredient);
+        }
+        else {
+            ingredientController.notifyUpdate(currentIngredient);
+        }
         ingredientAdapter.notifyDataSetChanged();
     }
 }

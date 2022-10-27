@@ -3,6 +3,7 @@ package com.example.a301project;
 import java.io.Serializable;
 
 public class Ingredient implements Serializable {
+    private String id = null;
     private String name;
     private String location;
     private String bbd;
@@ -20,6 +21,7 @@ public class Ingredient implements Serializable {
         this.amount = amount;
     }
 
+    String getId() {return this.id;}
     String getName() {return this.name;}
     String getbbd() {return this.bbd;}
     String getLocation() {return this.location;}
@@ -28,6 +30,10 @@ public class Ingredient implements Serializable {
     String getCategory() {return this.category;}
 
     // setters used to edit attributes for existing food object
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -42,11 +48,11 @@ public class Ingredient implements Serializable {
         this.unit = unit;
     }
 
-    public void setAmount(Integer Amount) {
+    public void setAmount(Integer amount) {
         this.amount = amount;
     }
 
-    public void setCategory(String Category) {
+    public void setCategory(String category) {
         this.category = category;
     }
 }
