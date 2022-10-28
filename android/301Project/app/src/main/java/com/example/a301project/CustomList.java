@@ -44,7 +44,7 @@ public class CustomList extends ArrayAdapter<Ingredient> {
 
         ingredientName.setText(ingredient.getName());
         locationName.setText(ingredient.getLocation());
-        bbdName.setText(ingredient.getbbd());
+        bbdName.setText("Expires: " + ingredient.getbbd());
         amountName.setText(ingredient.getAmount().toString());
         unitName.setText(ingredient.getUnit());
         categoryName.setText(ingredient.getCategory());

@@ -11,8 +11,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="60"
-        android:weightSum="100">
+        android:layout_weight="60">
 
         <ImageView
             android:layout_width="100dp"
@@ -29,6 +28,8 @@
             android:padding="5dp"
             android:text="Title"
             android:textSize="35dp"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -41,52 +42,58 @@
         <Space
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_weight="1"></Space>
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/r_prepTimeTextView"
             android:text="Prep Time"
-            android:layout_width="100dp"
+            android:layout_width="110dp"
             android:layout_height="30dp"
             android:layout_gravity="center"
             android:background="@drawable/rounded_rect"
             android:backgroundTint="#1a459522"
             android:gravity="center"
             android:textStyle="bold"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textSize="15dp" />
 
         <Space
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_weight="1"></Space>
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/r_servingsTextView"
             android:text="Servings"
-            android:layout_width="100dp"
+            android:layout_width="110dp"
             android:layout_height="30dp"
             android:layout_gravity="center"
             android:background="@drawable/rounded_rect"
             android:backgroundTint="#1aA704FD"
             android:gravity="center"
             android:textStyle="bold"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textSize="15dp" />
 
         <Space
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_weight="1"></Space>
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/r_categoryTextView"
             android:text="Category"
-            android:layout_width="100dp"
+            android:layout_width="110dp"
             android:layout_height="30dp"
             android:layout_gravity="center"
             android:background="@drawable/rounded_rect"
             android:backgroundTint="#1a036ED9"
             android:gravity="center"
             android:textStyle="bold"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textSize="15dp" />
 
         <Space

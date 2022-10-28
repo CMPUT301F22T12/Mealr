@@ -1,6 +1,5 @@
 package com.example.a301project;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,23 +7,15 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -34,7 +25,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Iterator;
 
 /**
  * Main Activity class for Ingredients
@@ -69,15 +59,6 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
         // create list of ingredients
         ingredientList = findViewById(R.id.ingredientListView);
         dataList = new ArrayList<>();
-
-        // Style header text to bold
-        ViewGroup ingredientHeader = content.findViewById(R.id.ingredientHeader);
-        for (int i = 0; i < ingredientHeader.getChildCount(); i++) {
-            View child = ingredientHeader.getChildAt(i);
-            if (child instanceof TextView) {
-                ((TextView) child).setTypeface(null, Typeface.BOLD);
-            }
-        }
 
         ingredientAdapter = new CustomList(this,dataList);
         ingredientList.setAdapter(ingredientAdapter);
