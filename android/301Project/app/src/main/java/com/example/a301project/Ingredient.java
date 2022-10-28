@@ -2,6 +2,10 @@ package com.example.a301project;
 
 import java.io.Serializable;
 
+/**
+ * This is a class that holds the data which makes up an ingredient. This class consists mostly of
+ * getters and setters to make retrieving its parameters easier.
+ */
 public class Ingredient implements Serializable {
     private String id = null;
     private String name;
@@ -11,6 +15,15 @@ public class Ingredient implements Serializable {
     private String unit;
     private int amount;
 
+    /**
+     * Makes an {@link Ingredient} object from the given parameters
+     * @param name The name of the object
+     * @param amount The amount of the object
+     * @param bbd The best before date of the object
+     * @param location The location of the object
+     * @param unit The unit the object uses
+     * @param category The object's category
+     */
     public Ingredient(String name, int amount, String bbd, String location, String unit, String category) {
         // constructor
         this.name = name;
@@ -21,37 +34,96 @@ public class Ingredient implements Serializable {
         this.amount = amount;
     }
 
+    /**
+     * Gets the {@link Ingredient} object's ID
+     * @return The ID of the object
+     */
     String getId() {return this.id;}
+
+    /**
+     * Gets the {@link Ingredient} object's name
+     * @return The name of the object
+     */
     String getName() {return this.name;}
+
+    /**
+     * Gets the {@link Ingredient} object's best before date
+     * @return The best before date of the object
+     */
     String getbbd() {return this.bbd;}
+
+    /**
+     * Gets the {@link Ingredient} object's location
+     * @return The location of the object
+     */
     String getLocation() {return this.location;}
+
+    /**
+     * Gets the {@link Ingredient} object's amount
+     * @return The amount of the object (as an {@link Integer}
+     */
     Integer getAmount() {return this.amount;}
+
+    /**
+     * Gets the {@link Ingredient} object's unit
+     * @return The unit of the object
+     */
     String getUnit() {return this.unit;}
+
+    /**
+     * Gets the {@link Ingredient} object's category
+     * @return The category of the object
+     */
     String getCategory() {return this.category;}
 
     // setters used to edit attributes for existing food object
+
+    /**
+     * Sets the {@link Ingredient} object's ID
+     * @param id The {@link Ingredient} object's ID is set to this value
+     */
     public void setId(String id) {
         this.id = id;
     }
 
+    /**
+     * Sets the {@link Ingredient} object's name
+     * @param name The {@link Ingredient} object's name is set to this value
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Sets the {@link Ingredient} object's best before date
+     * @param bbd The {@link Ingredient} object's best before date is set to this value
+     */
     public void setBbd(String bbd) {
         this.bbd = bbd;
     }
 
+    /**
+     * Sets the {@link Ingredient} object's location
+     * @param location The {@link Ingredient} object's location is set to this value
+     */
     public void setLocation(String location) {this.location = location;}
 
     public void setUnit(String unit) {
         this.unit = unit;
     }
 
+    /**
+     * Sets the {@link Ingredient} object's amount (as an integer)
+     * @param amount The {@link Ingredient} object's amount is set to this value
+     */
     public void setAmount(Integer amount) {
         this.amount = amount;
     }
 
+    /**
+     * Sets the {@link Ingredient} object's category
+     * @param category The {@link Ingredient} object's category is set to this value
+     */
     public void setCategory(String category) {
         this.category = category;
     }
