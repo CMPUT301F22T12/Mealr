@@ -26,17 +26,32 @@ import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This {@link IngredientController} class allows the {@link IngredientActivity} to communicate with
+ * the Firestore database backend. This class contains methods to add or remove {@link Ingredient} objects to the
+ * database, as well as edit functionality.
+ *
+ * This class should be used exclusively by the {@link IngredientActivity} class to handle database communication.
+ */
 public class IngredientController {
     // connect to firebase and handles add and delete
     String collectionName = "Ingredient";
     FirebaseFirestore db;
     final CollectionReference collectionReference;
 
+    /**
+     * The constructor for the {@link IngredientController}. Sets up the {@link #db} and {@link #collectionReference}
+     */
     public IngredientController() {
         db = FirebaseFirestore.getInstance();
         collectionReference = db.collection(collectionName);
     }
 
+    /**
+     * Converts a {@link String} to a {@link Timestamp} object
+     * @param bestBefore The best before date as a {@link String}
+     * @return A {@link Timestamp} object
+     */
     public static Timestamp convertStringToTimestamp(String bestBefore) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = null;
@@ -48,6 +63,10 @@ public class IngredientController {
         return new Timestamp(date);
     }
 
+    /**
+     * A {@link IngredientController} getter for the {@link #collectionReference}
+     * @return The {@link #collectionReference}
+     */
     public CollectionReference getCollectionReference() {return this.collectionReference;}
 
     /**
@@ -115,6 +134,11 @@ public class IngredientController {
                 });
     }
 
+    /**
+     * Notifies the Firestore database of an update to an ingredient. The database then updates the
+     * ingredient's values with the provided {@link Ingredient} object
+     * @param ingredient The {@link Ingredient} object to update in the databse
+     */
     public void notifyUpdate(Ingredient ingredient) {
         Map<String,Object> userMap = new HashMap<>();
         userMap.put("Name",ingredient.getName());
