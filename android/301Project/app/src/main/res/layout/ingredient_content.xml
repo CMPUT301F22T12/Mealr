@@ -1,62 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal"
+    android:layout_height="200dp"
+    android:layout_margin="10dp"
+    android:background="@drawable/rounded_rect"
+    android:orientation="vertical"
+    android:padding="10dp"
     android:weightSum="100">
-    <TextView
-        android:id="@+id/i_nameText"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="15"
-        android:padding="3dp"
-        android:text="Entry"
-        android:textSize="20dp" />
 
-    <TextView
-        android:id="@+id/i_amountText"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="10"
-        android:text="#"
-        android:textSize="20dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="30">
 
-    <TextView
-        android:id="@+id/i_unitText"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="15"
-        android:text="Unit"
-        android:textSize="20dp" />
+        <TextView
+            android:id="@+id/i_nameText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="15"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:padding="3dp"
+            android:text="Entry"
+            android:textSize="35dp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/i_bbdText"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="20"
-        android:text="Expiry"
-        android:textSize="20dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="70"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/i_locationText"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="20"
-        android:text="Location"
-        android:textSize="20dp"/>
-    <TextView
-        android:id="@+id/i_categoryText"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="20"
-        android:text="Category"
-        android:textSize="20dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
 
+            <TextView
+                android:id="@+id/i_amountText"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:padding="3dp"
+                android:text="#"
+                android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/i_unitText"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:text="Unit"
+                android:textSize="25dp" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp">
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/i_locationText"
+                android:layout_width="110dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/rounded_rect"
+                android:backgroundTint="#1a459522"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:textStyle="bold"
+                android:text="Location"
+                android:textSize="20dp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/i_categoryText"
+                android:layout_width="110dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/rounded_rect"
+                android:backgroundTint="#1a036ED9"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="Category"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:orientation="horizontal">
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/i_bbdText"
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:backgroundTint="#1a036ED9"
+                android:gravity="center_vertical|right"
+                android:text="Expiry"
+                android:textSize="15dp" />
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

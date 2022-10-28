@@ -42,8 +42,8 @@ public class RecipeListAdapter extends ArrayAdapter<Recipe> {
 
         // Set the text
         titleTV.setText(r.getTitle());
-        prepTimeTV.setText(r.getPrepTime().toString());
-        servingsTV.setText(r.getServings().toString());
+        prepTimeTV.setText(Math.floorDiv(r.getPrepTime(), 60) + " min");
+        servingsTV.setText(r.getServings().toString() + " Servings");
         categoryTV.setText(r.getCategory());
 
         return view;
