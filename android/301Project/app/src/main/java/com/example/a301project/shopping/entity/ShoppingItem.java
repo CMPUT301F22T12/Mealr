@@ -1,13 +1,8 @@
-package com.example.a301project.shopping.entity;
+﻿package com.example.a301project.shopping.entity;
 
 import java.io.Serializable;
 
-/**
- * @ClassName: ShoppingItem
- * @Description: java类作用描述
- * @Author: ping
- * @CreateDate: 2022/10/27 5:33 下午
- */
+
 public class ShoppingItem implements Serializable {
     private String ingredient;
 

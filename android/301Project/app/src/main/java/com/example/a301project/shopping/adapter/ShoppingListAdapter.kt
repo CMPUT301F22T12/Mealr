@@ -1,4 +1,4 @@
-package com.example.a301project.shopping.adapter
+﻿package com.example.a301project.shopping.adapter
 
 import android.content.Context
 import android.view.View
@@ -9,12 +9,7 @@ import com.example.a301project.R
 import com.example.a301project.base.BaseAdapter
 import com.example.a301project.shopping.entity.ShoppingItem
 
-/**
- * @ClassName: DownloadListAdapter
- * @Description: java类作用描述
- * @Author: ping
- * @CreateDate: 2022/9/5 5:55 下午
- */
+
 class ShoppingListAdapter(dataList: MutableList<ShoppingItem>, context: Context) : BaseAdapter(dataList, context) {
 
 

@@ -1,4 +1,4 @@
-/**
+﻿/**
  *
  */
 package com.example.a301project.util;
@@ -10,7 +10,7 @@ import com.example.a301project.application.MyApplication;
 
 public class ToastUtil {
     /**
-     * 弹出Toast
+     * 
      */
     public static void show(String info) {
         Toast.makeText(MyApplication.getContext(), info, Toast.LENGTH_LONG).show();
