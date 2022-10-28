@@ -1,53 +1,25 @@
-//package com.example.a301project;
-//
-//import androidx.appcompat.app.AppCompatActivity;
-//import androidx.recyclerview.widget.LinearLayoutManager;
-//
-//import android.app.Activity;
-//import android.app.DatePickerDialog;
-//import android.app.Dialog;
-//import android.os.Bundle;
-//import android.text.TextUtils;
-//import android.view.Display;
-//import android.view.View;
-//import android.view.ViewGroup;
-//import android.view.WindowManager;
-//import android.widget.DatePicker;
-//import android.widget.EditText;
-//import android.widget.TextView;
-//
-//import com.example.a301project.base.BaseAdapter;
-//import com.example.a301project.databinding.ActivityShoppingListBinding;
-//import com.example.a301project.shopping.adapter.ShoppingListAdapter;
-//import com.example.a301project.shopping.entity.ShoppingItem;
-//import com.example.a301project.util.SortUtil;
-//import com.example.a301project.util.ToastUtil;
-//
-//import java.util.ArrayList;
-//import java.util.Calendar;
-//import java.util.List;
-//
-//public class ShoppingListActivity extends NavActivity  {
-//
-//    ActivityShoppingListBinding viewBinding;
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        viewBinding = ActivityShoppingListBinding.inflate(getLayoutInflater());
-//        setContentView(viewBinding.getRoot());
-//
-//
-//        // Set the correct button to be selected
-//        bottomNav.getMenu().findItem(R.id.action_shopping_list).setChecked(true);
-//
+package com.example.a301project;
+
+import android.os.Bundle;
+import android.view.ViewGroup;
+
+public class ShoppingListActivity extends NavActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        // We have to put our layout in the space for the content
+        ViewGroup content = findViewById(R.id.nav_content);
+//        getLayoutInflater().inflate(R.layout.activity_shopping_list, content, true);
+
+
+        // Set the correct button to be selected
+        super.onCreate(savedInstanceState);
+        bottomNav.getMenu().findItem(R.id.action_shopping_list).setChecked(true);
+
 //        initViews();
-//    }
-//
-//    List<ShoppingItem> shoppingItemList;
-//    ShoppingListAdapter shoppingListAdapter;
-//
-//
+    }
+
+
 //    private void initViews(){
 //        shoppingItemList = new ArrayList<>();
 //        shoppingListAdapter = new ShoppingListAdapter(shoppingItemList,this);
@@ -241,5 +213,5 @@
 //        dialog.getWindow().setAttributes(lp);
 //        dialog.show();
 //    }
-//
-//}
+
+}
