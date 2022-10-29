@@ -56,29 +56,29 @@ public class ShoppingListActivity extends NavActivity  {
         viewBinding.tvShoppingAddItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //显示添加item 弹出
+                //add item
                 showAddItemDialog(null,1);
             }
         });
         shoppingListAdapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
             @Override
             public void onClickListener(View view, int position) {
-                //修改
+                //make a modify
                 showAddItemDialog(shoppingItemList.get(position),2);
             }
         });
         viewBinding.tvShoppingSortBy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //按照ingredient 排序
-                SortUtil.INSTANCE.sortShoppingItemByIngredient(shoppingItemList);
+                //sort by ingredient 
+                SortUtil.sortShoppingItemByIngredient(shoppingItemList);
                 shoppingListAdapter.notifyDataSetChanged();
             }
         });
         viewBinding.tvShoppingCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SortUtil.INSTANCE.sortShoppingItemByCategory(shoppingItemList);
+                SortUtil.sortShoppingItemByCategory(shoppingItemList);
                 shoppingListAdapter.notifyDataSetChanged();
             }
         });
@@ -156,11 +156,11 @@ public class ShoppingListActivity extends NavActivity  {
         });
 
         dialog.setContentView(view);
-        // 将对话框的大小按屏幕大小的百分比设置
+        // Set the size of the dialog based on the size of the screen 
         WindowManager windowManager = this.getWindowManager();
         Display display = windowManager.getDefaultDisplay();
         WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
-        lp.width = (int)(display.getWidth() * 0.8); //设置宽度
+        lp.width = (int)(display.getWidth() * 0.8); //set the width
         dialog.getWindow().setAttributes(lp);
         dialog.show();
     }
@@ -180,15 +180,15 @@ public class ShoppingListActivity extends NavActivity  {
         tv_add_food_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Calendar mcalendar = Calendar.getInstance();     //  获取当前时间    —   年、月、日
-                int year = mcalendar.get(Calendar.YEAR);         //  得到当前年
-                int month = mcalendar.get(Calendar.MONTH);       //  得到当前月
-                final int day = mcalendar.get(Calendar.DAY_OF_MONTH);  //  得到当前日
+                Calendar mcalendar = Calendar.getInstance();     //  get the current date
+                int year = mcalendar.get(Calendar.YEAR);         //  get the year
+                int month = mcalendar.get(Calendar.MONTH);       //  month
+                final int day = mcalendar.get(Calendar.DAY_OF_MONTH);  //  day
 
-                new DatePickerDialog(ShoppingListActivity.this, new DatePickerDialog.OnDateSetListener() {      //  日期选择对话框
+                new DatePickerDialog(ShoppingListActivity.this, new DatePickerDialog.OnDateSetListener() {      //  Date selection dialog
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        //  这个方法是得到选择后的 年，月，日，分别对应着三个参数 — year、month、dayOfMonth
+                        //  get the selected year, month, day into three params
                         tv_add_food_date.setText(year+"-"+month+"-"+dayOfMonth);
                     }
                 },year,month,day).show();
@@ -212,11 +212,11 @@ public class ShoppingListActivity extends NavActivity  {
         });
 
         dialog.setContentView(view);
-        // 将对话框的大小按屏幕大小的百分比设置
+        // Set the size of the dialog 
         WindowManager windowManager = this.getWindowManager();
         Display display = windowManager.getDefaultDisplay();
         WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
-        lp.width = (int)(display.getWidth() * 0.8); //设置宽度
+        lp.width = (int)(display.getWidth() * 0.8); //width
         dialog.getWindow().setAttributes(lp);
         dialog.show();
     }
@@ -233,11 +233,11 @@ public class ShoppingListActivity extends NavActivity  {
             }
         });
         dialog.setContentView(view);
-        // 将对话框的大小按屏幕大小的百分比设置
+        // Set the size of the dialog
         WindowManager windowManager = this.getWindowManager();
         Display display = windowManager.getDefaultDisplay();
         WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
-        lp.width = (int)(display.getWidth() * 0.8); //设置宽度
+        lp.width = (int)(display.getWidth() * 0.8); //width
         dialog.getWindow().setAttributes(lp);
         dialog.show();
     }
