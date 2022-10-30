@@ -1,4 +1,4 @@
-﻿package com.example.a301project.application;
+package com.example.a301project.application;
 
 import android.app.Application;
 import android.content.Context;

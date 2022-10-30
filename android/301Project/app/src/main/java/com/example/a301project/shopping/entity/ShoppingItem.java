@@ -1,4 +1,4 @@
-﻿package com.example.a301project.shopping.entity;
+package com.example.a301project.shopping.entity;
 
 import java.io.Serializable;
 
