@@ -149,8 +149,8 @@ public class IngredientActivityTest {
         assertTrue(solo.waitForText("5", 1, 2000));
 
         // enter bestbeforedate
-        solo.enterText((EditText) solo.getView(R.id.edit_bbd), "23-08-2022");
-        assertTrue(solo.waitForText("23-08-2022", 1, 2000));
+        solo.enterText((EditText) solo.getView(R.id.edit_bbd), "2022-08-11");
+        assertTrue(solo.waitForText("22-08-11", 1, 2000));
 
         // enter location
         solo.enterText((EditText) solo.getView(R.id.edit_location), "Fridge");
@@ -170,7 +170,7 @@ public class IngredientActivityTest {
      * Fill the entry fields + check that confirmButton works
      */
     @Test
-    public void confirmButton() {
+    public void checkConfirmButton() {
         // fill fields
         fillEntryFields();
 
@@ -187,13 +187,13 @@ public class IngredientActivityTest {
     @Test
     public void addIngredient() {
         // add ingredient
-        confirmButton();
+        checkConfirmButton();
 
         // check that it was added
         assertTrue(solo.waitForText("Carrot", 1, 2000));
         assertTrue(solo.waitForText("5", 1, 2000));
         assertTrue(solo.waitForText("lbs", 1, 2000));
-        assertTrue(solo.waitForText("23-08-2022", 1, 2000));
+        assertTrue(solo.waitForText("2022-08-11", 1, 2000));
         assertTrue(solo.waitForText("Fridge", 1, 2000));
         assertTrue(solo.waitForText("Vegetable", 1, 2000));
     }
@@ -208,7 +208,127 @@ public class IngredientActivityTest {
     }
 
     /**
-     * Click on ingredient and check that edit fragment is shown
+     * Test that the error message is shown when trying to add ingredient with empty name
+     */
+    @Test
+    public void addIngredientWithMissingName() {
+        // open the fragment
+        addIngredientButton();
+
+        // clear name field
+        solo.clearEditText((EditText) solo.getView(R.id.edit_name));
+
+        // enter amount
+        solo.clearEditText((EditText) solo.getView(R.id.edit_amount));
+        solo.enterText((EditText) solo.getView(R.id.edit_amount), "5");
+        assertTrue(solo.waitForText("5", 1, 2000));
+
+        // enter bestbeforedate
+        solo.enterText((EditText) solo.getView(R.id.edit_bbd), "2022-08-11");
+        assertTrue(solo.waitForText("2022-08-11", 1, 2000));
+
+        // enter location
+        solo.enterText((EditText) solo.getView(R.id.edit_location), "Fridge");
+        assertTrue(solo.waitForText("Fridge", 1, 2000));
+
+        // enter unit
+        solo.enterText((EditText) solo.getView(R.id.edit_unit), "lbs");
+        assertTrue(solo.waitForText("lbs", 1, 2000));
+
+        // enter category
+        solo.enterText((EditText) solo.getView(R.id.edit_category), "Vegetable");
+        assertTrue(solo.waitForText("Vegetable", 1, 2000));
+
+        // click confirm button
+        solo.clickOnButton("Confirm");
+
+        // check that error message is shown (or that fragment didn't close)
+        assertTrue(solo.waitForText("Add/Edit Entry", 1, 2000));
+    }
+
+    /**
+     * Test that the error message is shown when trying to add ingredient with an empty amount
+     * (but the rest of the fields are fileld)
+     */
+    @Test
+    public void addIngredientWithMissingAmount() {
+        // open the fragment
+        addIngredientButton();
+
+        // enter name
+        solo.enterText((EditText) solo.getView(R.id.edit_name), "Carrot");
+        assertTrue(solo.waitForText("Carrot", 1, 2000));
+
+        // clear amount field
+        solo.clearEditText((EditText) solo.getView(R.id.edit_amount));
+
+        // enter bestbeforedate
+        solo.enterText((EditText) solo.getView(R.id.edit_bbd), "2022-08-11");
+        assertTrue(solo.waitForText("2022-08-11", 1, 2000));
+
+        // enter location
+        solo.enterText((EditText) solo.getView(R.id.edit_location), "Fridge");
+        assertTrue(solo.waitForText("Fridge", 1, 2000));
+
+        // enter unit
+        solo.enterText((EditText) solo.getView(R.id.edit_unit), "lbs");
+        assertTrue(solo.waitForText("lbs", 1, 2000));
+
+        // enter category
+        solo.enterText((EditText) solo.getView(R.id.edit_category), "Vegetable");
+        assertTrue(solo.waitForText("Vegetable", 1, 2000));
+
+        // click confirm button
+        solo.clickOnButton("Confirm");
+
+        // check that error message is shown (or that fragment didn't close)
+        assertTrue(solo.waitForText("Add/Edit Entry", 1, 2000));
+
+    }
+
+    /**
+     * Test that the error message is shown when trying to add ingredient with an empty amount
+     * (but the rest of the fields are fileld)
+     */
+    @Test
+    public void addIngredientWithMissingDate() {
+        // open the fragment
+        addIngredientButton();
+
+        // enter name
+        solo.enterText((EditText) solo.getView(R.id.edit_name), "Carrot");
+        assertTrue(solo.waitForText("Carrot", 1, 2000));
+
+        // enter amount
+        solo.clearEditText((EditText) solo.getView(R.id.edit_amount));
+        solo.enterText((EditText) solo.getView(R.id.edit_amount), "5");
+        assertTrue(solo.waitForText("5", 1, 2000));
+
+        // clear bestbeforedate
+        solo.clearEditText((EditText) solo.getView(R.id.edit_bbd));
+        // enter location
+        solo.enterText((EditText) solo.getView(R.id.edit_location), "Fridge");
+        assertTrue(solo.waitForText("Fridge", 1, 2000));
+
+        // enter unit
+        solo.enterText((EditText) solo.getView(R.id.edit_unit), "lbs");
+        assertTrue(solo.waitForText("lbs", 1, 2000));
+
+        // enter category
+        solo.enterText((EditText) solo.getView(R.id.edit_category), "Vegetable");
+        assertTrue(solo.waitForText("Vegetable", 1, 2000));
+
+        // click confirm button
+        solo.clickOnButton("Confirm");
+
+        // check that error message is shown (or that fragment didn't close)
+        assertTrue(solo.waitForText("Add/Edit Entry", 1, 2000));
+
+    }
+
+
+    /**
+     * Click on an ingredient in the list and checks that edit fragment is shown
      */
     @Test
     public void clickOnIngredient() {
@@ -220,14 +340,6 @@ public class IngredientActivityTest {
      */
     @Test
     public void viewIngredientDetails() {
-
-    }
-
-    /**
-     * Test that the error message is shown when trying to add ingredient with empty name
-     */
-    @Test
-    public void addIngredientWithMissingName() {
 
     }
 
