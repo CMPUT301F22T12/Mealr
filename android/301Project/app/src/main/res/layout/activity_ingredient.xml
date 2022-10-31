@@ -13,20 +13,24 @@
         android:layout_height="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="5dp"
+        android:paddingHorizontal="5dp"
         app:layout_constraintTop_toTopOf="parent">
 
         <Button
             android:id="@+id/add_ingredient_button"
-            android:layout_width="97dp"
+            android:layout_width="70dp"
             android:layout_height="40dp"
             android:text="Add"
             android:textAllCaps="false"
-            tools:layout_editor_absoluteY="0dp" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
+            android:id="@+id/ingredientSortText"
             android:text="Sort By: "
             app:layout_constraintEnd_toStartOf="@+id/ingredientSortSpinner" />
 
@@ -47,37 +51,16 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <include
-        android:id="@+id/ingredientHeader"
-        layout="@layout/ingredient_content"
-        android:layout_width="0dp"
-        android:layout_height="30dp"
-        android:showDividers="end"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ingredientSort" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:showDividers="end"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        android:background="@color/black"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ingredientHeader"/>
-
-
-
     <ListView
         android:id="@+id/ingredientListView"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_margin="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ingredientHeader" />
+        android:divider="@android:color/transparent"
+        android:dividerHeight="15dp"
+        app:layout_constraintTop_toBottomOf="@+id/ingredientSort" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

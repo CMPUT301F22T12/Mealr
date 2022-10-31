@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'com.google.gms.google-services'
 }
+ 
 
 android {
     namespace 'com.example.a301project'
@@ -24,13 +25,14 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_9
+        targetCompatibility JavaVersion.VERSION_1_9
     }
 }
 
 dependencies {
 
+    implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
@@ -42,4 +44,5 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test:rules:1.2.0'
     androidTestImplementation 'com.jayway.android.robotium:robotium-solo:5.3.1'
+
 }

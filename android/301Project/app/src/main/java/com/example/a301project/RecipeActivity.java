@@ -1,6 +1,5 @@
 package com.example.a301project;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +9,13 @@ import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * Renders the recipes for the user and allows them to modify or add them
+ */
 public class RecipeActivity extends NavActivity {
     private ListView listView;
     private ArrayAdapter<Recipe> recipeArrayAdapter;
@@ -41,15 +42,6 @@ public class RecipeActivity extends NavActivity {
         recipeArrayAdapter = new RecipeListAdapter(this, recipeDataList);
         listView = findViewById(R.id.recipeListView);
         listView.setAdapter(recipeArrayAdapter);
-
-        // Style header
-        ViewGroup header = content.findViewById(R.id.recipeHeader);
-        for (int i = 0; i < header.getChildCount(); i++) {
-            View child = header.getChildAt(i);
-            if (child instanceof TextView) {
-                ((TextView) child).setTypeface(null, Typeface.BOLD);
-            }
-        }
 
         // Setup sorting
         sortSpinner = findViewById(R.id.recipeSortSpinner);
@@ -89,7 +81,7 @@ public class RecipeActivity extends NavActivity {
     }
 
     /**
-     * Sorts recipe list by selected filters
+     * Sorts internal recipe list by selected filters defined the sortOptions attribute
      */
     private void sortDataBySpinner() {
         // Make sure views are defined
