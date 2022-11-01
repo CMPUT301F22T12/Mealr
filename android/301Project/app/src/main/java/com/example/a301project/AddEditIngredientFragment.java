@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -24,6 +25,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import java.lang.reflect.Array;
 import java.util.Calendar;
@@ -38,6 +42,7 @@ public class AddEditIngredientFragment extends DialogFragment {
     private EditText categoryName;
     private OnFragmentInteractionListener listener;
     private DatePickerDialog.OnDateSetListener setListener;
+    private Button deleteButton;
 
     public interface OnFragmentInteractionListener {
         void onConfirmPressed(Ingredient currentIngredient, boolean createNewIngredient);
@@ -79,6 +84,29 @@ public class AddEditIngredientFragment extends DialogFragment {
         amountName = view.findViewById(R.id.edit_amount);
         unitName = view.findViewById(R.id.edit_unit);
         categoryName = view.findViewById(R.id.edit_category);
+        deleteButton = view.findViewById(R.id.delete_ingredient_button);
+
+        String title;
+        if (this.getTag().equals("ADD")) {
+            title = "Add Entry";
+            deleteButton.setVisibility(View.GONE);
+        }
+        else {
+            title = "Edit Entry";
+        }
+
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                IngredientController controller = new IngredientController();
+                controller.removeIngredient(currentIngredient);
+
+                Fragment frag = getActivity().getSupportFragmentManager().findFragmentByTag("EDIT");
+                getActivity().getSupportFragmentManager().beginTransaction().remove(frag).commit();
+
+                Toast.makeText(getContext(), "Ingredient Delete Successful", Toast.LENGTH_LONG).show();
+            }
+        });
 
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this.getContext(),
                 R.array.units_array, R.layout.ingredient_unit_item);
@@ -128,7 +156,7 @@ public class AddEditIngredientFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         return builder
                 .setView(view)
-                .setTitle("Add/Edit Entry")
+                .setTitle(title)
                 .setNegativeButton("Cancel",null)
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
