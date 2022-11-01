@@ -98,13 +98,27 @@ public class AddEditIngredientFragment extends DialogFragment {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                IngredientController controller = new IngredientController();
-                controller.removeIngredient(currentIngredient);
 
-                Fragment frag = getActivity().getSupportFragmentManager().findFragmentByTag("EDIT");
-                getActivity().getSupportFragmentManager().beginTransaction().remove(frag).commit();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setMessage("Are you sure you want to delete this ingredient?")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                IngredientController controller = new IngredientController();
+                                controller.removeIngredient(currentIngredient);
 
-                Toast.makeText(getContext(), "Ingredient Delete Successful", Toast.LENGTH_LONG).show();
+                                Fragment frag = getActivity().getSupportFragmentManager().findFragmentByTag("EDIT");
+                                getActivity().getSupportFragmentManager().beginTransaction().remove(frag).commit();
+                                Toast.makeText(getContext(), "Ingredient Delete Successful", Toast.LENGTH_LONG).show();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
             }
         });
 
