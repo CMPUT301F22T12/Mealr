@@ -18,11 +18,13 @@
             android:padding="30dp"
             android:textSize="35dp"></EditText>
 
+
         <TextView
             android:id="@+id/prep_time_label"
             android:layout_width="166dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/edit_title"
+            android:layout_marginTop="26dp"
             android:paddingLeft="50dp"
             android:text="Prep Time"
             android:textSize="20dp" />
@@ -33,9 +35,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/edit_title"
-            android:layout_marginStart="82dp"
-            android:layout_marginLeft="82dp"
-            android:layout_marginTop="-9dp"
+            android:layout_marginStart="86dp"
+            android:layout_marginLeft="86dp"
+            android:layout_marginTop="21dp"
             android:layout_toEndOf="@+id/prep_time_label"
             android:layout_toRightOf="@+id/prep_time_label"
             android:hint="Prep Time"></EditText>
@@ -45,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="37dp"
             android:layout_below="@+id/prep_time_label"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="71dp"
             android:paddingLeft="50dp"
             android:text="Servings"
             android:textSize="20dp" />
@@ -55,8 +57,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/edit_prep_time"
-            android:layout_marginLeft="47dp"
-            android:layout_marginTop="-7dp"
+            android:layout_marginLeft="126dp"
+            android:layout_marginTop="59dp"
             android:layout_toRightOf="@+id/servings_label"
             android:hint="Servings"></EditText>
 
@@ -64,9 +66,9 @@
             android:id="@+id/comments_label"
             android:layout_width="wrap_content"
             android:layout_height="37dp"
-            android:paddingLeft="50dp"
             android:layout_below="@+id/servings_label"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="86dp"
+            android:paddingLeft="50dp"
             android:text="Comments"
             android:textSize="20dp" />
 
@@ -74,21 +76,19 @@
             android:id="@+id/edit_comments"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/edit_prep_time"
-            android:layout_marginLeft="120dp"
-            android:layout_marginTop="9dp"
+            android:layout_below="@+id/servings_label"
+            android:layout_marginLeft="105dp"
+            android:layout_marginTop="86dp"
             android:layout_toRightOf="@+id/comments_label"
             android:hint="Comments"></EditText>
-
-
 
         <TextView
             android:id="@+id/category_label"
             android:layout_width="wrap_content"
             android:layout_height="37dp"
             android:layout_below="@+id/comments_label"
+            android:layout_marginTop="89dp"
             android:paddingLeft="50dp"
-            android:layout_marginTop="12dp"
             android:text="Category"
             android:textSize="20dp" />
 
@@ -97,8 +97,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/edit_comments"
-            android:layout_marginLeft="117dp"
-            android:layout_marginTop="1dp"
+            android:layout_marginLeft="123dp"
+            android:layout_marginTop="83dp"
             android:layout_toRightOf="@+id/category_label"
             android:hint="category"></EditText>
 
