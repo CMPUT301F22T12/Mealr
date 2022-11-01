@@ -174,7 +174,7 @@ public class AddEditIngredientFragment extends DialogFragment {
                                            location.isEmpty() || amount.isEmpty() || category.isEmpty();
 
                         if (hasEmpty) {
-                            Toast.makeText(getContext(), "Add/Edit Rejected: Missing Field(s)",Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(),  title + " Rejected: Missing Field(s)",Toast.LENGTH_LONG).show();
                             return;
                         }
 
