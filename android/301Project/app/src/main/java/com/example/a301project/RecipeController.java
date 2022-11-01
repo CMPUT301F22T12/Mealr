@@ -10,7 +10,7 @@ public class RecipeController {
     private FirebaseFirestore db;
     private CollectionReference cr;
 
-    public RecipeController(ArrayList<Recipe> recipeDataList) {
+    public RecipeController() {
         this.db = FirebaseFirestore.getInstance();
         this.cr = db.collection("Recipe");
     }
