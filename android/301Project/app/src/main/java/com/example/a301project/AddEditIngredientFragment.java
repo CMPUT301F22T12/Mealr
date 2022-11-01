@@ -13,13 +13,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import java.lang.reflect.Array;
 import java.util.Calendar;
 
 public class AddEditIngredientFragment extends DialogFragment {
@@ -27,7 +32,7 @@ public class AddEditIngredientFragment extends DialogFragment {
     private EditText ingredientName;
     private EditText amountName;
     private EditText locationName;
-    private EditText unitName;
+    private Spinner unitName;
     private EditText bbdName;
     private EditText categoryName;
     private OnFragmentInteractionListener listener;
@@ -74,6 +79,24 @@ public class AddEditIngredientFragment extends DialogFragment {
         unitName = view.findViewById(R.id.edit_unit);
         categoryName = view.findViewById(R.id.edit_category);
 
+        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this.getContext(),
+                R.array.units_array, R.layout.ingredient_unit_item);
+
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        unitName.setAdapter(spinnerAdapter);
+        unitName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                unitName.setSelection(i);
+                currentIngredient.setUnit(adapterView.getItemAtPosition(i).toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
         bbdName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,7 +121,7 @@ public class AddEditIngredientFragment extends DialogFragment {
         ingredientName.setText(currentIngredient.getName());
         bbdName.setText(currentIngredient.getbbd());
         locationName.setText(currentIngredient.getLocation());
-        unitName.setText(currentIngredient.getUnit());
+        unitName.setSelection(spinnerAdapter.getPosition(currentIngredient.getUnit()));
         amountName.setText(currentIngredient.getAmount().toString());
         categoryName.setText(currentIngredient.getCategory());
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -114,7 +137,6 @@ public class AddEditIngredientFragment extends DialogFragment {
                         String bestbefore = AddEditIngredientFragment.this.bbdName.getText().toString();
                         String location = AddEditIngredientFragment.this.locationName.getText().toString();
                         String amount = AddEditIngredientFragment.this.amountName.getText().toString();
-                        String unit = AddEditIngredientFragment.this.unitName.getText().toString();
                         String category = AddEditIngredientFragment.this.categoryName.getText().toString();
                         Log.d(TAG, category);
                         Integer intAmount = Integer.valueOf(amount);
@@ -124,7 +146,6 @@ public class AddEditIngredientFragment extends DialogFragment {
                         currentIngredient.setBbd(bestbefore);
                         currentIngredient.setLocation(location);
                         currentIngredient.setAmount(intAmount);
-                        currentIngredient.setUnit(unit);
                         currentIngredient.setCategory(category);
 
                         listener.onConfirmPressed(currentIngredient, createNewIngredient);
