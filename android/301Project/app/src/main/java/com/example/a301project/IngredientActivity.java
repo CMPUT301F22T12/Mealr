@@ -45,8 +45,8 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
     private Switch sortSwitch;
     public int position = -1;
 
-    Button addButton;
-    Button removeButton;
+    private Button addButton;
+    private  Button removeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
