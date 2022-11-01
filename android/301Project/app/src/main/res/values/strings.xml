@@ -8,4 +8,16 @@
         <item>Ounces</item>
         <item>Cups</item>
     </string-array>
+
+    <string-array name="category_array">
+        <item>Fruit</item>
+        <item>Vegetable</item>
+        <item>Dairy</item>
+        <item>Protein</item>
+        <item>Sweets</item>
+        <item>Grain</item>
+        <item>Preserved</item>
+        <item>Seasoning</item>
+        <item>Condiments</item>
+    </string-array>
 </resources>
