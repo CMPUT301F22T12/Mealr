@@ -154,8 +154,17 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
                     String location = (String) doc.getData().get("Location");
                     String unit = (String) doc.getData().get("Unit");
 
-                    long amountL = (long) doc.getData().get("Amount");
-                    int amount = (int) amountL;
+                    // Get the amount. Firestore sometimes stores it as a double or as a long.
+                    // Do not know ahead of time which one, so use try catch.
+                    // TODO: Figure out a better solution than try-catch
+                    Double amount = null;
+                    try {
+                        Long amountL = (Long) doc.getData().get("Amount");
+                        amount = amountL.doubleValue();
+                    }
+                    catch(ClassCastException e) {
+                        amount = (Double) doc.getData().get("Amount");
+                    }
 
                     Ingredient newIngredient = new Ingredient(name,amount,bbd,location,unit,category);
                     newIngredient.setId(id);

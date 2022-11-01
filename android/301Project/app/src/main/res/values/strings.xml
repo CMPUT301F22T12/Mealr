@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">301Project</string>
+    <string-array name="units_array">
+        <item>Pieces</item>
+        <item>Slices</item>
+        <item>Grams</item>
+        <item>lbs</item>
+        <item>Ounces</item>
+        <item>Cups</item>
+    </string-array>
 </resources>
