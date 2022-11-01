@@ -32,7 +32,7 @@ public class AddEditIngredientFragment extends DialogFragment {
     // fragment used for adding and editing an ingredient
     private EditText ingredientName;
     private EditText amountName;
-    private EditText locationName;
+    private Spinner locationName;
     private Spinner unitName;
     private EditText bbdName;
     private Spinner categoryName;
@@ -98,12 +98,31 @@ public class AddEditIngredientFragment extends DialogFragment {
             }
         });
 
+        // Location spinner
+        ArrayAdapter<CharSequence> locationAdapter = ArrayAdapter.createFromResource(this.getContext(),
+                R.array.location_array, R.layout.ingredient_unit_item);
+        locationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        locationName.setAdapter(locationAdapter);
+        locationName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                locationName.setSelection(i);
+                currentIngredient.setLocation(adapterView.getItemAtPosition(i).toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+
         // Unit spinner
-        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this.getContext(),
+        ArrayAdapter<CharSequence> unitAdapter = ArrayAdapter.createFromResource(this.getContext(),
                 R.array.units_array, R.layout.ingredient_unit_item);
 
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        unitName.setAdapter(spinnerAdapter);
+        unitAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        unitName.setAdapter(unitAdapter);
         unitName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -140,8 +159,8 @@ public class AddEditIngredientFragment extends DialogFragment {
         // set EditText boxes to the specific fields of the current selected Food
         ingredientName.setText(currentIngredient.getName());
         bbdName.setText(currentIngredient.getbbd());
-        locationName.setText(currentIngredient.getLocation());
-        unitName.setSelection(spinnerAdapter.getPosition(currentIngredient.getUnit()));
+        locationName.setSelection(locationAdapter.getPosition(currentIngredient.getLocation()));
+        unitName.setSelection(unitAdapter.getPosition(currentIngredient.getUnit()));
         amountName.setText(currentIngredient.getAmount().toString());
         categoryName.setSelection(categoryAdapter.getPosition(currentIngredient.getCategory()));
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -155,13 +174,11 @@ public class AddEditIngredientFragment extends DialogFragment {
                         // retrieve text from the text boxes
                         String ingredientName = AddEditIngredientFragment.this.ingredientName.getText().toString();
                         String bestbefore = AddEditIngredientFragment.this.bbdName.getText().toString();
-                        String location = AddEditIngredientFragment.this.locationName.getText().toString();
                         String amount = AddEditIngredientFragment.this.amountName.getText().toString();
                         Double doubleAmount = Double.valueOf(amount);
 
                         // check if any field is empty
-                        boolean hasEmpty = ingredientName.isEmpty() || bestbefore.isEmpty() ||
-                                           location.isEmpty() || amount.isEmpty();
+                        boolean hasEmpty = ingredientName.isEmpty() || bestbefore.isEmpty() || amount.isEmpty();
 
                         if (hasEmpty) {
                             Toast.makeText(getContext(), "Add/Edit Rejected: Missing Field(s)",Toast.LENGTH_LONG).show();
@@ -171,7 +188,6 @@ public class AddEditIngredientFragment extends DialogFragment {
                         // set the name of the current food as the edited fields
                         currentIngredient.setName(ingredientName);
                         currentIngredient.setBbd(bestbefore);
-                        currentIngredient.setLocation(location);
                         currentIngredient.setAmount(doubleAmount);
 
                         listener.onConfirmPressed(currentIngredient, createNewIngredient);
