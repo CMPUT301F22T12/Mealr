@@ -35,7 +35,7 @@ public class AddEditIngredientFragment extends DialogFragment {
     private EditText locationName;
     private Spinner unitName;
     private EditText bbdName;
-    private EditText categoryName;
+    private Spinner categoryName;
     private OnFragmentInteractionListener listener;
     private DatePickerDialog.OnDateSetListener setListener;
 
@@ -80,6 +80,25 @@ public class AddEditIngredientFragment extends DialogFragment {
         unitName = view.findViewById(R.id.edit_unit);
         categoryName = view.findViewById(R.id.edit_category);
 
+        // Category spinner
+        ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(this.getContext(),
+                R.array.category_array, R.layout.ingredient_unit_item);
+        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categoryName.setAdapter(categoryAdapter);
+        categoryName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                categoryName.setSelection(i);
+                currentIngredient.setCategory(adapterView.getItemAtPosition(i).toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        // Unit spinner
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this.getContext(),
                 R.array.units_array, R.layout.ingredient_unit_item);
 
@@ -124,7 +143,7 @@ public class AddEditIngredientFragment extends DialogFragment {
         locationName.setText(currentIngredient.getLocation());
         unitName.setSelection(spinnerAdapter.getPosition(currentIngredient.getUnit()));
         amountName.setText(currentIngredient.getAmount().toString());
-        categoryName.setText(currentIngredient.getCategory());
+        categoryName.setSelection(categoryAdapter.getPosition(currentIngredient.getCategory()));
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         return builder
                 .setView(view)
@@ -138,12 +157,11 @@ public class AddEditIngredientFragment extends DialogFragment {
                         String bestbefore = AddEditIngredientFragment.this.bbdName.getText().toString();
                         String location = AddEditIngredientFragment.this.locationName.getText().toString();
                         String amount = AddEditIngredientFragment.this.amountName.getText().toString();
-                        String category = AddEditIngredientFragment.this.categoryName.getText().toString();
-                        Log.d(TAG, category);
                         Double doubleAmount = Double.valueOf(amount);
 
+                        // check if any field is empty
                         boolean hasEmpty = ingredientName.isEmpty() || bestbefore.isEmpty() ||
-                                           location.isEmpty() || amount.isEmpty() || category.isEmpty();
+                                           location.isEmpty() || amount.isEmpty();
 
                         if (hasEmpty) {
                             Toast.makeText(getContext(), "Add/Edit Rejected: Missing Field(s)",Toast.LENGTH_LONG).show();
@@ -155,7 +173,6 @@ public class AddEditIngredientFragment extends DialogFragment {
                         currentIngredient.setBbd(bestbefore);
                         currentIngredient.setLocation(location);
                         currentIngredient.setAmount(doubleAmount);
-                        currentIngredient.setCategory(category);
 
                         listener.onConfirmPressed(currentIngredient, createNewIngredient);
                     }
