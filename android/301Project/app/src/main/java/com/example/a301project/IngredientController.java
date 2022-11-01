@@ -75,7 +75,7 @@ public class IngredientController {
      */
     public void addIngredient(Ingredient ingredient) {
         // get all required values
-        int amount = ingredient.getAmount();
+        double amount = ingredient.getAmount();
         String bestBefore = ingredient.getbbd();
         String category = ingredient.getCategory();
         String location = ingredient.getLocation();

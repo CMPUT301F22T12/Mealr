@@ -13,7 +13,7 @@ public class Ingredient implements Serializable {
     private String bbd;
     private String category;
     private String unit;
-    private int amount;
+    private double amount;
 
     /**
      * Makes an {@link Ingredient} object from the given parameters
@@ -24,7 +24,7 @@ public class Ingredient implements Serializable {
      * @param unit {@link String} The unit the object uses
      * @param category {@link String} The object's category
      */
-    public Ingredient(String name, int amount, String bbd, String location, String unit, String category) {
+    public Ingredient(String name, double amount, String bbd, String location, String unit, String category) {
         // constructor
         this.name = name;
         this.location = location;
@@ -62,7 +62,7 @@ public class Ingredient implements Serializable {
      * Gets the {@link Ingredient} object's amount
      * @return The amount of the object (as an {@link Integer}
      */
-    public Integer getAmount() {return this.amount;}
+    public Double getAmount() {return this.amount;}
 
     /**
      * Gets the {@link Ingredient} object's unit
@@ -120,7 +120,7 @@ public class Ingredient implements Serializable {
      * Sets the {@link Ingredient} object's amount (as an integer)
      * @param amount The {@link Ingredient} object's amount is set to this value
      */
-    public void setAmount(Integer amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 

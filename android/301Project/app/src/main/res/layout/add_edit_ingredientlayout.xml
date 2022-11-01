@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:gravity="center_horizontal"
+        android:hint="Ingredient Name"
         android:inputType="textPersonName"
         android:padding="15dp"
         android:text="Name"
@@ -36,7 +37,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:ems="10"
-            android:inputType="number"
+            android:hint="Amount"
+            android:inputType="numberDecimal"
             android:text="Name" />
     </LinearLayout>
 
@@ -61,6 +63,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:ems="10"
+            android:hint="Category"
             android:inputType="textPersonName"
             android:text="Name" />
     </LinearLayout>
@@ -90,6 +93,7 @@
             android:ems="10"
             android:focusable="false"
             android:focusableInTouchMode="false"
+            android:hint="Best Before Date"
             android:inputType="textPersonName"
             android:text="Name" />
     </LinearLayout>
@@ -115,6 +119,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:ems="10"
+            android:hint="Location"
             android:inputType="textPersonName"
             android:text="Name" />
     </LinearLayout>

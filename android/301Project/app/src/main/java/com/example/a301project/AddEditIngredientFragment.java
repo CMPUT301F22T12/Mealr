@@ -19,6 +19,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -139,13 +140,21 @@ public class AddEditIngredientFragment extends DialogFragment {
                         String amount = AddEditIngredientFragment.this.amountName.getText().toString();
                         String category = AddEditIngredientFragment.this.categoryName.getText().toString();
                         Log.d(TAG, category);
-                        Integer intAmount = Integer.valueOf(amount);
+                        Double doubleAmount = Double.valueOf(amount);
+
+                        boolean hasEmpty = ingredientName.isEmpty() || bestbefore.isEmpty() ||
+                                           location.isEmpty() || amount.isEmpty() || category.isEmpty();
+
+                        if (hasEmpty) {
+                            Toast.makeText(getContext(), "Add/Edit Rejected: Missing Field(s)",Toast.LENGTH_LONG).show();
+                            return;
+                        }
 
                         // set the name of the current food as the edited fields
                         currentIngredient.setName(ingredientName);
                         currentIngredient.setBbd(bestbefore);
                         currentIngredient.setLocation(location);
-                        currentIngredient.setAmount(intAmount);
+                        currentIngredient.setAmount(doubleAmount);
                         currentIngredient.setCategory(category);
 
                         listener.onConfirmPressed(currentIngredient, createNewIngredient);
