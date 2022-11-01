@@ -1,9 +1,17 @@
 package com.example.a301project;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class RecipeController {
@@ -13,6 +21,43 @@ public class RecipeController {
     public RecipeController(ArrayList<Recipe> recipeDataList) {
         this.db = FirebaseFirestore.getInstance();
         this.cr = db.collection("Recipe");
+    }
+
+    public void addRecipe(Recipe recipe) {
+        String title = recipe.getTitle();
+        String category = recipe.getCategory();
+        String comments = recipe.getComments();
+        Long prepTime = recipe.getPrepTime();
+        Long servings = recipe.getServings();
+
+        String photo = "";
+        ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
+
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("Title", title);
+        data.put("Category", category);
+        data.put("Comments", comments);
+        data.put("Ingredients", ingredients);
+        data.put("Photo", photo);
+        data.put("PrepTime", prepTime);
+        data.put("Servings", servings);
+
+        cr
+                .add(data)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        String id = documentReference.getId();
+                        Log.d("Added", "Added document with ID: "+ id);
+                        recipe.setId(id);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("ERROR", "Error adding document", e);
+                    }
+                });
     }
 
     /**
@@ -44,5 +89,19 @@ public class RecipeController {
 
     public interface successHandler {
         void f(ArrayList<Recipe> r);
+    }
+
+    public void notifyUpdate(Recipe recipe) {
+        Map<String,Object> userMap = new HashMap<>();
+        userMap.put("Title",recipe.getTitle());
+        userMap.put("Category",recipe.getCategory());
+        userMap.put("Comments",recipe.getComments());
+        userMap.put("Ingredients",recipe.getIngredients());
+        userMap.put("Photo", recipe.getPhoto());
+        userMap.put("Servings", recipe.getServings());
+        userMap.put("PrepTime", recipe.getPrepTime());
+        db.collection("Recipe")
+                .document(recipe.getId())
+                .update(userMap);
     }
 }

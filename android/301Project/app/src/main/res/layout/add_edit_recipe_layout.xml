@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="670dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/edit_title"
+            android:layout_width="400dp"
+            android:layout_height="97dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:hint="Recipe Name"
+            android:padding="30dp"
+            android:textSize="35dp"></EditText>
+
+        <TextView
+            android:id="@+id/prep_time_label"
+            android:layout_width="166dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edit_title"
+            android:paddingLeft="50dp"
+            android:text="Prep Time"
+            android:textSize="20dp" />
+
+
+        <EditText
+            android:id="@+id/edit_prep_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edit_title"
+            android:layout_marginStart="82dp"
+            android:layout_marginLeft="82dp"
+            android:layout_marginTop="-9dp"
+            android:layout_toEndOf="@+id/prep_time_label"
+            android:layout_toRightOf="@+id/prep_time_label"
+            android:hint="Prep Time"></EditText>
+
+        <TextView
+            android:id="@+id/servings_label"
+            android:layout_width="wrap_content"
+            android:layout_height="37dp"
+            android:layout_below="@+id/prep_time_label"
+            android:layout_marginTop="12dp"
+            android:paddingLeft="50dp"
+            android:text="Servings"
+            android:textSize="20dp" />
+
+        <EditText
+            android:id="@+id/edit_servings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edit_prep_time"
+            android:layout_marginLeft="47dp"
+            android:layout_marginTop="-7dp"
+            android:layout_toRightOf="@+id/servings_label"
+            android:hint="Servings"></EditText>
+
+        <TextView
+            android:id="@+id/comments_label"
+            android:layout_width="wrap_content"
+            android:layout_height="37dp"
+            android:paddingLeft="50dp"
+            android:layout_below="@+id/servings_label"
+            android:layout_marginTop="12dp"
+            android:text="Comments"
+            android:textSize="20dp" />
+
+        <EditText
+            android:id="@+id/edit_comments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edit_prep_time"
+            android:layout_marginLeft="120dp"
+            android:layout_marginTop="9dp"
+            android:layout_toRightOf="@+id/comments_label"
+            android:hint="Comments"></EditText>
+
+
+
+        <TextView
+            android:id="@+id/category_label"
+            android:layout_width="wrap_content"
+            android:layout_height="37dp"
+            android:layout_below="@+id/comments_label"
+            android:paddingLeft="50dp"
+            android:layout_marginTop="12dp"
+            android:text="Category"
+            android:textSize="20dp" />
+
+        <EditText
+            android:id="@+id/edit_category_recipe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edit_comments"
+            android:layout_marginLeft="117dp"
+            android:layout_marginTop="1dp"
+            android:layout_toRightOf="@+id/category_label"
+            android:hint="category"></EditText>
+
+
+    </RelativeLayout>
+</FrameLayout>
