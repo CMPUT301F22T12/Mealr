@@ -20,7 +20,7 @@ public class RecipeActivity extends NavActivity {
     private ListView listView;
     private ArrayAdapter<Recipe> recipeArrayAdapter;
     private ArrayList<Recipe> recipeDataList = new ArrayList<>();
-    private RecipeController controller = new RecipeController(recipeDataList);
+    private RecipeController controller = new RecipeController();
     final String[] sortOptions = {"Title", "Prep Time", "Servings", "Category"};
     private Spinner sortSpinner;
     private Switch sortSwitch;
