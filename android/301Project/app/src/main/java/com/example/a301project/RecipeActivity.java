@@ -26,6 +26,7 @@ public class RecipeActivity extends NavActivity implements AddEditRecipeFragment
     private Spinner sortSpinner;
     private Switch sortSwitch;
     Button addButton;
+    public int position = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +76,15 @@ public class RecipeActivity extends NavActivity implements AddEditRecipeFragment
             }
         });
         sortDataBySpinner();
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                position = i;
+                Recipe selected = (Recipe) adapterView.getItemAtPosition(i);
+                AddEditRecipeFragment.newInstance(recipeArrayAdapter.getItem(position), false).show(getSupportFragmentManager(), "EDIT");
+            }
+        });
+
     }
 
     /**

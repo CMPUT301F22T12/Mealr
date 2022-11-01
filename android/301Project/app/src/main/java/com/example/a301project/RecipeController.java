@@ -81,6 +81,7 @@ public class RecipeController {
                         (Long) data.get("Servings"),
                         new ArrayList<>()
                 );
+                r.setId(doc.getId());
                 res.add(r);
             });
             s.f(res);
@@ -100,8 +101,9 @@ public class RecipeController {
         userMap.put("Photo", recipe.getPhoto());
         userMap.put("Servings", recipe.getServings());
         userMap.put("PrepTime", recipe.getPrepTime());
+        String id = recipe.getId();
         db.collection("Recipe")
-                .document(recipe.getId())
+                .document(id)
                 .update(userMap);
     }
 }
