@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -16,7 +17,7 @@ import java.util.Collections;
 /**
  * Renders the recipes for the user and allows them to modify or add them
  */
-public class RecipeActivity extends NavActivity {
+public class RecipeActivity extends NavActivity implements AddEditRecipeFragment.OnFragmentInteractionListener {
     private ListView listView;
     private ArrayAdapter<Recipe> recipeArrayAdapter;
     private ArrayList<Recipe> recipeDataList = new ArrayList<>();
@@ -24,6 +25,7 @@ public class RecipeActivity extends NavActivity {
     final String[] sortOptions = {"Title", "Prep Time", "Servings", "Category"};
     private Spinner sortSpinner;
     private Switch sortSwitch;
+    Button addButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +33,9 @@ public class RecipeActivity extends NavActivity {
         // We have to put our layout in the space for the content
         ViewGroup content = findViewById(R.id.nav_content);
         getLayoutInflater().inflate(R.layout.activity_recipe, content, true);
-
+        addButton = findViewById(R.id.add_recipe_button);
         // Set the correct button to be selected
         bottomNav.getMenu().findItem(R.id.action_recipes).setChecked(true);
-
         // Fetch the data
         controller.getRecipes(res -> setRecipeDataList(res));
 
@@ -57,6 +58,13 @@ public class RecipeActivity extends NavActivity {
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
+            }
+        });
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Recipe newRecipe = new Recipe("","","","", 0L, 0L,new ArrayList<>());
+                AddEditRecipeFragment.newInstance(newRecipe,true).show(getSupportFragmentManager(),"ADD");
             }
         });
         sortSwitch.setChecked(true);
@@ -104,6 +112,22 @@ public class RecipeActivity extends NavActivity {
                 }
         );
 
+        recipeArrayAdapter.notifyDataSetChanged();
+    }
+
+    public void addRecipe(Recipe recipe) {
+        recipeArrayAdapter.add(recipe);
+        controller.addRecipe(recipe);
+    }
+
+    @Override
+    public void onConfirmPressed(Recipe recipe, boolean createNewRecipe) {
+        if (createNewRecipe) {
+            addRecipe(recipe);
+        }
+        else {
+            controller.notifyUpdate(recipe);
+        }
         recipeArrayAdapter.notifyDataSetChanged();
     }
 }

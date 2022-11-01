@@ -1,8 +1,9 @@
 package com.example.a301project;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Recipe {
+public class Recipe implements Serializable {
     private String title;
     private String category;
     private String comments;
@@ -10,6 +11,7 @@ public class Recipe {
     private Long prepTime;
     private Long servings;
     private ArrayList<Ingredient> ingredients;
+    private String id = null;
 
     public Recipe(String title, String category, String comments, String photo, Long prepTime, Long servings, ArrayList<Ingredient> ingredients) {
         this.title = title;
@@ -75,5 +77,13 @@ public class Recipe {
 
     public void setIngredients(ArrayList<Ingredient> ingredients) {
         this.ingredients = ingredients;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return this.id;
     }
 }
