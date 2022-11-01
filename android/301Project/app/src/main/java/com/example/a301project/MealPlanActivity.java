@@ -35,8 +35,6 @@ public class MealPlanActivity extends NavActivity {
             );
         }
 
-        Log.i("day", String.valueOf(mealPlanDataList));
-
         // Attach to listview
         mealPlanArrayAdapter = new MealPlanListAdapter(this, mealPlanDataList);
         listView = findViewById(R.id.mealPlanListView);
