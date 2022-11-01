@@ -3,18 +3,24 @@ package com.example.a301project;
 import static android.content.ContentValues.TAG;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+
+import java.util.Calendar;
 
 public class AddEditIngredientFragment extends DialogFragment {
     // fragment used for adding and editing an ingredient
@@ -25,6 +31,7 @@ public class AddEditIngredientFragment extends DialogFragment {
     private EditText bbdName;
     private EditText categoryName;
     private OnFragmentInteractionListener listener;
+    private DatePickerDialog.OnDateSetListener setListener;
 
     public interface OnFragmentInteractionListener {
         void onConfirmPressed(Ingredient currentIngredient, boolean createNewIngredient);
@@ -48,6 +55,11 @@ public class AddEditIngredientFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.add_edit_ingredientlayout, null);
 
+        Calendar calendar = Calendar.getInstance();
+        final int year = calendar.get(Calendar.YEAR);
+        final int month = calendar.get(Calendar.MONTH);
+        final int day = calendar.get(Calendar.DAY_OF_MONTH);
+
         Bundle bundle = getArguments();
         if (bundle != null) {
             currentIngredient = (Ingredient) bundle.get("ingredient");
@@ -61,6 +73,26 @@ public class AddEditIngredientFragment extends DialogFragment {
         amountName = view.findViewById(R.id.edit_amount);
         unitName = view.findViewById(R.id.edit_unit);
         categoryName = view.findViewById(R.id.edit_category);
+
+        bbdName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatePickerDialog datePicker = new DatePickerDialog(
+                        getActivity(), android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                        setListener, year, month, day);
+                datePicker.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                datePicker.show();
+            }
+        });
+
+        setListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+                month = month + 1;
+                String date = year + "-" + String.format("%02d", month) + "-" + String.format("%02d", dayOfMonth);
+                bbdName.setText(date);
+            }
+        };
 
         // set EditText boxes to the specific fields of the current selected Food
         ingredientName.setText(currentIngredient.getName());
@@ -94,7 +126,6 @@ public class AddEditIngredientFragment extends DialogFragment {
                         currentIngredient.setAmount(intAmount);
                         currentIngredient.setUnit(unit);
                         currentIngredient.setCategory(category);
-
 
                         listener.onConfirmPressed(currentIngredient, createNewIngredient);
                     }

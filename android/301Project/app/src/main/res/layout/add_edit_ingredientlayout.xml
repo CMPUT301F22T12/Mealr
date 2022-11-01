@@ -38,7 +38,8 @@
             android:layout_marginTop="-9dp"
             android:layout_toEndOf="@+id/amount_label"
             android:layout_toRightOf="@+id/amount_label"
-            android:hint="integer"></EditText>
+            android:hint="Amount"
+            android:inputType="number"></EditText>
 
         <TextView
             android:id="@+id/bbd_label"
@@ -58,7 +59,11 @@
             android:layout_marginLeft="47dp"
             android:layout_marginTop="-7dp"
             android:layout_toRightOf="@+id/bbd_label"
-            android:hint="best before"></EditText>
+            android:clickable="false"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:hint="Best Before"></EditText>
 
         <TextView
             android:id="@+id/location_label"
@@ -78,7 +83,7 @@
             android:layout_marginLeft="120dp"
             android:layout_marginTop="9dp"
             android:layout_toRightOf="@+id/location_label"
-            android:hint="location"></EditText>
+            android:hint="Location"></EditText>
 
         <TextView
             android:id="@+id/unit_label"
@@ -98,7 +103,7 @@
             android:layout_marginLeft="163dp"
             android:layout_marginTop="0dp"
             android:layout_toRightOf="@+id/unit_label"
-            android:hint="unit"></EditText>
+            android:hint="Unit"></EditText>
 
         <TextView
             android:id="@+id/category_label"
@@ -118,7 +123,7 @@
             android:layout_marginLeft="117dp"
             android:layout_marginTop="1dp"
             android:layout_toRightOf="@+id/category_label"
-            android:hint="category"></EditText>
+            android:hint="Category"></EditText>
 
 
     </RelativeLayout>
