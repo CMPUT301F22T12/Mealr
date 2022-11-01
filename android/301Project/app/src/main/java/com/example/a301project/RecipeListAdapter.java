@@ -42,7 +42,7 @@ public class RecipeListAdapter extends ArrayAdapter<Recipe> {
 
         // Set the text
         titleTV.setText(r.getTitle());
-        prepTimeTV.setText(Math.floorDiv(r.getPrepTime(), 60) + " min");
+        prepTimeTV.setText(r.getPrepTime() + " min");
         servingsTV.setText(r.getServings().toString() + " Servings");
         categoryTV.setText(r.getCategory());
 
