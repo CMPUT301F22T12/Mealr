@@ -35,9 +35,9 @@ import java.util.Map;
  */
 public class IngredientController {
     // connect to firebase and handles add and delete
-    String collectionName = "Ingredient";
-    FirebaseFirestore db;
-    final CollectionReference collectionReference;
+    private String collectionName = "Ingredient";
+    private FirebaseFirestore db;
+    private CollectionReference collectionReference;
 
     /**
      * The constructor for the {@link IngredientController}. Sets up the {@link #db} and {@link #collectionReference}

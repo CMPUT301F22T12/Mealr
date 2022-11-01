@@ -17,12 +17,12 @@ public class Ingredient implements Serializable {
 
     /**
      * Makes an {@link Ingredient} object from the given parameters
-     * @param name The name of the object
-     * @param amount The amount of the object
-     * @param bbd The best before date of the object
-     * @param location The location of the object
-     * @param unit The unit the object uses
-     * @param category The object's category
+     * @param name {@link String} The name of the object
+     * @param amount {@link Integer} The amount of the object
+     * @param bbd {@link String} The best before date of the object
+     * @param location {@link String} The location of the object
+     * @param unit {@link String} The unit the object uses
+     * @param category {@link String} The object's category
      */
     public Ingredient(String name, int amount, String bbd, String location, String unit, String category) {
         // constructor
@@ -38,43 +38,43 @@ public class Ingredient implements Serializable {
      * Gets the {@link Ingredient} object's ID
      * @return The ID of the object
      */
-    String getId() {return this.id;}
+    public String getId() {return this.id;}
 
     /**
      * Gets the {@link Ingredient} object's name
      * @return The name of the object
      */
-    String getName() {return this.name;}
+    public String getName() {return this.name;}
 
     /**
      * Gets the {@link Ingredient} object's best before date
      * @return The best before date of the object
      */
-    String getbbd() {return this.bbd;}
+    public String getbbd() {return this.bbd;}
 
     /**
      * Gets the {@link Ingredient} object's location
      * @return The location of the object
      */
-    String getLocation() {return this.location;}
+    public String getLocation() {return this.location;}
 
     /**
      * Gets the {@link Ingredient} object's amount
      * @return The amount of the object (as an {@link Integer}
      */
-    Integer getAmount() {return this.amount;}
+    public Integer getAmount() {return this.amount;}
 
     /**
      * Gets the {@link Ingredient} object's unit
      * @return The unit of the object
      */
-    String getUnit() {return this.unit;}
+    public String getUnit() {return this.unit;}
 
     /**
      * Gets the {@link Ingredient} object's category
      * @return The category of the object
      */
-    String getCategory() {return this.category;}
+    public String getCategory() {return this.category;}
 
     // setters used to edit attributes for existing food object
 
@@ -108,7 +108,11 @@ public class Ingredient implements Serializable {
      */
     public void setLocation(String location) {this.location = location;}
 
-    public void setUnit(String unit) {
+    /**
+     * Sets the {@link Ingredient} object's unit
+     * @param unit {@link String }The unit of the {@link Ingredient}
+     */
+    protected void setUnit(String unit) {
         this.unit = unit;
     }
 
