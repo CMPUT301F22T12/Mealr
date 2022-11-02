@@ -10,7 +10,7 @@ public class ShoppingItem extends Ingredient{
      * @param unit     The unit the object uses
      * @param category The object's category
      */
-    public ShoppingItem(String name, int amount, String unit, String category) {
+    public ShoppingItem(String name, double amount, String unit, String category) {
         super(name, amount, null, null, unit, category);
     }
 }
