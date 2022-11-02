@@ -26,14 +26,13 @@ public class RecipeController {
             ArrayList<Recipe> res = new ArrayList<>();
 
             queryDocumentSnapshots.forEach(doc -> {
-                Map<String, Object> data = doc.getData();
                 Recipe r = new Recipe(
-                        (String) data.get("Title"),
-                        (String) data.get("Category"),
-                        (String) data.get("Comments"),
-                        (String) data.get("Photo"),
-                        (Long) data.get("PrepTime"),
-                        (Long) data.get("Servings"),
+                        doc.getString("Title"),
+                        doc.getString("Category"),
+                        doc.getString("Comments"),
+                        doc.getString("Photo"),
+                        doc.getLong("PrepTime"),
+                        doc.getLong("Servings"),
                         new ArrayList<>()
                 );
                 res.add(r);

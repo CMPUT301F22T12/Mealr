@@ -141,33 +141,20 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 dataList.clear();
                 for(QueryDocumentSnapshot doc: value) {
-                    String id = doc.getId();
-                    String name = (String) doc.getData().get("Name");
-
-                    Timestamp timestamp = (Timestamp) doc.getData().get("BestBeforeDate");
-                    Date date = timestamp.toDate();
+                    Date date = doc.getDate("BestBeforeDate");
                     String pattern = "yyyy-MM-dd";
                     DateFormat df = new SimpleDateFormat(pattern);
                     String bbd = df.format(date);
 
-                    String category = (String) doc.getData().get("Category");
-                    String location = (String) doc.getData().get("Location");
-                    String unit = (String) doc.getData().get("Unit");
-
-                    // Get the amount. Firestore sometimes stores it as a double or as a long.
-                    // Do not know ahead of time which one, so use try catch.
-                    // TODO: Figure out a better solution than try-catch
-                    Double amount = null;
-                    try {
-                        Long amountL = (Long) doc.getData().get("Amount");
-                        amount = amountL.doubleValue();
-                    }
-                    catch(ClassCastException e) {
-                        amount = (Double) doc.getData().get("Amount");
-                    }
-
-                    Ingredient newIngredient = new Ingredient(name,amount,bbd,location,unit,category);
-                    newIngredient.setId(id);
+                    Ingredient newIngredient = new Ingredient(
+                            doc.getString("Name"),
+                            doc.getDouble("Amount"),
+                            bbd,
+                            doc.getString("Location"),
+                            doc.getString("Unit"),
+                            doc.getString("Category")
+                    );
+                    newIngredient.setId(doc.getId());
 
                     dataList.add(newIngredient);
                 }
