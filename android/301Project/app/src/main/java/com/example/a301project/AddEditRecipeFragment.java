@@ -28,6 +28,7 @@ public class AddEditRecipeFragment extends DialogFragment {
 
     public interface OnFragmentInteractionListener {
         void onConfirmPressed(Recipe currentRecipe, boolean createNewRecipe);
+        void onDeleteConfirmed(Recipe currentRecipe);
     }
 
     @Override
@@ -75,7 +76,7 @@ public class AddEditRecipeFragment extends DialogFragment {
                             public void onClick(DialogInterface dialog, int id) {
                                 RecipeController controller = new RecipeController();
                                 controller.removeRecipe(currentRecipe);
-
+                                listener.onDeleteConfirmed(currentRecipe);
                                 Fragment frag = getActivity().getSupportFragmentManager().findFragmentByTag("EDIT");
                                 getActivity().getSupportFragmentManager().beginTransaction().remove(frag).commit();
                                 Toast.makeText(getContext(), "Recipe Delete Successful", Toast.LENGTH_LONG).show();

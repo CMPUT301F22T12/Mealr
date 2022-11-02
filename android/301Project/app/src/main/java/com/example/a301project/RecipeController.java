@@ -68,6 +68,7 @@ public class RecipeController {
                     @Override
                     public void onSuccess(Void unused) {
                         Log.d("ContentValues", "Successfully deleted recipe with ID: " + id);
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

@@ -61,6 +61,7 @@ public class RecipeActivity extends NavActivity implements AddEditRecipeFragment
 
             }
         });
+        recipeArrayAdapter.notifyDataSetChanged();
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -139,5 +140,10 @@ public class RecipeActivity extends NavActivity implements AddEditRecipeFragment
             controller.notifyUpdate(recipe);
         }
         recipeArrayAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDeleteConfirmed(Recipe currentRecipe) {
+        recipeArrayAdapter.remove(currentRecipe);
     }
 }
