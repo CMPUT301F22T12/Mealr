@@ -29,11 +29,24 @@ public class ShoppingListController {
         cr.get().addOnSuccessListener(queryDocumentSnapshots -> {
             ArrayList<ShoppingItem> res = new ArrayList<>();
 
+
             queryDocumentSnapshots.forEach(doc -> {
                 Map<String, Object> data = doc.getData();
+
+                // Same fix as with the ingredient controller.
+                // TODO: Figure out a way to not use try except for this conversion
+                Double amount;
+                try {
+                    Long amountL = (Long) doc.getData().get("Amount");
+                    amount = amountL.doubleValue();
+                }
+                catch(ClassCastException e) {
+                    amount = (Double) doc.getData().get("Amount");
+                }
+
                 ShoppingItem item = new ShoppingItem(
                         (String) data.get("Name"),
-                        Math.toIntExact((Long) data.get("Amount")),
+                        amount,
                         (String) data.get("Unit"),
                         (String) data.get("Category")
                 );
