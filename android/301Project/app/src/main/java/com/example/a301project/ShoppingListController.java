@@ -1,5 +1,7 @@
 package com.example.a301project;
 
+import android.util.Log;
+
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -29,13 +31,13 @@ public class ShoppingListController {
         cr.get().addOnSuccessListener(queryDocumentSnapshots -> {
             ArrayList<ShoppingItem> res = new ArrayList<>();
 
+
             queryDocumentSnapshots.forEach(doc -> {
-                Map<String, Object> data = doc.getData();
                 ShoppingItem item = new ShoppingItem(
-                        (String) data.get("Name"),
-                        Math.toIntExact((Long) data.get("Amount")),
-                        (String) data.get("Unit"),
-                        (String) data.get("Category")
+                        doc.getString("Name"),
+                        doc.getDouble("Amount"),
+                        doc.getString("Unit"),
+                        doc.getString("Category")
                 );
                 res.add(item);
             });

@@ -20,4 +20,14 @@
         <item>Seasoning</item>
         <item>Condiments</item>
     </string-array>
+
+    <string-array name="location_array">
+        <item>Fridge</item>
+        <item>Freezer</item>
+        <item>Pantry</item>
+        <item>Kitchen Cupboard</item>
+        <item>Kitchen Shelf</item>
+        <item>Cabinet</item>
+        <item>Cardboard box by the door</item>
+    </string-array>
 </resources>
