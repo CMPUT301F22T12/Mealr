@@ -60,6 +60,24 @@ public class RecipeController {
                 });
     }
 
+    public void removeRecipe(Recipe recipe) {
+        String id = recipe.getId();
+        db.collection("Recipe").document(id)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d("ContentValues", "Successfully deleted recipe with ID: " + id);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("ContentValues", "Could not delete document with ID: " + id, e);
+                    }
+                });
+    }
+
     /**
      * Gets all recipes from Firebase
      *

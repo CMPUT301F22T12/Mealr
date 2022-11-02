@@ -8,11 +8,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 
 public class AddEditRecipeFragment extends DialogFragment {
     private EditText category;
@@ -21,6 +24,7 @@ public class AddEditRecipeFragment extends DialogFragment {
     private EditText servings;
     private EditText prepTime;
     private AddEditRecipeFragment.OnFragmentInteractionListener listener;
+    private Button deleteButton;
 
     public interface OnFragmentInteractionListener {
         void onConfirmPressed(Recipe currentRecipe, boolean createNewRecipe);
@@ -55,6 +59,37 @@ public class AddEditRecipeFragment extends DialogFragment {
         title = view.findViewById(R.id.edit_title);
         servings = view.findViewById(R.id.edit_servings);
         prepTime = view.findViewById(R.id.edit_prep_time);
+        deleteButton = view.findViewById(R.id.delete_recipe_button);
+
+        if (this.getTag().equals("ADD")) {
+            deleteButton.setVisibility(View.GONE);
+        }
+
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setMessage("Are you sure you want to delete this Recipe?")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                RecipeController controller = new RecipeController();
+                                controller.removeRecipe(currentRecipe);
+
+                                Fragment frag = getActivity().getSupportFragmentManager().findFragmentByTag("EDIT");
+                                getActivity().getSupportFragmentManager().beginTransaction().remove(frag).commit();
+                                Toast.makeText(getContext(), "Recipe Delete Successful", Toast.LENGTH_LONG).show();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+        });
 
         category.setText(currentRecipe.getTitle());
         comments.setText(currentRecipe.getComments());

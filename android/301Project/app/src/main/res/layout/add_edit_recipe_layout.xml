@@ -103,5 +103,15 @@
             android:hint="category"></EditText>
 
 
+        <Button
+            android:id="@+id/delete_recipe_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edit_category_recipe"
+            android:layout_marginTop="24dp"
+            android:layout_weight="1"
+            android:text="Delete" />
+
+
     </RelativeLayout>
 </FrameLayout>
