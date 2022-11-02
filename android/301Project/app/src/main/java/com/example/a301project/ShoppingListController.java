@@ -1,5 +1,7 @@
 package com.example.a301project;
 
+import android.util.Log;
+
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -31,24 +33,11 @@ public class ShoppingListController {
 
 
             queryDocumentSnapshots.forEach(doc -> {
-                Map<String, Object> data = doc.getData();
-
-                // Same fix as with the ingredient controller.
-                // TODO: Figure out a way to not use try except for this conversion
-                Double amount;
-                try {
-                    Long amountL = (Long) doc.getData().get("Amount");
-                    amount = amountL.doubleValue();
-                }
-                catch(ClassCastException e) {
-                    amount = (Double) doc.getData().get("Amount");
-                }
-
                 ShoppingItem item = new ShoppingItem(
-                        (String) data.get("Name"),
-                        amount,
-                        (String) data.get("Unit"),
-                        (String) data.get("Category")
+                        doc.getString("Name"),
+                        doc.getDouble("Amount"),
+                        doc.getString("Unit"),
+                        doc.getString("Category")
                 );
                 res.add(item);
             });
