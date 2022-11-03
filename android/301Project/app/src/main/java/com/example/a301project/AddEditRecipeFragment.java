@@ -8,8 +8,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,7 +21,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 public class AddEditRecipeFragment extends DialogFragment {
-    private EditText category;
+    private Spinner categoryName;
     private EditText comments;
     private EditText title;
     private EditText servings;
@@ -55,7 +58,7 @@ public class AddEditRecipeFragment extends DialogFragment {
             currentRecipe = (Recipe) bundle.get("recipe");
             createNewRecipe = (boolean) bundle.get("createNew");
         }
-        category = view.findViewById(R.id.edit_category_recipe);
+        categoryName = view.findViewById(R.id.edit_category_recipe);
         comments = view.findViewById(R.id.edit_comments);
         title = view.findViewById(R.id.edit_title);
         servings = view.findViewById(R.id.edit_servings);
@@ -92,7 +95,25 @@ public class AddEditRecipeFragment extends DialogFragment {
             }
         });
 
-        category.setText(currentRecipe.getTitle());
+
+        // Category spinner
+        ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(this.getContext(),
+                R.array.category_array, R.layout.ingredient_unit_item);
+        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categoryName.setAdapter(categoryAdapter);
+        categoryName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                categoryName.setSelection(i);
+                currentRecipe.setCategory(adapterView.getItemAtPosition(i).toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        categoryName.setSelection(categoryAdapter.getPosition(currentRecipe.getCategory()));
         comments.setText(currentRecipe.getComments());
         title.setText(currentRecipe.getTitle());
         servings.setText(String.valueOf(currentRecipe.getServings()));
@@ -106,7 +127,6 @@ public class AddEditRecipeFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         String title = AddEditRecipeFragment.this.title.getText().toString();
-                        String category = AddEditRecipeFragment.this.category.getText().toString();
                         String comments = AddEditRecipeFragment.this.comments.getText().toString();
                         String servings = AddEditRecipeFragment.this.servings.getText().toString();
                         String prepTime = AddEditRecipeFragment.this.prepTime.getText().toString();
@@ -115,7 +135,6 @@ public class AddEditRecipeFragment extends DialogFragment {
                         Long longPrepTime = Long.valueOf(prepTime);
 
                         currentRecipe.setTitle(title);
-                        currentRecipe.setCategory(category);
                         currentRecipe.setComments(comments);
                         currentRecipe.setServings(longServings);
                         currentRecipe.setPrepTime(longPrepTime);

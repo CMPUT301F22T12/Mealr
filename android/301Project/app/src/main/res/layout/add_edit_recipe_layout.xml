@@ -107,13 +107,12 @@
             android:text="Category"
             android:textSize="20dp" />
 
-        <EditText
+        <Spinner
             android:id="@+id/edit_category_recipe"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:padding="5sp"
-            android:hint="category" />
+            android:padding="5sp" />
 
     </LinearLayout>
 
