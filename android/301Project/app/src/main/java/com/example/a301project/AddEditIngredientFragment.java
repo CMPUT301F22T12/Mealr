@@ -109,7 +109,7 @@ public class AddEditIngredientFragment extends DialogFragment {
 
                                 Fragment frag = getActivity().getSupportFragmentManager().findFragmentByTag("EDIT");
                                 getActivity().getSupportFragmentManager().beginTransaction().remove(frag).commit();
-                                Toast.makeText(getContext(), "Recipe Delete Successful", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getContext(), "Ingredient Delete Successful", Toast.LENGTH_LONG).show();
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
