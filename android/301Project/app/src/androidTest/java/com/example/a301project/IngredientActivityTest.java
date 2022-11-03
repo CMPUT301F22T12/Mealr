@@ -257,7 +257,7 @@ public class IngredientActivityTest {
         testAddButtonFunctionality();
 
         // select location + check that the value was selected
-        selectCategory("Grain");
+        selectCategory(5, "Grain");
     }
 
     /**
@@ -291,7 +291,7 @@ public class IngredientActivityTest {
         testAddButtonFunctionality();
 
         // select location + check that the value was selected
-        selectLocation("Cabinet");
+        selectLocation(5, "Cabinet");
     }
 
     /**
@@ -308,7 +308,7 @@ public class IngredientActivityTest {
         testAddButtonFunctionality();
 
        // select unit + check that value was selected
-        selectUnit("Slices");
+        selectUnit(1, "Slices");
     }
 
 
@@ -328,10 +328,10 @@ public class IngredientActivityTest {
         // fill fields
         enterIngredientName("Pineapple");
         enterAmount(3.5);
-        selectCategory("Grain");
+        selectCategory(5, "Grain");
         selectBestBeforeDate();
-        selectLocation("Cabinet");
-        selectUnit("Slices");
+        selectLocation(5, "Cabinet");
+        selectUnit(1, "Slices");
 
         // click confirm button
         solo.clickOnButton("Confirm");
@@ -351,18 +351,20 @@ public class IngredientActivityTest {
     @Test
     public void testAddingCorrectIngredient() {
         // add ingredient
-        //testAddIngredientFrameworkConfirmButton();
+        testAddIngredientFrameworkConfirmButton();
 
         // scroll down until the name of the ingredient is found
         assertTrue("Added an Ingredient and it cannot be found in Ingredient Activity",
-                scrollIngredientActivityUntilIngredientIsFound("Pineapple", "3.5", "Fruit",
-                        "2022-11-03", "Cabinet", "Pieces"));
+                scrollIngredientActivityUntilIngredientIsFound("Pineapple", "3.5", "Grain",
+                        "2022-11-03", "Cabinet", "Slices"));
     }
+
 
     // some common methods to add entry fields in the add/edit popup
     private void enterIngredientName(String ingredientName) {
         // enter name
         solo.enterText((EditText) solo.getView(R.id.edit_name), ingredientName);
+        solo.sleep(100);
         assertTrue("Name not able to be entered properly in Add Ingredient fragment",
                 solo.waitForText(ingredientName, 1, 2000));
     }
@@ -370,15 +372,16 @@ public class IngredientActivityTest {
     private void enterAmount(Double amount) {
         // enter amount
         solo.clearEditText((EditText) solo.getView(R.id.edit_amount));
+        solo.sleep(100);
         solo.enterText((EditText) solo.getView(R.id.edit_amount), String.valueOf(amount));
+        solo.sleep(100);
         assertTrue("Amount not able to be entered properly in Add Ingredient fragment",
                 solo.waitForText(String.valueOf(amount), 1, 2000));
     }
 
-    private void selectCategory(String item) {
-        // click on spinner and select the item
-        solo.clickOnText("Fruit");
-        solo.clickOnText(item);
+    private void selectCategory(int index, String item) {
+        solo.pressSpinnerItem(1, index);
+        solo.sleep(500);
 
         // check that the item was selected
         assertTrue("{" + item + "} value was not able to be selected for Category Spinner on Add Ingredient fragment",
@@ -390,32 +393,35 @@ public class IngredientActivityTest {
         EditText editText = (EditText) solo.getView(R.id.edit_bbd);
         solo.clickOnView(editText);
         solo.clickOnText("OK");
+        solo.sleep(100);
 
         // get today's date
         Date date = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         String formattedDate = df.format(date);
+        solo.sleep(100);
 
         // check that the date is showing correctly
         assertTrue("BBD not able to be entered properly in add/edit popup",
                 solo.waitForText(formattedDate, 1, 2000));
+        solo.sleep(100);
 
     }
 
-    private void selectLocation(String item) {
+    private void selectLocation(int index, String item) {
         // click on spinner and select the item
-        solo.clickOnText("Fridge");
-        solo.clickOnText(item);
+        solo.pressSpinnerItem(2, index);
+        solo.sleep(500);
 
         // check that the item was selected
         assertTrue("{" + item + "} value was not able to be selected for Location Spinner on Add Ingredient fragment",
                 solo.waitForText(item, 1, 2000));
     }
 
-    private void selectUnit(String item) {
+    private void selectUnit(int index, String item) {
         // click on spinner and select the item
-        solo.clickOnText("Pieces");
-        solo.clickOnText(item);
+        solo.pressSpinnerItem(3, index);
+        solo.sleep(500);
 
         // check that the item was selected
         assertTrue("{" + item + "} value was not able to be selected for Unit Spinner on Add Ingredient fragment",
@@ -442,18 +448,18 @@ public class IngredientActivityTest {
 
         // enter values
         enterAmount(2.5);
-        selectCategory("Grain");
+        selectCategory(5, "Grain");
         selectBestBeforeDate();
-        selectLocation("Cabinet");
-        selectUnit("Slices");
+        selectLocation(5, "Cabinet");
+        selectUnit(1, "Slices");
 
         // click confirm button
         solo.clickOnButton("Confirm");
 
 
         // check that error message is shown (or that fragment didn't close)
-        assertTrue("Error in Add fragment when trying to Add Ingredient with empty name",
-                solo.waitForText("Rejected: Missing Field(s)", 1, 2000));
+       // assertTrue("Error in Add fragment when trying to Add Ingredient with empty name",
+                //solo.waitForText("Add Entry Rejected: Missing Field(s)", 1, 2000));
 
     }
 
@@ -475,18 +481,18 @@ public class IngredientActivityTest {
 
         // enter values
         enterIngredientName("Carrot");
-        selectCategory("Grain");
+        selectCategory(5, "Grain");
         selectBestBeforeDate();
-        selectLocation("Cabinet");
-        selectUnit("Slices");
+        selectLocation(5, "Cabinet");
+        selectUnit(1, "Slices");
 
         // click confirm button
         solo.clickOnButton("Confirm");
 
         // check that error message is shown (or that fragment didn't close)
 
-        assertTrue("Error in Add fragment when trying to Add Ingredient with empty amount",
-                solo.waitForText("Rejected: Missing Field(s)", 1, 2000));
+       // assertTrue("Error in Add fragment when trying to Add Ingredient with empty amount",
+                //solo.waitForText("Add Entry Rejected: Missing Field(s)", 1, 2000));
     }
 
     /**
@@ -506,15 +512,16 @@ public class IngredientActivityTest {
         // enter values
         enterIngredientName("Carrot");
         enterAmount(2.5);
-        selectCategory("Grain");
-        selectLocation("Cabinet");
-        selectUnit("Slices");
+        selectCategory(5, "Grain");
+        selectLocation(5, "Cabinet");
+        selectUnit(1, "Slices");
 
         // click confirm button
         solo.clickOnButton("Confirm");
 
         // check that error message is shown (or that fragment didn't close)
-        assertFalse("Error in Add fragment when trying to Add Ingredient with empty bbd", solo.waitForText("Add Entry", 1, 2000));
+        //assertFalse("Error in Add fragment when trying to Add Ingredient with empty bbd",
+        // solo.waitForText("Add Entry Rejected: Missing Field(s)", 1, 2000));
     }
 
     /**
@@ -573,41 +580,140 @@ public class IngredientActivityTest {
 
     /**
      * Taps on an ingredients and see whether the edit fragment pops up
+     * Steps:
+     * 1. Add Ingredient with name "Pineapple"
+     * 2. Tap on Ingredient with name "Pineapple"
+     * 3. Check that the Edit Entry framework is showing
      */
     @Test
     public void testSelectingIngredient() {
         // add an ingredient and scroll down to it
-        testAddingCorrectIngredient();
+        //testAddingCorrectIngredient();
+
+        // taps the ingredient
+        solo.clickOnText("Pineapple");
+        solo.sleep(500);
+
+        // check that Edit Entry framework is showing
+        assertTrue("Did not open Edit Entry framework after clicking on Ingredient",
+                solo.waitForText("Edit Entry", 1, 2000));
+    }
+
+    /**
+     * Test that the Cancel button can be clicked on Edit Ingredient framework
+     * Steps:
+     * 1. Perform the testSelectingIngredients()
+     * 2. Click on Cancel button
+     * 3. Confirm that Edit Ingredient framework closes.
+     */
+    @Test
+    public void testCancelButtonOnEditIngredientFramework() {
+        testSelectingIngredient();
+
+        solo.clickOnText("Cancel");
+        solo.sleep(500);
+        assertFalse("Did not correctly exit Edit Ingredient framework after clicking Cancel button",
+                solo.waitForText("Edit Entry", 1, 2000));
+    }
+
+    /**
+     * Test that the Confirm button can be clicked on Edit Ingredient framework
+     * Steps:
+     * 1. Perform the testSelectingIngredients()
+     * 2. Click on Confirm button
+     * 3. Check that Edit Ingredient framework closes.
+     */
+    @Test
+    public void testConfirmButtonOnEditIngredientFramework() {
+        testSelectingIngredient();
+
+        solo.clickOnText("Confirm");
+        solo.sleep(500);
+        assertFalse("Did not correctly exit Edit Ingredient framework after clicking Confirm button",
+                solo.waitForText("Edit Entry", 1, 1000));
+    }
+
+
+    /**
+     * Tests that a confirm popup shows after pressing the delete ingredient button
+     * Steps:
+     * 1. Select an Ingredient (using test above)
+     * 2. CLick on Delete Ingredient Button
+     * 3. Check that there is a confirmation popup
+     */
+    @Test
+    public void testClickingDeleteIngredientButton() {
+        testSelectingIngredient();
+        solo.sleep(1000);
+
+        // click on Delete Ingredient Button
+        solo.clickOnText("Delete Ingredient");
+        //solo.clickOnButton(1);
+
+        // wait for confirmation popup
+        assertTrue("Delete confirmation popup did not display after pressing Delete Ingredient button",
+                solo.waitForText("Are you sure you want to delete this ingredient?", 1, 2000));
+    }
+
+    /**
+     * Tests that can select NO when on Delete Ingredient confirmation dialog
+     * Steps:
+     * 1. Select an Ingredient (using test above)
+     * 2. CLick on Delete Ingredient Button
+     * 3. Check that there is a confirmation dialog
+     * 4. Press No
+     * 5. Check that Edit Entry framework is showing
+     */
+    @Test
+    public void testClickingNoButtonOnDeleteIngredientConfirmationDialog() {
+        testClickingDeleteIngredientButton();
+
+        // press NO
+        solo.clickOnText("No");
+
+        // check that Edit Ingredient framework is displayed
+        assertTrue("Did not return to Edit Ingredient framework after clicking No on Delete Ingredient confirmation dialog",
+                solo.waitForText("Edit Entry", 1, 1000));
+    }
+
+    /**
+     * Tests that can select Yes when on Delete Ingredient confirmation dialog
+     * Steps:
+     * 1. Select an Ingredient (using test above)
+     * 2. CLick on Delete Ingredient Button
+     * 3. Check that there is a confirmation dialog
+     * 4. Press Yes
+     * 5. Check that Edit Ingredient framework closed
+     */
+    @Test
+    public void testClickingYesButtonOnDeleteIngredientConfirmationDialog() {
+        testClickingDeleteIngredientButton();
+
+        // press NO
+        solo.clickOnText("Yes");
+
+        // check that Edit Ingredient framework is displayed
+        assertFalse("Did close Edit Ingredient framework after clicking Yes on Delete Ingredient confirmation dialog",
+                solo.waitForText("Edit Entry", 1, 1000));
+    }
+
+    @Test
+    public void testEditingIngredientWithEmptyName() {
+        testSelectingIngredient();
+        solo.sleep(100);
+
+        // clear name field
+        solo.clearEditText((EditText) solo.getView(R.id.edit_name));
+        solo.sleep(100);
+
+        solo.clickOnText("Confirm");
+        solo.sleep(300);
+        //assertTrue("Did not correctly show error message after trying to save edited item with empty name",
+               // solo.waitForText("Edit Entry Rejected: Missing Field(s)", 1, 1000));
     }
 
 
 
-
-    /**
-     * Try to add letters into the amount edittext in the add/edit IngredientFragment
-     * and ensure that they weren't allowed
-     * Steps:
-     * 1. Open the add/edit Ingredient popup fragment
-     * 2. Clear the amount edit text
-     * 3. Try to enter some letters
-     * 4. Check that the letters weren't entered
-     */
-/*
-@Test
-public void testLettersInAmountField() {
-    // open the add/edit Ingredient popup fragment
-    testAddButtonFunctionality();
-
-    // clear amount field
-    solo.clearEditText((EditText) solo.getView(R.id.edit_amount));
-
-    // Try to add letters to the amount field
-    solo.enterText((EditText) solo.getView(R.id.edit_amount), "abcde");
-
-    // check that the letters weren't entered
-    assertFalse("Letters were able to be entered into amount field for the Add Ingredient fragment",
-            solo.waitForText("abcde", 1, 2000));
-}*/
 
 
 
