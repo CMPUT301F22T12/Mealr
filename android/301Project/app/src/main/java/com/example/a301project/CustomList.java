@@ -12,11 +12,20 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
+/**
+ * This class creates a custom array list for ingredient objects
+ * contains a constructor and a method that returns a view of the custom list
+ */
 public class CustomList extends ArrayAdapter<Ingredient> {
     // custom array list containing Ingredient
     private ArrayList<Ingredient> ingredients;
     private Context context;
 
+    /**
+     * Makes a Custom list from an array list of ingredients
+     * @param context {@link Context} context to the array list
+     * @param ingredients {@link ArrayList<Ingredient>} array list containing ingredients
+     */
     public CustomList(Context context, ArrayList<Ingredient> ingredients) {
         // constructor
         super(context,0,ingredients);
@@ -24,6 +33,13 @@ public class CustomList extends ArrayAdapter<Ingredient> {
         this.context = context;
     }
 
+    /**
+     *
+     * @param position {@link Integer} the position of the current view
+     * @param convertView {@link View} the view to be retrieved
+     * @param parent {@link ViewGroup} the collection of views that contains
+     * @return a view
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup
