@@ -134,6 +134,14 @@ public class AddEditRecipeFragment extends DialogFragment {
                         Long longServings = Long.valueOf(servings);
                         Long longPrepTime = Long.valueOf(prepTime);
 
+                        // check if any field is empty
+                        boolean hasEmpty = title.isEmpty() || servings.isEmpty() || prepTime.isEmpty();
+
+                        if (hasEmpty) {
+                            Toast.makeText(getContext(),  " Rejected: Missing Field(s)",Toast.LENGTH_LONG).show();
+                            return;
+                        }
+
                         currentRecipe.setTitle(title);
                         currentRecipe.setComments(comments);
                         currentRecipe.setServings(longServings);
