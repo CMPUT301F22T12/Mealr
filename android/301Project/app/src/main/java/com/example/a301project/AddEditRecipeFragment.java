@@ -98,7 +98,7 @@ public class AddEditRecipeFragment extends DialogFragment {
 
         // Category spinner
         ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(this.getContext(),
-                R.array.category_array, R.layout.ingredient_unit_item);
+                R.array.category_array_recipe, R.layout.ingredient_unit_item);
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categoryName.setAdapter(categoryAdapter);
         categoryName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
