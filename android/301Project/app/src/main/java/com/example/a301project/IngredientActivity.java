@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Main Activity class for Ingredients
@@ -182,13 +183,13 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
 
         Collections.sort(dataList, (Ingredient i1, Ingredient i2) -> {
                     if (sortBy.equals(sortOptions[0])) {
-                        return asc * i1.getName().compareTo(i2.getName());
+                        return asc * i1.getName().toLowerCase().compareTo(i2.getName().toLowerCase());
                     } else if (sortBy.equals(sortOptions[1])) {
-                        return asc * i1.getLocation().compareTo(i2.getLocation());
+                        return asc * i1.getLocation().toLowerCase().compareTo(i2.getLocation().toLowerCase());
                     } else if (sortBy.equals(sortOptions[2])) {
                         return asc * i1.getbbd().compareTo(i2.getbbd());
                     } else {
-                        return asc * i1.getCategory().compareTo(i2.getCategory());
+                        return asc * i1.getCategory().toLowerCase().compareTo(i2.getCategory().toLowerCase());
                     }
                 }
         );

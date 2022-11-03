@@ -91,9 +91,9 @@ public class ShoppingListActivity extends NavActivity {
 
         Collections.sort(shoppingItemDataList, (ShoppingItem s1, ShoppingItem s2) -> {
                     if (sortBy.equals(sortOptions[0])) {
-                        return asc * s1.getName().compareTo(s2.getName());
+                        return asc * s1.getName().toLowerCase().compareTo(s2.getName().toLowerCase());
                     } else {
-                        return asc * s1.getCategory().compareTo(s2.getCategory());
+                        return asc * s1.getCategory().toLowerCase().compareTo(s2.getCategory().toLowerCase());
                     }
                 }
         );
