@@ -21,6 +21,14 @@
         <item>Condiments</item>
     </string-array>
 
+    <string-array name="category_array_recipe">
+        <item>Breakfast</item>
+        <item>Lunch</item>
+        <item>Dinner</item>
+        <item>Dessert</item>
+        <item>Snack</item>
+    </string-array>
+
     <string-array name="location_array">
         <item>Fridge</item>
         <item>Freezer</item>
