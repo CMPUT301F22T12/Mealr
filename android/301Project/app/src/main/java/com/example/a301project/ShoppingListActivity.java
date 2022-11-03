@@ -18,7 +18,7 @@ public class ShoppingListActivity extends NavActivity {
     private ArrayAdapter<ShoppingItem> shoppingItemArrayAdapter;
     private ArrayList<ShoppingItem> shoppingItemDataList = new ArrayList<>();
     private ShoppingListController controller = new ShoppingListController();
-    final String[] sortOptions = {"Title", "Category"};
+    private final String[] sortOptions = {"Title", "Category"};
     private Spinner sortSpinner;
     private Switch sortSwitch;
 

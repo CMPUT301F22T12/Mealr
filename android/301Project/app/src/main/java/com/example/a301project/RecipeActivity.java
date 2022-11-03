@@ -22,7 +22,7 @@ public class RecipeActivity extends NavActivity implements AddEditRecipeFragment
     private ArrayAdapter<Recipe> recipeArrayAdapter;
     private ArrayList<Recipe> recipeDataList = new ArrayList<>();
     private RecipeController controller = new RecipeController();
-    final String[] sortOptions = {"Title", "Prep Time", "Servings", "Category"};
+    private final String[] sortOptions = {"Title", "Prep Time", "Servings", "Category"};
     private Spinner sortSpinner;
     private Switch sortSwitch;
     Button addButton;
@@ -93,9 +93,9 @@ public class RecipeActivity extends NavActivity implements AddEditRecipeFragment
      *
      * @param a ArrayList of recipes to set the data list to
      */
-    private void setRecipeDataList(ArrayList<Recipe> a) {
+    private void setRecipeDataList(ArrayList<Recipe> r) {
         recipeDataList.clear();
-        recipeDataList.addAll(a);
+        recipeDataList.addAll(r);
         recipeArrayAdapter.notifyDataSetChanged();
     }
 
