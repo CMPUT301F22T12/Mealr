@@ -36,6 +36,7 @@
             android:id="@+id/edit_prep_time"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:inputType="numberDecimal"
             android:layout_weight="1"
             android:ems="10"
             android:hint="Prep Time" />
@@ -60,6 +61,7 @@
             android:id="@+id/edit_servings"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:inputType="number"
             android:layout_weight="1"
             android:padding="5sp"
             android:hint="Servings" />
