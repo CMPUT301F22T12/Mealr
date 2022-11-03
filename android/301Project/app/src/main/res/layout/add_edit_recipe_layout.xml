@@ -1,117 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="670dp">
-    <RelativeLayout
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/edit_title"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:gravity="center_horizontal"
+        android:hint="Recipe Name"
+        android:padding="15dp"
+        android:text="Name"
+        android:textSize="34dp" />
 
-        <EditText
-            android:id="@+id/edit_title"
-            android:layout_width="400dp"
-            android:layout_height="97dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:hint="Recipe Name"
-            android:padding="30dp"
-            android:textSize="35dp"></EditText>
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/ingredient_edit_padding">
 
         <TextView
             android:id="@+id/prep_time_label"
-            android:layout_width="166dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/edit_title"
-            android:layout_marginTop="26dp"
-            android:paddingLeft="50dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
             android:text="Prep Time"
             android:textSize="20dp" />
 
 
         <EditText
             android:id="@+id/edit_prep_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/edit_title"
-            android:layout_marginStart="86dp"
-            android:layout_marginLeft="86dp"
-            android:layout_marginTop="21dp"
-            android:layout_toEndOf="@+id/prep_time_label"
-            android:layout_toRightOf="@+id/prep_time_label"
-            android:hint="Prep Time"></EditText>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="Prep Time" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/ingredient_edit_padding">
 
         <TextView
             android:id="@+id/servings_label"
-            android:layout_width="wrap_content"
-            android:layout_height="37dp"
-            android:layout_below="@+id/prep_time_label"
-            android:layout_marginTop="71dp"
-            android:paddingLeft="50dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
             android:text="Servings"
             android:textSize="20dp" />
 
         <EditText
             android:id="@+id/edit_servings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/edit_prep_time"
-            android:layout_marginLeft="126dp"
-            android:layout_marginTop="59dp"
-            android:layout_toRightOf="@+id/servings_label"
-            android:hint="Servings"></EditText>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="5sp"
+            android:hint="Servings" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/ingredient_edit_padding">
 
         <TextView
             android:id="@+id/comments_label"
-            android:layout_width="wrap_content"
-            android:layout_height="37dp"
-            android:layout_below="@+id/servings_label"
-            android:layout_marginTop="86dp"
-            android:paddingLeft="50dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
             android:text="Comments"
             android:textSize="20dp" />
 
         <EditText
             android:id="@+id/edit_comments"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/servings_label"
-            android:layout_marginLeft="105dp"
-            android:layout_marginTop="86dp"
-            android:layout_toRightOf="@+id/comments_label"
-            android:hint="Comments"></EditText>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="Comments" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/ingredient_edit_padding">
 
         <TextView
             android:id="@+id/category_label"
-            android:layout_width="wrap_content"
-            android:layout_height="37dp"
-            android:layout_below="@+id/comments_label"
-            android:layout_marginTop="89dp"
-            android:paddingLeft="50dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
             android:text="Category"
             android:textSize="20dp" />
 
         <EditText
             android:id="@+id/edit_category_recipe"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/edit_comments"
-            android:layout_marginLeft="123dp"
-            android:layout_marginTop="83dp"
-            android:layout_toRightOf="@+id/category_label"
-            android:hint="category"></EditText>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="5sp"
+            android:hint="category" />
 
+    </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:padding="15dp">
         <Button
             android:id="@+id/delete_recipe_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/edit_category_recipe"
-            android:layout_marginTop="24dp"
             android:layout_weight="1"
-            android:text="Delete" />
+            android:text="Delete Recipe" />
+    </LinearLayout>
 
-
-    </RelativeLayout>
-</FrameLayout>
+</LinearLayout>
