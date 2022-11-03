@@ -22,7 +22,7 @@ public class ShoppingListController {
     }
 
     /**
-     * Gets all ingredients from Firebase and filter ones reqruied
+     * Gets all ingredients from Firebase and filter ones
      *
      * @param s successHandler function to be called on success with
      *          the ArrayList of Recipes

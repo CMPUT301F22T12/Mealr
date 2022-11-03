@@ -116,6 +116,7 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
                 position = i;
                 Ingredient selected = (Ingredient) adapterView.getItemAtPosition(i);
                 AddEditIngredientFragment.newInstance(ingredientAdapter.getItem(position),false).show(getSupportFragmentManager(),"EDIT");
+
             }
         });
 

@@ -182,8 +182,7 @@ public class AddEditIngredientFragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 DatePickerDialog datePicker = new DatePickerDialog(
-                        getActivity(), android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                        setListener, year, month, day);
+                        getActivity(), android.R.style.Theme_Holo_Light_Dialog_MinWidth, setListener, year, month, day);
                 datePicker.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 datePicker.show();
             }
@@ -217,7 +216,7 @@ public class AddEditIngredientFragment extends DialogFragment {
                         String ingredientName = AddEditIngredientFragment.this.ingredientName.getText().toString();
                         String bestbefore = AddEditIngredientFragment.this.bbdName.getText().toString();
                         String amount = AddEditIngredientFragment.this.amountName.getText().toString();
-                        Double doubleAmount = Double.valueOf(amount);
+                        Double doubleAmount = 0.0;
 
                         // check if any field is empty
                         boolean hasEmpty = ingredientName.isEmpty() || bestbefore.isEmpty() || amount.isEmpty();
@@ -225,6 +224,8 @@ public class AddEditIngredientFragment extends DialogFragment {
                         if (hasEmpty) {
                             Toast.makeText(getContext(),  title + " Rejected: Missing Field(s)",Toast.LENGTH_LONG).show();
                             return;
+                        } else {
+                            doubleAmount = Double.valueOf(amount);
                         }
 
                         // set the name of the current food as the edited fields
@@ -235,7 +236,6 @@ public class AddEditIngredientFragment extends DialogFragment {
                         listener.onConfirmPressed(currentIngredient, createNewIngredient);
                     }
                 }).create();
-
     }
     static AddEditIngredientFragment newInstance(Ingredient ingredient, boolean createNew) {
         Bundle args = new Bundle();
