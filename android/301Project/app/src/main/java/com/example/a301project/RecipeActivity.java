@@ -112,13 +112,13 @@ public class RecipeActivity extends NavActivity implements AddEditRecipeFragment
 
         Collections.sort(recipeDataList, (Recipe r1, Recipe r2) -> {
                     if (sortBy.equals(sortOptions[0])) {
-                        return asc * r1.getTitle().compareTo(r2.getTitle());
+                        return asc * r1.getTitle().toLowerCase().compareTo(r2.getTitle().toLowerCase());
                     } else if (sortBy.equals(sortOptions[1])) {
                         return asc * r1.getPrepTime().compareTo(r2.getPrepTime());
                     } else if (sortBy.equals(sortOptions[2])) {
                         return asc * r1.getServings().compareTo(r2.getServings());
                     } else {
-                        return asc * r1.getCategory().compareTo(r2.getCategory());
+                        return asc * r1.getCategory().toLowerCase().compareTo(r2.getCategory().toLowerCase());
                     }
                 }
         );
