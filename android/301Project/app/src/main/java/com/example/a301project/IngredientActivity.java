@@ -40,7 +40,7 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
     private ArrayAdapter<Ingredient> ingredientAdapter;
     private Spinner ingredientSpinner;
     private ArrayList<Ingredient> dataList;
-    private String[] sortOptions = {"Entry", "Location", "Expiry", "Category"};
+    private String[] sortOptions = {"Name", "Location", "Expiry", "Category"};
     private Spinner sortSpinner;
     private Switch sortSwitch;
     public int position = -1;

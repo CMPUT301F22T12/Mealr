@@ -4,11 +4,7 @@ package com.example.a301project;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import android.view.View;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -52,7 +48,7 @@ public class IngredientActivityTest {
      * Check that the IngredientActivity opens
      */
     @Test
-    public void openIngredientActivity() {
+    public void testThatIngredientActivityIsOpen() {
         // Asserts that the current activity is the IngredientActivity.
         solo.assertCurrentActivity("IngredientActivity did not open on startup", IngredientActivity.class);
     }
@@ -66,7 +62,7 @@ public class IngredientActivityTest {
      */
     @Test
     public void testAddButtonFunctionality() {
-        openIngredientActivity();
+        testThatIngredientActivityIsOpen();
 
         // Click on button
         solo.clickOnButton("Add");
@@ -102,6 +98,94 @@ public class IngredientActivityTest {
         // check that Switch is on
         assertTrue(ascendingSwitch.isChecked());
     }*/
+
+    /**
+     * Tests that the Name value is the default value in the SortBy {@link android.widget.Spinner}
+     * in Ingredient Activity
+     * Steps:
+     * 1. Check that IngredientActivity is open
+     * 2. Check that the Name value is the selected in the SortBy {@link android.widget.Spinner}
+     */
+    @Test
+    public void testThatNameIsDefaultSortBySelection() {
+        // check that IngredientActivity is open
+        testThatIngredientActivityIsOpen();
+
+        // check that the item was selected
+        assertTrue("{Name} was not the default selection for the Sort By spinner in IngredientActivityCategory",
+                solo.waitForText("Name", 1, 2000));
+    }
+
+    /**
+     * Tests that the Location value can be selected in the SortBy {@link android.widget.Spinner}
+     * in Ingredient Activity
+     * Steps:
+     * 1. Check that IngredientActivity is open
+     * 2. Check that Name value is currently selected in the Sort By {@link android.widget.Spinner}
+     * 3. Open the spinner and select the Location value
+     * 4. Check that the Location value is the selected in the Sort By {@link android.widget.Spinner}
+     */
+    @Test
+    public void testSelectingLocationFromSortBySpinner() {
+        // ensure that IngredientActivity is open and Name is the default value for the Sort By spinner
+        testThatNameIsDefaultSortBySelection();
+
+        // click on spinner and select the item
+        solo.clickOnText("Name");
+        solo.clickOnText("Location");
+
+        // check that the item was selected
+        assertTrue("{Location} value was not able to be selected from the Sort By Spinner in IngredientActivity",
+                solo.waitForText("Location", 1, 2000));
+    }
+
+    /**
+     * Tests that the Expiry value can be selected in the SortBy {@link android.widget.Spinner}
+     * in Ingredient Activity
+     * Steps:
+     * 1. Check that IngredientActivity is open
+     * 2. Check that Name value is currently selected in the Sort By spinner
+     * 3. Open the spinner and select the Expiry value
+     * 4. Check that the Expiry value is the selected in the Sort By  {@link android.widget.Spinner}
+     */
+    @Test
+    public void testSelectingExpiryFromSortBySpinner() {
+        // ensure that IngredientActivity is open and Name is the default value for the Sort By spinner
+        testThatNameIsDefaultSortBySelection();
+
+        // click on spinner and select the item
+        solo.clickOnText("Name");
+        solo.clickOnText("Expiry");
+
+        // check that the item was selected
+        assertTrue("{Expiry} value was not able to be selected from the Sort By Spinner in IngredientActivity",
+                solo.waitForText("Expiry", 1, 2000));
+
+    }
+
+    /**
+     * Tests that the Category value can be selected in the SortBy {@link android.widget.Spinner}
+     * in Ingredient Activity
+     * Steps:
+     * 1. Check that IngredientActivity is open
+     * 2. Check that Name value is currently selected in the Sort By spinner
+     * 3. Open the spinner and select the Category value
+     * 4. Check that the Category value is the selected in the Sort By  {@link android.widget.Spinner}
+     */
+    @Test
+    public void testSelectingCategoryFromSortBySpinner() {
+        // ensure that IngredientActivity is open and Name is the default value for the Sort By spinner
+        testThatNameIsDefaultSortBySelection();
+
+        // click on spinner and select the item
+        solo.clickOnText("Name");
+        solo.clickOnText("Category");
+
+        // check that the item was selected
+        assertTrue("{Category} value was not able to be selected from the Sort By Spinner in IngredientActivity",
+                solo.waitForText("Category", 1, 2000));
+
+    }
 
     /**
      * Check that the cancel button closes the Add Ingredient fragment
@@ -267,21 +351,12 @@ public class IngredientActivityTest {
     @Test
     public void testAddingCorrectIngredient() {
         // add ingredient
-        testAddIngredientFrameworkConfirmButton();
+        //testAddIngredientFrameworkConfirmButton();
 
-        // check that it was added
-        assertTrue("Added Ingredient but Name: {Pineapple} not found in IngredientActivity",
-                solo.waitForText("Pineapple", 1, 2000));
-        assertTrue("Added Ingredient but Amount: {3.5} not found in IngredientActivity",
-                solo.waitForText("3.5", 1, 2000));
-        assertTrue("Added Ingredient but Category: {Grain} not found in IngredientActivity",
-                solo.waitForText("Grain", 1, 2000));
-        assertTrue("Added Ingredient but BBD: {2022-11-02} not found in IngredientActivity",
-                solo.waitForText("2022-11-02", 1, 2000));
-        assertTrue("Added Ingredient but Location: {Cabinet} not found in IngredientActivity",
-                solo.waitForText("Cabinet", 1, 2000));
-        assertTrue("Added Ingredient but Unit: {Slices} not found in IngredientActivity",
-                solo.waitForText("Slices", 1, 2000));
+        // scroll down until the name of the ingredient is found
+        assertTrue("Added an Ingredient and it cannot be found in Ingredient Activity",
+                scrollIngredientActivityUntilIngredientIsFound("Pineapple", "3.5", "Fruit",
+                        "2022-11-03", "Cabinet", "Pieces"));
     }
 
     // some common methods to add entry fields in the add/edit popup
@@ -440,6 +515,69 @@ public class IngredientActivityTest {
 
         // check that error message is shown (or that fragment didn't close)
         assertFalse("Error in Add fragment when trying to Add Ingredient with empty bbd", solo.waitForText("Add Entry", 1, 2000));
+    }
+
+    /**
+     * Scrolls down until a certain text value is found
+     * @param text The {@link String} to find when scrolling
+     * @return if the text {@link String} was found while scrolling
+     */
+    private boolean scrollIngredientsUntilIngredientIsFound(String text) {
+
+        // start off at the top
+        boolean scrollMore = true;
+        solo.scrollToTop();
+
+        // keep scrolling until value is found or until can't scroll anymore
+        while(scrollMore) {
+            scrollMore = solo.scrollDown();
+            if (solo.waitForText(text, 1, 100)) {
+                return true;
+            }
+        }
+        // text was not found
+        return false;
+    }
+
+    /**
+     * Scrolls down Ingredient Activity until an Ingredient is found
+     * @param name the name {@link String} of the ingredient {@link Ingredient}
+     * @param amount the amount {@link String} of the ingredient {@link Ingredient}
+     * @param category the category {@link String} of the ingredient {@link Ingredient}
+     * @param bbd the best before date {@link String} of the ingredient {@link Ingredient}
+     * @param location the location {@link String} of the ingredient {@link Ingredient}
+     * @param unit the unit {@link String} of the ingredient {@link Ingredient}
+     * @return
+     */
+    public boolean scrollIngredientActivityUntilIngredientIsFound(String name, String amount, String category,
+                                                                  String bbd, String location, String unit){
+        // start off at the top
+        boolean scrollMore = true;
+        solo.scrollToTop();
+
+        // keep scrolling until Ingredient is found or until can't scroll anymore
+        while(scrollMore) {
+            scrollMore = solo.scrollDown();
+            if(solo.waitForText(name, 1, 100) &
+                    solo.waitForText(amount, 1, 100) &
+                    solo.waitForText(category, 1, 100) &
+                    solo.waitForText("Expires: " + bbd, 1, 100) &
+                    solo.waitForText(location, 1, 100) &
+                    solo.waitForText(unit, 1, 100)){
+                // found ingredient
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Taps on an ingredients and see whether the edit fragment pops up
+     */
+    @Test
+    public void testSelectingIngredient() {
+        // add an ingredient and scroll down to it
+        testAddingCorrectIngredient();
     }
 
 
