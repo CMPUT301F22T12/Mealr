@@ -23,6 +23,12 @@ public class ShoppingListActivity extends NavActivity {
     private Switch sortSwitch;
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        bottomNav.getMenu().findItem(R.id.action_shopping_list).setChecked(true);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 

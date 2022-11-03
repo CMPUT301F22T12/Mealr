@@ -38,7 +38,11 @@ public class NavActivity extends AppCompatActivity {
                 } else if (id == R.id.action_shopping_list) {
                     i = new Intent(NavActivity.this, ShoppingListActivity.class);
                 }
+
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+
                 startActivity(i);
+
                 return true;
             }
         });

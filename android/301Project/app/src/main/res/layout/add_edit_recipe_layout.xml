@@ -22,6 +22,35 @@
         android:orientation="horizontal"
         android:padding="@dimen/ingredient_edit_padding">
 
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/rounded_rect"
+            android:src="@drawable/meal"
+            android:id="@+id/recipeImageView"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            />
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/uploadImageButton"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:text="Upload Image"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/ingredient_edit_padding">
+
         <TextView
             android:id="@+id/prep_time_label"
             android:layout_width="match_parent"
