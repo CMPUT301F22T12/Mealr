@@ -5,6 +5,7 @@
       <map>
         <entry key="../../../../../../../layout/custom_preview.xml" value="0.10696266397578204" />
         <entry key="app/src/main/res/drawable-anydpi/fridge.xml" value="0.127" />
+        <entry key="app/src/main/res/drawable-hdpi/rounded_rect_trans.xml" value="0.2806212768554688" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
         <entry key="app/src/main/res/drawable-xhdpi/menu_book.xml" value="0.1" />
         <entry key="app/src/main/res/drawable-xhdpi/recipe.xml" value="0.1" />
@@ -19,7 +20,8 @@
         <entry key="app/src/main/res/layout/activity_nav.xml" value="0.3077438354492188" />
         <entry key="app/src/main/res/layout/activity_recipe.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_shopping_list.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/add_edit_recipe_layout.xml" value="0.4281234741210938" />
+        <entry key="app/src/main/res/layout/add_edit_ingredientlayout.xml" value="0.21557971014492755" />
+        <entry key="app/src/main/res/layout/add_edit_recipe_layout.xml" value="0.2886428833007813" />
         <entry key="app/src/main/res/layout/ingredient_content.xml" value="0.2525726318359375" />
         <entry key="app/src/main/res/layout/ingredient_unit_item.xml" value="0.30520833333333336" />
         <entry key="app/src/main/res/layout/meal_plan_layout.xml" value="0.25327510917030566" />

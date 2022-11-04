@@ -5,10 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -39,12 +42,17 @@ public class RecipeListAdapter extends ArrayAdapter<Recipe> {
         TextView prepTimeTV = view.findViewById(R.id.r_prepTimeTextView);
         TextView servingsTV = view.findViewById(R.id.r_servingsTextView);
         TextView categoryTV = view.findViewById(R.id.r_categoryTextView);
+        ImageView imageView = view.findViewById(R.id.r_imageview);
 
         // Set the text
         titleTV.setText(r.getTitle());
         prepTimeTV.setText(r.getPrepTime() + " min");
         servingsTV.setText(r.getServings().toString() + " Servings");
         categoryTV.setText(r.getCategory());
+        if (r.getPhoto() != null && !r.getPhoto().isEmpty()) {
+            Picasso.get().load(r.getPhoto()).into(imageView);
+            imageView.setClipToOutline(true);
+        }
 
         return view;
     }
