@@ -15,7 +15,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- * Renders the recipes for the user and allows them to modify or add them
+ * /**
+ *  Main Activity class for Recipes
+ *  functionalities for add, edit, delete
+ *  initiates an RecipeController object that has access to firebase data
+ *  handles sorting of recipes
+ *  @return void
  */
 public class RecipeActivity extends NavActivity implements AddEditRecipeFragment.OnFragmentInteractionListener {
     private ListView listView;
@@ -28,12 +33,20 @@ public class RecipeActivity extends NavActivity implements AddEditRecipeFragment
     Button addButton;
     public int position = -1;
 
+    /**
+     * Method for the activity becomes active and can receive input
+     * Navigation panel finds the menu and displays it
+     */
     @Override
     protected void onResume() {
         super.onResume();
         bottomNav.getMenu().findItem(R.id.action_recipes).setChecked(true);
     }
 
+    /**
+     * Method for initializing attributes of this activity
+     * @param savedInstanceState {@link Bundle} the last saved instance of the fragment, NULL if newly created
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,23 +65,42 @@ public class RecipeActivity extends NavActivity implements AddEditRecipeFragment
         listView.setAdapter(recipeArrayAdapter);
 
         // Setup sorting
+        // sort by title, prep time, servings, category
         sortSpinner = findViewById(R.id.recipeSortSpinner);
         sortSwitch = findViewById(R.id.recipeSortSwitch);
         ArrayAdapter<String> sortAdapter = new ArrayAdapter<>(this, com.google.android.material.R.layout.support_simple_spinner_dropdown_item, sortOptions);
         sortSpinner.setAdapter(sortAdapter);
         sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            /**
+             * Method invoked when a sort parameter in this view is selected
+             * @param adapterView {@link AdapterView} the AdapterView where the selection happened
+             * @param view {@link View} the view that was clicked
+             * @param i {@link Integer} position of the view in the adapter
+             * @param l {@link Long} the row ID of the item that was selected
+             */
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 sortDataBySpinner();
             }
 
+            /**
+             * Method for when no spinner item is selected
+             * @param adapterView {@link AdapterView} the AdapterView where the selection happened
+             * @return void
+             */
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
+                // nothing happens
 
             }
         });
         recipeArrayAdapter.notifyDataSetChanged();
         addButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Method invoked when the add button is clicked
+             * shows Add Recipe fragment
+             * @param view {@link View} the view that contains the add button
+             */
             @Override
             public void onClick(View view) {
                 Recipe newRecipe = new Recipe("","","","", 0L, 0L,new ArrayList<>());
@@ -77,15 +109,30 @@ public class RecipeActivity extends NavActivity implements AddEditRecipeFragment
         });
         sortSwitch.setChecked(true);
         sortSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            /**
+             * Method for when sort switch is clicked
+             * @param compoundButton {@link CompoundButton} the switch button view that has changed
+             * @param b {@link boolean} the checked state of the button
+             * @return void
+             */
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                // sortData determines what parameter to sort the Recipes by
                 sortDataBySpinner();
             }
         });
         sortDataBySpinner();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            /**
+             * Method invoked when an item in this view is clicked
+             * @param adapterView {@link AdapterView} the AdapterView where the selection happened
+             * @param view {@link View} the view that was clicked
+             * @param i {@link Integer} position of the view in the adapter
+             * @param l {@link Long} the row ID of the item that was selected
+             */
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                // when a Recipe item is clicked, open Edit Recipe fragment
                 position = i;
                 Recipe selected = (Recipe) adapterView.getItemAtPosition(i);
                 AddEditRecipeFragment.newInstance(recipeArrayAdapter.getItem(position), false).show(getSupportFragmentManager(), "EDIT");
@@ -95,9 +142,9 @@ public class RecipeActivity extends NavActivity implements AddEditRecipeFragment
     }
 
     /**
-     * Sets the internal recipe list the new one.
-     *
-     * @param a ArrayList of recipes to set the data list to
+     * Method to clear recipeDataList,
+     * Resets the internal recipe list the new one.
+     * @param r {@link ArrayList} list of recipes to set the data list to
      */
     private void setRecipeDataList(ArrayList<Recipe> r) {
         recipeDataList.clear();
@@ -106,7 +153,8 @@ public class RecipeActivity extends NavActivity implements AddEditRecipeFragment
     }
 
     /**
-     * Sorts internal recipe list by selected filters defined the sortOptions attribute
+     * Sorts internal recipe list by selected parameters defined the sortOptions attribute
+     * Sort By parameters: Title, Prep Time, Servings, Category
      */
     private void sortDataBySpinner() {
         // Make sure views are defined
@@ -116,6 +164,8 @@ public class RecipeActivity extends NavActivity implements AddEditRecipeFragment
         String sortBy = sortSpinner.getSelectedItem().toString();
         Integer asc = sortSwitch.isChecked() ? 1 : -1;
 
+        // determine which sort option was selected, then sort them in ascending or descending order
+        // ascending or descending is based on the asc variable
         Collections.sort(recipeDataList, (Recipe r1, Recipe r2) -> {
                     if (sortBy.equals(sortOptions[0])) {
                         return asc * r1.getTitle().toLowerCase().compareTo(r2.getTitle().toLowerCase());
@@ -132,11 +182,24 @@ public class RecipeActivity extends NavActivity implements AddEditRecipeFragment
         recipeArrayAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Method for adding recipes
+     * trigger when Add button clicked
+     * @param recipe {@link Recipe} a Recipe to be added
+     * @return void
+     */
     public void addRecipe(Recipe recipe) {
         recipeArrayAdapter.add(recipe);
         controller.addRecipe(recipe);
     }
 
+    /**
+     * Method invoked when Add/Edit fragment confirm button clicked
+     * @param recipe {@link Recipe}
+     * @param createNewRecipe {@link boolean}
+     * checks whether to create new recipe or to update existing
+     * @return void
+     */
     @Override
     public void onConfirmPressed(Recipe recipe, boolean createNewRecipe) {
         if (createNewRecipe) {
@@ -148,6 +211,10 @@ public class RecipeActivity extends NavActivity implements AddEditRecipeFragment
         recipeArrayAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Method for deleting a recipe when confirm is clicked
+     * @param currentRecipe {@link Recipe} the current recipe to be deleted
+     */
     @Override
     public void onDeleteConfirmed(Recipe currentRecipe) {
         recipeArrayAdapter.remove(currentRecipe);

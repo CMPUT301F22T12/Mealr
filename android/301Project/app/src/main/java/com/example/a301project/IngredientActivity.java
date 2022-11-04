@@ -51,7 +51,7 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
 
     /**
      * Method for the activity becomes active and can receive input
-     * Navigation panel to get the menu of this activity
+     * Navigation panel finds the menu and displays it
      */
     @Override
     protected void onResume() {
@@ -230,7 +230,7 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
     /**
      * Method for adding ingredients
      * trigger when Add button clicked
-     * @param ingredient {@link Ingredient} an ingredient
+     * @param ingredient {@link Ingredient} an ingredient to be added
      * @return void
      */
     public void addIngredient(Ingredient ingredient) {
@@ -239,7 +239,7 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
     }
 
     /**
-     * Method for Add/Edit fragment confirm
+     * Method invoked when Add/Edit fragment confirm clicked
      * @param currentIngredient {@link Ingredient}
      * @param createNewIngredient {@link boolean}
      * checks whether to create new ingredient or to update existing
