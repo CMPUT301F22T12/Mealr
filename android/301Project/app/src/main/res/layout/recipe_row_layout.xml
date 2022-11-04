@@ -18,7 +18,13 @@
             android:layout_height="100dp"
             android:layout_gravity="center_vertical"
             android:background="@drawable/rounded_rect"
-            android:src="@drawable/meal" />
+            android:foreground="@drawable/rounded_rect_trans"
+            android:src="@drawable/meal"
+            android:id="@+id/r_imageview"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:cropToPadding="true"
+            />
 
         <TextView
             android:id="@+id/r_titleTextView"

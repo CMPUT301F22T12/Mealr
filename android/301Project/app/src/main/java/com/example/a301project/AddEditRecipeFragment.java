@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -29,6 +30,15 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
+
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
@@ -44,11 +54,49 @@ public class AddEditRecipeFragment extends DialogFragment {
     private boolean createNewRecipe;
     private ImageView image;
     private Button uploadButton;
+    private Button cameraButton;
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
+    private String photoUrl;
 
 
     public interface OnFragmentInteractionListener {
         void onConfirmPressed(Recipe currentRecipe, boolean createNewRecipe);
         void onDeleteConfirmed(Recipe currentRecipe);
+    }
+
+    private void saveBitmapToFirebase(Bitmap bitmap) {
+        uploadButton.setEnabled(false);
+
+        StorageReference storageRef = storage.getReference();
+        StorageReference imagesRef = storageRef.child("mealImages").child(title.getText().toString());
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        byte[] bytes = stream.toByteArray();
+
+        UploadTask uploadTask = imagesRef.putBytes(bytes);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Toast.makeText(getContext(), "An error occurred!", Toast.LENGTH_LONG).show();
+                uploadButton.setEnabled(true);
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Toast.makeText(getContext(), "Image uploaded!", Toast.LENGTH_LONG).show();
+                image.setImageBitmap(bitmap);
+                image.setClipToOutline(true);
+
+                Task<Uri> downloadUri = taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        photoUrl = uri.toString();
+                    }
+                });
+                uploadButton.setEnabled(true);
+            }
+        });
     }
 
     @Override
@@ -80,6 +128,7 @@ public class AddEditRecipeFragment extends DialogFragment {
         deleteButton = view.findViewById(R.id.delete_recipe_button);
         image = view.findViewById(R.id.recipeImageView);
         uploadButton = view.findViewById(R.id.uploadImageButton);
+        cameraButton = view.findViewById(R.id.cameraButton);
 
         if (this.getTag().equals("ADD")) {
             deleteButton.setVisibility(View.GONE);
@@ -111,33 +160,57 @@ public class AddEditRecipeFragment extends DialogFragment {
             }
         });
 
-
         // Create a launcher for the gallery upload intent
         ActivityResultLauncher<Intent> galleryActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() == Activity.RESULT_OK) {
-                            Intent data = result.getData();
-                            if (data != null){
-                                Uri uri = data.getData();
-                                InputStream in;
-                                try {
-                                    in = getActivity().getContentResolver().openInputStream(uri);
-                                    final Bitmap selected_img = BitmapFactory.decodeStream(in);
-                                    image.setImageBitmap(selected_img);
-                                    image.setClipToOutline(true);
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        if (data != null) {
+                            Uri uri = data.getData();
+                            InputStream in;
+                            try {
+                                in = getActivity().getContentResolver().openInputStream(uri);
+                                final Bitmap bitmap = BitmapFactory.decodeStream(in);
 
-                                } catch (FileNotFoundException e) {
-                                    e.printStackTrace();
-                                    Toast.makeText(getContext(), "An error occurred!", Toast.LENGTH_LONG).show();
+                                // Save the image to firebase
+                                title = view.findViewById(R.id.edit_title);
+                                if (!title.getText().toString().isEmpty()) {
+                                    saveBitmapToFirebase(bitmap);
                                 }
+                            } catch (FileNotFoundException e) {
+                                Toast.makeText(getContext(), "An error occurred!", Toast.LENGTH_LONG).show();
                             }
-
                         }
                     }
                 });
+
+        ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    try {
+                        Intent data = result.getData();
+                        if (data != null) {
+                            final Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                            saveBitmapToFirebase(bitmap);
+                        }
+                        } catch(Exception e){
+                        Toast.makeText(getContext(), "An error occurred!", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }
+        });
+
+        cameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                cameraActivityResultLauncher.launch(i);
+            }
+        });
 
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,9 +221,6 @@ public class AddEditRecipeFragment extends DialogFragment {
                 galleryActivityResultLauncher.launch(i);
             }
         });
-
-
-
 
         // Category spinner
         ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(this.getContext(),
@@ -174,6 +244,10 @@ public class AddEditRecipeFragment extends DialogFragment {
         title.setText(currentRecipe.getTitle());
         servings.setText(String.valueOf(currentRecipe.getServings()));
         prepTime.setText(String.valueOf(currentRecipe.getPrepTime()));
+        if (currentRecipe.getPhoto() != null && !currentRecipe.getPhoto().isEmpty()) {
+            Picasso.get().load(currentRecipe.getPhoto()).into(image);
+            image.setClipToOutline(true);
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         return builder
                 .setView(view)
@@ -202,6 +276,7 @@ public class AddEditRecipeFragment extends DialogFragment {
                         currentRecipe.setComments(comments);
                         currentRecipe.setServings(longServings);
                         currentRecipe.setPrepTime(longPrepTime);
+                        currentRecipe.setPhoto(photoUrl);
 
                         listener.onConfirmPressed(currentRecipe, createNewRecipe);
 

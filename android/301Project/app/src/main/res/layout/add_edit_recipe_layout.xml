@@ -27,6 +27,7 @@
             android:layout_height="80dp"
             android:layout_gravity="center_vertical"
             android:background="@drawable/rounded_rect"
+            android:foreground="@drawable/rounded_rect_trans"
             android:src="@drawable/meal"
             android:id="@+id/recipeImageView"
             android:adjustViewBounds="true"
@@ -39,10 +40,21 @@
 
         <Button
             android:id="@+id/uploadImageButton"
-            android:layout_width="150dp"
+            android:layout_width="100dp"
             android:layout_height="50dp"
             android:layout_gravity="center_vertical"
-            android:text="Upload Image"
+            android:text="Upload"
+            />
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+        <Button
+            android:id="@+id/cameraButton"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:text="Camera"
             />
     </LinearLayout>
     <LinearLayout
