@@ -23,12 +23,20 @@ public class MealPlanActivity extends NavActivity {
     private ArrayAdapter<MealPlan> mealPlanArrayAdapter;
     private ArrayList<MealPlan> mealPlanDataList = new ArrayList<>();
 
+    /**
+     * Method for the activity becomes active and can receive input
+     * Navigation panel finds the menu and displays it
+     */
     @Override
     protected void onResume() {
         super.onResume();
         bottomNav.getMenu().findItem(R.id.action_meal_plan).setChecked(true);
     }
 
+    /**
+     * Method for initializing attributes of this activity
+     * @param savedInstanceState {@link Bundle} the last saved instance of the fragment, NULL if newly created
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +48,7 @@ public class MealPlanActivity extends NavActivity {
         bottomNav.getMenu().findItem(R.id.action_meal_plan).setChecked(true);
 
         // Get Data
-        // TODO create a controller and hook up
+        // TODO create a controller and hook up to Firebase
         for (DayOfWeek d: DayOfWeek.values()) {
             mealPlanDataList.add(
                     new MealPlan(d.getDisplayName(TextStyle.FULL, Locale.CANADA))
