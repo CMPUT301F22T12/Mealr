@@ -38,7 +38,7 @@ public class CustomList extends ArrayAdapter<Ingredient> {
      * @param position {@link Integer} the position of the current view
      * @param convertView {@link View} the view to be retrieved
      * @param parent {@link ViewGroup} the collection of views that contains
-     * @return a view
+     * @return the view that is selected
      */
     @NonNull
     @Override
