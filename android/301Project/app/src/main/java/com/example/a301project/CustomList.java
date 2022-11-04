@@ -49,7 +49,8 @@ public class CustomList extends ArrayAdapter<Ingredient> {
         if(view == null){
             view = LayoutInflater.from(context).inflate(R.layout.ingredient_content, parent,false);
         }
-        // list view to display 3 attributes of each food object
+        // list view to display attributes of each ingredient object
+        // by setting the view textboxes to their ID
         Ingredient ingredient = ingredients.get(position);
         TextView ingredientName = view.findViewById(R.id.i_nameText);
         TextView locationName = view.findViewById(R.id.i_locationText);
@@ -58,6 +59,7 @@ public class CustomList extends ArrayAdapter<Ingredient> {
         TextView unitName = view.findViewById(R.id.i_unitText);
         TextView categoryName = view.findViewById(R.id.i_categoryText);
 
+        // set the texts of ingredients
         ingredientName.setText(ingredient.getName());
         locationName.setText(ingredient.getLocation());
         bbdName.setText("Expires: " + ingredient.getbbd());
