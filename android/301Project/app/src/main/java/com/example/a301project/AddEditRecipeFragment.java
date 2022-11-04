@@ -30,7 +30,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
-<<<<<<< HEAD
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -43,13 +43,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-=======
 /**
  * A class for a fragment that handles adding and editing recipes
  * Fragment is activated when user clicks certain buttons
  */
->>>>>>> 9af36dcb74ba57f887d7bdfc49103e27fadc927d
-public class AddEditRecipeFragment extends DialogFragment {
+public class AddEditRecipeFragment<FirebaseStorage> extends DialogFragment {
     private Spinner categoryName;
     private EditText comments;
     private EditText title;
@@ -76,7 +74,6 @@ public class AddEditRecipeFragment extends DialogFragment {
         void onDeleteConfirmed(Recipe currentRecipe);
     }
 
-<<<<<<< HEAD
     private void saveBitmapToFirebase(Bitmap bitmap) {
         uploadButton.setEnabled(false);
 
@@ -112,14 +109,12 @@ public class AddEditRecipeFragment extends DialogFragment {
         });
     }
 
-=======
     /**
      * Method for when fragment is attached to the screen
      * @param context {@link Context} the context of the fragment
      * sets the listener object as OnFragmentInteractionListener
      * throws exception if context is not an instance of OnFragmentInteractionListener
      */
->>>>>>> 9af36dcb74ba57f887d7bdfc49103e27fadc927d
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -131,8 +126,6 @@ public class AddEditRecipeFragment extends DialogFragment {
         }
     }
 
-<<<<<<< HEAD
-=======
     Recipe currentRecipe;
     boolean createNewRecipe;
 
@@ -145,7 +138,7 @@ public class AddEditRecipeFragment extends DialogFragment {
      *                                         fragment is newly created
      * @return dialog fragment with the appropriate fields
      */
->>>>>>> 9af36dcb74ba57f887d7bdfc49103e27fadc927d
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
