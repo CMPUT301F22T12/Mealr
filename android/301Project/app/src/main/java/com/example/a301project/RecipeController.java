@@ -34,6 +34,15 @@ public class RecipeController {
     }
 
     /**
+     * Constructor for injecting a db for testing purposes
+     * @param db
+     */
+    public RecipeController(FirebaseFirestore db) {
+        this.db = db;
+        this.cr = db.collection("Recipe");
+    }
+
+    /**
      * Method to add an {@link Recipe} to the Firebase database
      * @param recipe This is the {@link Recipe} to be added to Firebase
      */
