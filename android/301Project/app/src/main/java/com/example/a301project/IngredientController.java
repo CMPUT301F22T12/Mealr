@@ -41,12 +41,21 @@ public class IngredientController {
     }
 
     /**
+     * Constructor for injecting a db for testing purposes
+     * @param db
+     */
+    public IngredientController(FirebaseFirestore db) {
+        this.db = db;
+        collectionReference = db.collection(collectionName);
+    }
+
+    /**
      * Converts a {@link String} to a {@link Timestamp} object
      * @param bestBefore The best before date as a {@link String}
      * @return A {@link Timestamp} object
      */
     public static Timestamp convertStringToTimestamp(String bestBefore) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf     = new SimpleDateFormat("yyyy-MM-dd");
         Date date = null;
         try {
             date = sdf.parse(bestBefore);
