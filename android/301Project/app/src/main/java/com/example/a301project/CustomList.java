@@ -12,11 +12,20 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
+/**
+ * This class creates a custom array list for ingredient objects
+ * contains a constructor and a method that returns a view of the custom list
+ */
 public class CustomList extends ArrayAdapter<Ingredient> {
     // custom array list containing Ingredient
     private ArrayList<Ingredient> ingredients;
     private Context context;
 
+    /**
+     * Makes a Custom list from an array list of ingredients
+     * @param context {@link Context} context to the array list
+     * @param ingredients {@link ArrayList<Ingredient>} array list containing ingredients
+     */
     public CustomList(Context context, ArrayList<Ingredient> ingredients) {
         // constructor
         super(context,0,ingredients);
@@ -24,6 +33,21 @@ public class CustomList extends ArrayAdapter<Ingredient> {
         this.context = context;
     }
 
+    /**
+<<<<<<< HEAD
+     * Method for creating a view that will appear in the ingredient adapter
+     * @param position {@link Integer} the position of the current view
+     * @param convertView {@link View} the reused view to be retrieved
+     * @param parent {@link ViewGroup} the collection of views that contains current view
+     * @return a view
+=======
+     *
+     * @param position {@link Integer} the position of the current view
+     * @param convertView {@link View} the view to be retrieved
+     * @param parent {@link ViewGroup} the collection of views that contains
+     * @return the view that is selected
+>>>>>>> 9af36dcb74ba57f887d7bdfc49103e27fadc927d
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup
@@ -33,7 +57,8 @@ public class CustomList extends ArrayAdapter<Ingredient> {
         if(view == null){
             view = LayoutInflater.from(context).inflate(R.layout.ingredient_content, parent,false);
         }
-        // list view to display 3 attributes of each food object
+        // list view to display attributes of each ingredient object
+        // by setting the view textboxes to their ID
         Ingredient ingredient = ingredients.get(position);
         TextView ingredientName = view.findViewById(R.id.i_nameText);
         TextView locationName = view.findViewById(R.id.i_locationText);
@@ -42,6 +67,7 @@ public class CustomList extends ArrayAdapter<Ingredient> {
         TextView unitName = view.findViewById(R.id.i_unitText);
         TextView categoryName = view.findViewById(R.id.i_categoryText);
 
+        // set the texts of ingredients
         ingredientName.setText(ingredient.getName());
         locationName.setText(ingredient.getLocation());
         bbdName.setText("Expires: " + ingredient.getbbd());

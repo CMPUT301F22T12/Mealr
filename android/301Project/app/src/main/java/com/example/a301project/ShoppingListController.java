@@ -8,10 +8,20 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * This {@link ShoppingListController} class allows the {@link ShoppingListActivity} to communicate with
+ * the Firestore database backend. This class contains methods to add or remove {@link Recipe} objects to the
+ * database, as well as edit functionality.
+ *
+ * This class should be used exclusively by the {@link ShoppingListActivity} class to handle database communication.
+ */
 public class ShoppingListController {
     private FirebaseFirestore db;
     private CollectionReference cr;
 
+    /**
+     * The constructor for the {@link ShoppingListController}. Sets up the {@link #db} and {@link #cr}
+     */
     public ShoppingListController() {
         this.db = FirebaseFirestore.getInstance();
         this.cr = db.collection("Ingredient");

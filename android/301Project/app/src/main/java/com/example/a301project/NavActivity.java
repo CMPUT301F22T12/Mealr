@@ -17,15 +17,27 @@ import com.google.android.material.navigation.NavigationBarView;
 public class NavActivity extends AppCompatActivity {
     protected BottomNavigationView bottomNav;
 
+    /**
+     * Method for on creating the activity
+     * @param savedInstanceState {@link Bundle} the last saved instance of this activity, NULL if its newly created
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav);
 
+        // sets the navigation bar at the bottom
         bottomNav = findViewById(R.id.bottomNav);
         bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            /**
+             * Method invoked when an item is selected in the navigation bar
+             * @param item {@link MenuItem} the item selected from the menu
+             * @return true
+             */
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                // retrive the selected item ID to determine which activity to switch to
+                // in future prototypes this will become fragments
                 int id = item.getItemId();
                 Intent i = null;
 
@@ -41,6 +53,7 @@ public class NavActivity extends AppCompatActivity {
 
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 
+                // launch the activity that was selected
                 startActivity(i);
 
                 return true;

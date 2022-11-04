@@ -12,6 +12,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 
+/**
+ * Class for MealPlan activity that contains a listview
+ * an ArrayAdapter for the meal plan
+ * renders MealPlan for user and allows them to add, delete, modify it
+ * currently incomplete
+ */
 public class MealPlanActivity extends NavActivity {
     private ListView listView;
     private ArrayAdapter<MealPlan> mealPlanArrayAdapter;

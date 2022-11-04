@@ -15,11 +15,19 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+/**
+ * Class for a RecipeList adapter that handles displaying Recipe objects to
+ * recipe activity
+ */
 public class RecipeListAdapter extends ArrayAdapter<Recipe> {
     private ArrayList<Recipe> recipes;
     private Context context;
 
-
+    /**
+     * Constructor for RecipeListAdapter using its attributes
+     * @param context {@link Context} the context for this adapter
+     * @param recipes {@link ArrayList} array list containing recipe objects
+     */
     public RecipeListAdapter(Context context, ArrayList<Recipe> recipes) {
         super(context, 0, recipes);
 
@@ -27,6 +35,13 @@ public class RecipeListAdapter extends ArrayAdapter<Recipe> {
         this.context = context;
     }
 
+    /**
+     * Method for creating a view that will appear in the recipe adapter
+     * @param position {@link Integer} the position of the current view
+     * @param convertView {@link View} the reused view to be retrieved
+     * @param parent {@link ViewGroup} the collection of views that contains current view
+     * @return a view
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -37,14 +52,14 @@ public class RecipeListAdapter extends ArrayAdapter<Recipe> {
             view = LayoutInflater.from(context).inflate(R.layout.recipe_row_layout, parent, false);
         }
 
-        // Find the views
+        // Find the views by searching textbox ID
         TextView titleTV = view.findViewById(R.id.r_titleTextView);
         TextView prepTimeTV = view.findViewById(R.id.r_prepTimeTextView);
         TextView servingsTV = view.findViewById(R.id.r_servingsTextView);
         TextView categoryTV = view.findViewById(R.id.r_categoryTextView);
         ImageView imageView = view.findViewById(R.id.r_imageview);
 
-        // Set the text
+        // Set the text to each textbox
         titleTV.setText(r.getTitle());
         prepTimeTV.setText(r.getPrepTime() + " min");
         servingsTV.setText(r.getServings().toString() + " Servings");

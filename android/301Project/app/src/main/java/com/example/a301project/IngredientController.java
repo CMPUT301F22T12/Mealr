@@ -90,6 +90,10 @@ public class IngredientController {
         collectionReference
                 .add(data)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    /**
+                     * Method invoked when successfully added to database
+                     * @param documentReference {@link DocumentReference} reference to document
+                     */
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         String id = documentReference.getId();
@@ -98,6 +102,10 @@ public class IngredientController {
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
+                    /**
+                     * Method invoked when failed to add to database
+                     * @param e {@link Exception} the error that occured
+                     */
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.w(TAG, "Error adding document",e);
