@@ -43,6 +43,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage'
     implementation 'com.google.firebase:firebase-firestore'
     implementation 'com.squareup.picasso:picasso:2.8'
+    testImplementation "org.mockito:mockito-core:3.+"
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test:rules:1.2.0'
     androidTestImplementation 'com.jayway.android.robotium:robotium-solo:5.3.1'
