@@ -14,16 +14,31 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This {@link RecipeController} class allows the {@link RecipeActivity} to communicate with
+ * the Firestore database backend. This class contains methods to add or remove {@link Recipe} objects to the
+ * database, as well as edit functionality.
+ *
+ * This class should be used exclusively by the {@link RecipeActivity} class to handle database communication.
+ */
 public class RecipeController {
     private FirebaseFirestore db;
     private CollectionReference cr;
 
+    /**
+     * The constructor for the {@link RecipeController}. Sets up the {@link #db} and {@link #cr}
+     */
     public RecipeController() {
         this.db = FirebaseFirestore.getInstance();
         this.cr = db.collection("Recipe");
     }
 
+    /**
+     * Method to add an {@link Recipe} to the Firebase database
+     * @param recipe This is the {@link Recipe} to be added to Firebase
+     */
     public void addRecipe(Recipe recipe) {
+        // get all required values
         String title = recipe.getTitle();
         String category = recipe.getCategory();
         String comments = recipe.getComments();
@@ -33,6 +48,7 @@ public class RecipeController {
         String photo = "";
         ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
 
+        // put all the values into hashmap
         HashMap<String, Object> data = new HashMap<>();
         data.put("Title", title);
         data.put("Category", category);
@@ -42,10 +58,15 @@ public class RecipeController {
         data.put("PrepTime", prepTime);
         data.put("Servings", servings);
 
+        // collection reference
         cr
                 .add(data)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
+                    /**
+                     * Method invoked when successfully added to database
+                     * @param documentReference {@link DocumentReference} reference to document
+                     */
                     public void onSuccess(DocumentReference documentReference) {
                         String id = documentReference.getId();
                         Log.d("Added", "Added document with ID: "+ id);
@@ -53,13 +74,20 @@ public class RecipeController {
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
+                    /**
+                     * Method invoked when failed to add to database
+                     * @param e {@link Exception} the error that occured
+                     */
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.w("ERROR", "Error adding document", e);
                     }
                 });
     }
-
+    /**
+     * Method to remove an {@link Recipe} from Firebase using its ID
+     * @param recipe This is the {@link Recipe} to be removed from Firebase
+     */
     public void removeRecipe(Recipe recipe) {
         String id = recipe.getId();
         db.collection("Recipe").document(id)
@@ -110,6 +138,11 @@ public class RecipeController {
         void f(ArrayList<Recipe> r);
     }
 
+    /**
+     * Notifies the Firestore database of an update to an recipe. The database then updates the
+     * recipe's values with the provided {@link Recipe} object
+     * @param recipe The {@link Recipe} object to update in the database
+     */
     public void notifyUpdate(Recipe recipe) {
         Map<String,Object> userMap = new HashMap<>();
         userMap.put("Title",recipe.getTitle());
