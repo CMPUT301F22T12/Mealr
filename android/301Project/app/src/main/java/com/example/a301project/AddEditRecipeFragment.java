@@ -82,7 +82,6 @@ public class AddEditRecipeFragment extends DialogFragment {
     private void saveBitmapToFirebase(Bitmap bitmap) {
         uploadButton.setEnabled(false);
         cameraButton.setEnabled(false);
-
         StorageReference storageRef = storage.getReference();
         StorageReference imagesRef = storageRef.child("mealImages").child(title.getText().toString());
 
@@ -153,7 +152,7 @@ public class AddEditRecipeFragment extends DialogFragment {
             currentRecipe = (Recipe) bundle.get("recipe");
             createNewRecipe = (boolean) bundle.get("createNew");
         }
-        // populate the textboxes with information of the selected recipe
+        // populate the text boxes with information of the selected recipe
         // empty if ADD
         categoryName = view.findViewById(R.id.edit_category_recipe);
         comments = view.findViewById(R.id.edit_comments);
@@ -222,9 +221,9 @@ public class AddEditRecipeFragment extends DialogFragment {
                         Intent data = result.getData();
                         if (data != null) {
                             Uri uri = data.getData();
-                            InputStream in;
                             try {
-                                in = getActivity().getContentResolver().openInputStream(uri);
+                                // Get the images as a bitmap from the result
+                                InputStream in = getActivity().getContentResolver().openInputStream(uri);
                                 final Bitmap bitmap = BitmapFactory.decodeStream(in);
 
                                 // Save the image to firebase
