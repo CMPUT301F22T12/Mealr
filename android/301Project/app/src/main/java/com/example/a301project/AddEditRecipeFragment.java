@@ -47,7 +47,7 @@ import java.io.InputStream;
  * A class for a fragment that handles adding and editing recipes
  * Fragment is activated when user clicks certain buttons
  */
-public class AddEditRecipeFragment<FirebaseStorage> extends DialogFragment {
+public class AddEditRecipeFragment extends DialogFragment {
     private Spinner categoryName;
     private EditText comments;
     private EditText title;
@@ -60,7 +60,7 @@ public class AddEditRecipeFragment<FirebaseStorage> extends DialogFragment {
     private ImageView image;
     private Button uploadButton;
     private Button cameraButton;
-    private com.google.firebase.storage.FirebaseStorage storage = com.google.firebase.storage.FirebaseStorage.getInstance();
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
     private String photoUrl;
 
 
@@ -74,8 +74,14 @@ public class AddEditRecipeFragment<FirebaseStorage> extends DialogFragment {
         void onDeleteConfirmed(Recipe currentRecipe);
     }
 
+    /**
+     * Saves the bitmap to firebase storage with the name of the recipe
+     * @param bitmap {@link Bitmap} the bitmap to save
+     * Shows toast based on result
+     */
     private void saveBitmapToFirebase(Bitmap bitmap) {
         uploadButton.setEnabled(false);
+        cameraButton.setEnabled(false);
 
         StorageReference storageRef = storage.getReference();
         StorageReference imagesRef = storageRef.child("mealImages").child(title.getText().toString());
@@ -90,6 +96,7 @@ public class AddEditRecipeFragment<FirebaseStorage> extends DialogFragment {
             public void onFailure(@NonNull Exception exception) {
                 Toast.makeText(getContext(), "An error occurred!", Toast.LENGTH_LONG).show();
                 uploadButton.setEnabled(true);
+                cameraButton.setEnabled(true);
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -105,6 +112,7 @@ public class AddEditRecipeFragment<FirebaseStorage> extends DialogFragment {
                     }
                 });
                 uploadButton.setEnabled(true);
+                cameraButton.setEnabled(true);
             }
         });
     }
@@ -135,7 +143,6 @@ public class AddEditRecipeFragment<FirebaseStorage> extends DialogFragment {
      *                                         fragment is newly created
      * @return dialog fragment with the appropriate fields
      */
-
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -206,6 +213,7 @@ public class AddEditRecipeFragment<FirebaseStorage> extends DialogFragment {
             }
         });
 
+
         // Create a launcher for the gallery upload intent
         ActivityResultLauncher<Intent> galleryActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -231,6 +239,7 @@ public class AddEditRecipeFragment<FirebaseStorage> extends DialogFragment {
                     }
                 });
 
+        // Create a launcher for the camera upload intent
         ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
@@ -298,14 +307,17 @@ public class AddEditRecipeFragment<FirebaseStorage> extends DialogFragment {
                 // nothing happens, the spinner goes away if you click away from the spinner
             }
         });
+
         categoryName.setSelection(categoryAdapter.getPosition(currentRecipe.getCategory()));
         comments.setText(currentRecipe.getComments());
         title.setText(currentRecipe.getTitle());
         servings.setText(String.valueOf(currentRecipe.getServings()));
         prepTime.setText(String.valueOf(currentRecipe.getPrepTime()));
+        // If we have a photo already, load it in
         if (currentRecipe.getPhoto() != null && !currentRecipe.getPhoto().isEmpty()) {
             Picasso.get().load(currentRecipe.getPhoto()).into(image);
             image.setClipToOutline(true);
+            photoUrl = currentRecipe.getPhoto();
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         return builder
@@ -341,10 +353,10 @@ public class AddEditRecipeFragment<FirebaseStorage> extends DialogFragment {
                         currentRecipe.setComments(comments);
                         currentRecipe.setServings(longServings);
                         currentRecipe.setPrepTime(longPrepTime);
-                        currentRecipe.setPhoto(photoUrl);
-
+                        if (photoUrl != null && !photoUrl.isEmpty()) {
+                            currentRecipe.setPhoto(photoUrl);
+                        }
                         listener.onConfirmPressed(currentRecipe, createNewRecipe);
-
                     }
                 }).create();
 
