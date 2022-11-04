@@ -50,8 +50,8 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
     private  Button removeButton;
 
     /**
-     * Method for initializing attributes of this activity
-     * @param savedInstanceState {@link Bundle} the last saved instance of the fragment, NULL if newly created
+     * Method for the activity becomes active and can receive input
+     * Navigation panel to get the menu of this activity
      */
     @Override
     protected void onResume() {
@@ -59,6 +59,10 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
         bottomNav.getMenu().findItem(R.id.action_ingredients).setChecked(true);
     }
 
+    /**
+     * Method for initializing attributes of this activity
+     * @param savedInstanceState {@link Bundle} the last saved instance of the fragment, NULL if newly created
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
