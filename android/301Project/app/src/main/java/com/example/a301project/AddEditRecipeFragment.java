@@ -60,7 +60,7 @@ public class AddEditRecipeFragment<FirebaseStorage> extends DialogFragment {
     private ImageView image;
     private Button uploadButton;
     private Button cameraButton;
-    private FirebaseStorage storage = FirebaseStorage.getInstance();
+    private com.google.firebase.storage.FirebaseStorage storage = com.google.firebase.storage.FirebaseStorage.getInstance();
     private String photoUrl;
 
 
@@ -125,9 +125,6 @@ public class AddEditRecipeFragment<FirebaseStorage> extends DialogFragment {
             throw new RuntimeException(context + "must implement OnFragmentInteractionListener");
         }
     }
-
-    Recipe currentRecipe;
-    boolean createNewRecipe;
 
     /**
      * Method to set the fragment attributes
