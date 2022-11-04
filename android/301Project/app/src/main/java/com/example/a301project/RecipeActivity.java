@@ -29,6 +29,12 @@ public class RecipeActivity extends NavActivity implements AddEditRecipeFragment
     public int position = -1;
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        bottomNav.getMenu().findItem(R.id.action_recipes).setChecked(true);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // We have to put our layout in the space for the content

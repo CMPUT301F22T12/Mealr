@@ -9,10 +9,11 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/recipeSort"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="5dp"
+        android:paddingHorizontal="5dp"
         app:layout_constraintTop_toTopOf="parent">
 
         <Button
@@ -34,7 +35,7 @@
 
         <Spinner
             android:id="@+id/recipeSortSpinner"
-            android:layout_width="140dp"
+            android:layout_width="120dp"
             android:layout_height="match_parent"
             app:layout_constraintEnd_toStartOf="@id/recipeSortSwitch"
             app:layout_constraintTop_toTopOf="parent" />

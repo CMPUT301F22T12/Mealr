@@ -5,24 +5,17 @@ import static android.content.ContentValues.TAG;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -137,7 +130,7 @@ public class IngredientController {
     /**
      * Notifies the Firestore database of an update to an ingredient. The database then updates the
      * ingredient's values with the provided {@link Ingredient} object
-     * @param ingredient The {@link Ingredient} object to update in the databse
+     * @param ingredient The {@link Ingredient} object to update in the database
      */
     public void notifyUpdate(Ingredient ingredient) {
         Map<String,Object> userMap = new HashMap<>();

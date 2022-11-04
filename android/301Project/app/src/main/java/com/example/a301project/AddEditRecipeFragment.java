@@ -1,24 +1,36 @@
 package com.example.a301project;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 public class AddEditRecipeFragment extends DialogFragment {
     private Spinner categoryName;
@@ -28,6 +40,11 @@ public class AddEditRecipeFragment extends DialogFragment {
     private EditText prepTime;
     private AddEditRecipeFragment.OnFragmentInteractionListener listener;
     private Button deleteButton;
+    private Recipe currentRecipe;
+    private boolean createNewRecipe;
+    private ImageView image;
+    private Button uploadButton;
+
 
     public interface OnFragmentInteractionListener {
         void onConfirmPressed(Recipe currentRecipe, boolean createNewRecipe);
@@ -45,9 +62,6 @@ public class AddEditRecipeFragment extends DialogFragment {
         }
     }
 
-    Recipe currentRecipe;
-    boolean createNewRecipe;
-
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -64,6 +78,8 @@ public class AddEditRecipeFragment extends DialogFragment {
         servings = view.findViewById(R.id.edit_servings);
         prepTime = view.findViewById(R.id.edit_prep_time);
         deleteButton = view.findViewById(R.id.delete_recipe_button);
+        image = view.findViewById(R.id.recipeImageView);
+        uploadButton = view.findViewById(R.id.uploadImageButton);
 
         if (this.getTag().equals("ADD")) {
             deleteButton.setVisibility(View.GONE);
@@ -94,6 +110,46 @@ public class AddEditRecipeFragment extends DialogFragment {
                 alert.show();
             }
         });
+
+
+        // Create a launcher for the gallery upload intent
+        ActivityResultLauncher<Intent> galleryActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            Intent data = result.getData();
+                            if (data != null){
+                                Uri uri = data.getData();
+                                InputStream in;
+                                try {
+                                    in = getActivity().getContentResolver().openInputStream(uri);
+                                    final Bitmap selected_img = BitmapFactory.decodeStream(in);
+                                    image.setImageBitmap(selected_img);
+                                    image.setClipToOutline(true);
+
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(getContext(), "An error occurred!", Toast.LENGTH_LONG).show();
+                                }
+                            }
+
+                        }
+                    }
+                });
+
+        uploadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(
+                        Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                galleryActivityResultLauncher.launch(i);
+            }
+        });
+
+
 
 
         // Category spinner

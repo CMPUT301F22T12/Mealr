@@ -50,6 +50,12 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
     private  Button removeButton;
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        bottomNav.getMenu().findItem(R.id.action_ingredients).setChecked(true);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // We have to put our layout in the space for the content

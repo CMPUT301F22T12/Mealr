@@ -18,6 +18,12 @@ public class MealPlanActivity extends NavActivity {
     private ArrayList<MealPlan> mealPlanDataList = new ArrayList<>();
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        bottomNav.getMenu().findItem(R.id.action_meal_plan).setChecked(true);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // We have to put our layout in the space for the content
