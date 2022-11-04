@@ -50,6 +50,7 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
     private  Button removeButton;
 
     /**
+<<<<<<< HEAD
      * Method for the activity becomes active and can receive input
      * Navigation panel finds the menu and displays it
      */
@@ -60,6 +61,8 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
     }
 
     /**
+=======
+>>>>>>> 9af36dcb74ba57f887d7bdfc49103e27fadc927d
      * Method for initializing attributes of this activity
      * @param savedInstanceState {@link Bundle} the last saved instance of the fragment, NULL if newly created
      */
@@ -230,7 +233,11 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
     /**
      * Method for adding ingredients
      * trigger when Add button clicked
+<<<<<<< HEAD
      * @param ingredient {@link Ingredient} an ingredient to be added
+=======
+     * @param ingredient {@link Ingredient} an ingredient
+>>>>>>> 9af36dcb74ba57f887d7bdfc49103e27fadc927d
      * @return void
      */
     public void addIngredient(Ingredient ingredient) {
@@ -239,7 +246,11 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
     }
 
     /**
+<<<<<<< HEAD
      * Method invoked when Add/Edit fragment confirm clicked
+=======
+     * Method for Add/Edit fragment confirm
+>>>>>>> 9af36dcb74ba57f887d7bdfc49103e27fadc927d
      * @param currentIngredient {@link Ingredient}
      * @param createNewIngredient {@link boolean}
      * checks whether to create new ingredient or to update existing
