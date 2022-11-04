@@ -34,10 +34,10 @@ public class CustomList extends ArrayAdapter<Ingredient> {
     }
 
     /**
-     *
+     * Method for creating a view that will appear in the ingredient adapter
      * @param position {@link Integer} the position of the current view
-     * @param convertView {@link View} the view to be retrieved
-     * @param parent {@link ViewGroup} the collection of views that contains
+     * @param convertView {@link View} the reused view to be retrieved
+     * @param parent {@link ViewGroup} the collection of views that contains current view
      * @return a view
      */
     @NonNull
