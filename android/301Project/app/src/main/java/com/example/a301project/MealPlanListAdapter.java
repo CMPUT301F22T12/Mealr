@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 /**
  * Class for an ArrayAdapter that renders MealPlan objects for use
- * by a ListView in MealPlanActivity
+ * by a ListView in MealPlanFragment
  */
 public class MealPlanListAdapter extends ArrayAdapter<MealPlan> {
     private ArrayList<MealPlan> mealPlans;

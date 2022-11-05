@@ -2,7 +2,6 @@ package com.example.a301project;
 
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -11,9 +10,10 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Switch;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -25,17 +25,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Locale;
 
 /**
  * Main Activity class for Ingredients
  * functionalities for add, edit, delete
  * initiates an IngredientController object that has access to firebase data
  * handles sorting of ingredients
- * @return void
+ * void
  */
 
-public class IngredientActivity extends NavActivity implements AddEditIngredientFragment.OnFragmentInteractionListener {
+public class IngredientFragment extends Fragment implements AddEditIngredientFragment.OnFragmentInteractionListener {
     private IngredientController ingredientController;
     private ListView ingredientList;
     private ArrayAdapter<Ingredient> ingredientAdapter;
@@ -45,40 +44,34 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
     private Switch sortSwitch;
     public int position = -1;
     private Button addButton;
-    /**
-     * Method for the activity becomes active and can receive input
-     * Navigation panel finds the menu and displays it
-     */
-    @Override
-    protected void onResume() {
-        super.onResume();
-        bottomNav.getMenu().findItem(R.id.action_ingredients).setChecked(true);
+
+    public IngredientFragment() {
+        super(R.layout.activity_ingredient);
     }
 
     /**
      * Method for initializing attributes of this activity
+     * @param view The View returned by onCreateView.f
      * @param savedInstanceState {@link Bundle} the last saved instance of the fragment, NULL if newly created
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // We have to put our layout in the space for the content
-        ViewGroup content = findViewById(R.id.nav_content);
-        getLayoutInflater().inflate(R.layout.activity_ingredient, content, true);
+        getActivity().setTitle("My Ingredients");
 
-        addButton = findViewById(R.id.add_ingredient_button);
+        addButton = view.findViewById(R.id.add_ingredient_button);
         // create list of ingredients
-        ingredientList = findViewById(R.id.ingredientListView);
+        ingredientList = view.findViewById(R.id.ingredientListView);
         dataList = new ArrayList<>();
 
-        ingredientAdapter = new CustomList(this,dataList);
+        ingredientAdapter = new CustomList(getContext(),dataList);
         ingredientList.setAdapter(ingredientAdapter);
 
 
         // ingredient sort by title, location, expiry date, category
-        sortSpinner = findViewById(R.id.ingredientSortSpinner);
-        sortSwitch = findViewById(R.id.ingredientSortSwitch);
-        ArrayAdapter<String> sortAdapter = new ArrayAdapter<>(this,com.google.android.material.R.layout.support_simple_spinner_dropdown_item, sortOptions);
+        sortSpinner = view.findViewById(R.id.ingredientSortSpinner);
+        sortSwitch = view.findViewById(R.id.ingredientSortSwitch);
+        ArrayAdapter<String> sortAdapter = new ArrayAdapter<>(getContext(),com.google.android.material.R.layout.support_simple_spinner_dropdown_item, sortOptions);
         sortSpinner.setAdapter(sortAdapter);
         sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             /**
@@ -117,7 +110,6 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
                 sortDataBySpinner();
             }
         });
-        sortDataBySpinner();
 
         // on item  click in ingredient list, editor appears
         ingredientList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -133,7 +125,8 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
                 // view ingredient details when you click on it
                 position = i;
                 Ingredient selected = (Ingredient) adapterView.getItemAtPosition(i);
-                AddEditIngredientFragment.newInstance(ingredientAdapter.getItem(position),false).show(getSupportFragmentManager(),"EDIT");
+
+                AddEditIngredientFragment.newInstance(ingredientAdapter.getItem(position),false, IngredientFragment.this).show(getChildFragmentManager(),"EDIT");
 
             }
         });
@@ -148,7 +141,7 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
             @Override
             public void onClick(View view) {
                 Ingredient newIngredient = new Ingredient("",1,"","","","");
-                AddEditIngredientFragment.newInstance(newIngredient,true).show(getSupportFragmentManager(),"ADD");
+                AddEditIngredientFragment.newInstance(newIngredient,true, IngredientFragment.this).show(getChildFragmentManager(),"ADD");
             }
         });
 
@@ -186,12 +179,10 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
 
                     dataList.add(newIngredient);
                 }
+                sortDataBySpinner();
                 ingredientAdapter.notifyDataSetChanged();
             }
         });
-
-        // Set the correct button to be selected
-        bottomNav.getMenu().findItem(R.id.action_ingredients).setChecked(true);
     }
     /**
      * Method for sorting ingredients by selected attributes
@@ -200,8 +191,8 @@ public class IngredientActivity extends NavActivity implements AddEditIngredient
      * @return void
      */
     public void sortDataBySpinner() {
-        sortSpinner = findViewById(R.id.ingredientSortSpinner);
-        sortSwitch = findViewById(R.id.ingredientSortSwitch);
+        sortSpinner = getView().findViewById(R.id.ingredientSortSpinner);
+        sortSwitch = getView().findViewById(R.id.ingredientSortSwitch);
 
         // retrieve the sort information
         String sortBy = sortSpinner.getSelectedItem().toString();

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MealPlanActivity">
+    tools:context=".MealPlanFragment">
     <ListView
         android:id="@+id/mealPlanListView"
         android:layout_width="0dp"

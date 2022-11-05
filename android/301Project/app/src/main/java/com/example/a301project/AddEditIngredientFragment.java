@@ -1,16 +1,12 @@
 package com.example.a301project;
 
-import static android.content.ContentValues.TAG;
-
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,17 +15,13 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
-import java.lang.reflect.Array;
 import java.util.Calendar;
 
 /**
@@ -47,6 +39,8 @@ public class AddEditIngredientFragment extends DialogFragment {
     private OnFragmentInteractionListener listener;
     private DatePickerDialog.OnDateSetListener setListener;
     private Button deleteButton;
+    private Ingredient currentIngredient;
+    private boolean createNewIngredient;
 
     /**
      * Method that responds when the fragment has been interacted with
@@ -56,24 +50,7 @@ public class AddEditIngredientFragment extends DialogFragment {
         void onConfirmPressed(Ingredient currentIngredient, boolean createNewIngredient);
     }
 
-    /**
-     * Method for when fragment is attached to the screen
-     * @param context {@link Context} the context of the fragment
-     * sets the listener object as OnFragmentInteractionListener
-     * throws exception if context is not an instance of OnFragmentInteractionListener
-     */
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof AddEditIngredientFragment.OnFragmentInteractionListener) {
-            listener = (AddEditIngredientFragment.OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString() + "must implement OnFragmentInteractionListener");
-        }
-    }
 
-    Ingredient currentIngredient;
-    boolean createNewIngredient;
 
     /**
      * Method to set the fragment attributes
@@ -136,8 +113,8 @@ public class AddEditIngredientFragment extends DialogFragment {
                                 IngredientController controller = new IngredientController();
                                 controller.removeIngredient(currentIngredient);
 
-                                Fragment frag = getActivity().getSupportFragmentManager().findFragmentByTag("EDIT");
-                                getActivity().getSupportFragmentManager().beginTransaction().remove(frag).commit();
+                                Fragment frag = getParentFragmentManager().findFragmentByTag("EDIT");
+                                getParentFragmentManager().beginTransaction().remove(frag).commit();
                                 Toast.makeText(getContext(), "Ingredient Delete Successful", Toast.LENGTH_LONG).show();
                             }
                         })
@@ -333,13 +310,15 @@ public class AddEditIngredientFragment extends DialogFragment {
      * @param createNew {@link boolean} variable that indicates whether to create a new ingredient
      * @return An Add/Edit Ingredient fragment
      */
-    static AddEditIngredientFragment newInstance(Ingredient ingredient, boolean createNew) {
+    static AddEditIngredientFragment newInstance(Ingredient ingredient, boolean createNew, OnFragmentInteractionListener listener) {
         Bundle args = new Bundle();
         args.putSerializable("ingredient",ingredient);
         args.putSerializable("createNew", createNew);
 
         AddEditIngredientFragment fragment = new AddEditIngredientFragment();
         fragment.setArguments(args);
+
+        fragment.listener = listener;
         return fragment;
     }
 }

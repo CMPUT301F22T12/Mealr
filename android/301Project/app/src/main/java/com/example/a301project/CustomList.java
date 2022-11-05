@@ -34,31 +34,22 @@ public class CustomList extends ArrayAdapter<Ingredient> {
     }
 
     /**
-<<<<<<< HEAD
      * Method for creating a view that will appear in the ingredient adapter
      * @param position {@link Integer} the position of the current view
      * @param convertView {@link View} the reused view to be retrieved
      * @param parent {@link ViewGroup} the collection of views that contains current view
      * @return a view
-=======
-     *
-     * @param position {@link Integer} the position of the current view
-     * @param convertView {@link View} the view to be retrieved
-     * @param parent {@link ViewGroup} the collection of views that contains
-     * @return the view that is selected
->>>>>>> 9af36dcb74ba57f887d7bdfc49103e27fadc927d
      */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup
             parent) {
-        // return super.getView(position, convertView, parent);
         View view = convertView;
         if(view == null){
             view = LayoutInflater.from(context).inflate(R.layout.ingredient_content, parent,false);
         }
         // list view to display attributes of each ingredient object
-        // by setting the view textboxes to their ID
+        // by setting the view text boxes to their ID
         Ingredient ingredient = ingredients.get(position);
         TextView ingredientName = view.findViewById(R.id.i_nameText);
         TextView locationName = view.findViewById(R.id.i_locationText);

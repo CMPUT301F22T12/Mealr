@@ -3,16 +3,12 @@ package com.example.a301project;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.Mockito;
 
 import java.util.Map;
 

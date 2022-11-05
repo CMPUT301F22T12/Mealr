@@ -1,19 +1,16 @@
 package com.example.a301project;
 
-import android.util.Log;
-
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 /**
- * This {@link ShoppingListController} class allows the {@link ShoppingListActivity} to communicate with
+ * This {@link ShoppingListController} class allows the {@link ShoppingListFragment} to communicate with
  * the Firestore database backend. This class contains methods to add or remove {@link Recipe} objects to the
  * database, as well as edit functionality.
  *
- * This class should be used exclusively by the {@link ShoppingListActivity} class to handle database communication.
+ * This class should be used exclusively by the {@link ShoppingListFragment} class to handle database communication.
  */
 public class ShoppingListController {
     private FirebaseFirestore db;

@@ -1,11 +1,13 @@
 package com.example.a301project;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -36,28 +38,68 @@ public class NavActivity extends AppCompatActivity {
              */
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                // retrive the selected item ID to determine which activity to switch to
+                // Retrieve the selected item ID to determine which activity to switch to
                 // in future prototypes this will become fragments
                 int id = item.getItemId();
-                Intent i = null;
 
-                if (id == R.id.action_ingredients) {
-                    i = new Intent(NavActivity.this, IngredientActivity.class);
-                } else if (id == R.id.action_recipes) {
-                    i = new Intent(NavActivity.this, RecipeActivity.class);
-                } else if (id == R.id.action_meal_plan) {
-                    i = new Intent(NavActivity.this, MealPlanActivity.class);
-                } else if (id == R.id.action_shopping_list) {
-                    i = new Intent(NavActivity.this, ShoppingListActivity.class);
-                }
-
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                // launch the activity that was selected
-                startActivity(i);
+                renderFragment(id);
 
                 return true;
             }
         });
+
+        // Render ingredient by default
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.nav_content, IngredientFragment.class, null, "IngredientFragment")
+                .setReorderingAllowed(true)
+                .addToBackStack(null)
+                .commit();
+        bottomNav.getMenu().findItem(R.id.action_ingredients).setChecked(true);
+    }
+
+    /**
+     * Renders the fragment with the given id
+     * @param id id of menu item in the nav bar
+     */
+    private void renderFragment(int id) {
+        // Avoid duplicates if you press button on same screen
+        if (bottomNav.getSelectedItemId() == id) {return;}
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Class<? extends Fragment> f = null;
+        String tag = null;
+
+        if (id == R.id.action_ingredients) {
+            f = IngredientFragment.class;
+            tag = "IngredientFragment";
+        } else if (id == R.id.action_recipes) {
+            f = RecipeFragment.class;
+            tag = "RecipeFragment";
+        } else if (id == R.id.action_meal_plan) {
+            f = MealPlanFragment.class;
+            tag = "MealPlanFragment";
+        } else if (id == R.id.action_shopping_list) {
+            f = ShoppingListFragment.class;
+            tag = "ShoppingListFragment";
+        }
+
+        fragmentManager.beginTransaction()
+                .replace(R.id.nav_content, f, null, tag)
+                .setReorderingAllowed(true)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    /**
+     * Override the back button so when we only have one fragment we close the app
+     * instead of showing a blank screen
+     */
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+            super.onBackPressed();
+        } else {
+            finish();
+        }
     }
 }

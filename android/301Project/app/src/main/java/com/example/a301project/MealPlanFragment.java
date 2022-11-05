@@ -1,15 +1,17 @@
 package com.example.a301project;
 
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
 import java.time.DayOfWeek;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Locale;
 
 /**
@@ -18,19 +20,13 @@ import java.util.Locale;
  * renders MealPlan for user and allows them to add, delete, modify it
  * currently incomplete
  */
-public class MealPlanActivity extends NavActivity {
+public class MealPlanFragment extends Fragment {
     private ListView listView;
     private ArrayAdapter<MealPlan> mealPlanArrayAdapter;
     private ArrayList<MealPlan> mealPlanDataList = new ArrayList<>();
 
-    /**
-     * Method for the activity becomes active and can receive input
-     * Navigation panel finds the menu and displays it
-     */
-    @Override
-    protected void onResume() {
-        super.onResume();
-        bottomNav.getMenu().findItem(R.id.action_meal_plan).setChecked(true);
+    public MealPlanFragment() {
+        super(R.layout.activity_meal_plan);
     }
 
     /**
@@ -38,14 +34,13 @@ public class MealPlanActivity extends NavActivity {
      * @param savedInstanceState {@link Bundle} the last saved instance of the fragment, NULL if newly created
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // We have to put our layout in the space for the content
-        ViewGroup content = findViewById(R.id.nav_content);
-        getLayoutInflater().inflate(R.layout.activity_meal_plan, content, true);
+        getActivity().setTitle("My Meal Plans");
 
-        // Set the correct button to be selected
-        bottomNav.getMenu().findItem(R.id.action_meal_plan).setChecked(true);
+        // We have to put our layout in the space for the content
+        ViewGroup content = view.findViewById(R.id.nav_content);
+        getLayoutInflater().inflate(R.layout.activity_meal_plan, content, true);
 
         // Get Data
         // TODO create a controller and hook up to Firebase
@@ -56,8 +51,8 @@ public class MealPlanActivity extends NavActivity {
         }
 
         // Attach to listview
-        mealPlanArrayAdapter = new MealPlanListAdapter(this, mealPlanDataList);
-        listView = findViewById(R.id.mealPlanListView);
+        mealPlanArrayAdapter = new MealPlanListAdapter(getContext(), mealPlanDataList);
+        listView = view.findViewById(R.id.mealPlanListView);
         listView.setAdapter(mealPlanArrayAdapter);
     }
 }

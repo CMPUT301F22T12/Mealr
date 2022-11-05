@@ -3,7 +3,6 @@ package com.example.a301project;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -29,7 +28,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -117,23 +115,6 @@ public class AddEditRecipeFragment extends DialogFragment {
     }
 
     /**
-     * Method for when fragment is attached to the screen
-     * @param context {@link Context} the context of the fragment
-     * sets the listener object as OnFragmentInteractionListener
-     * throws exception if context is not an instance of OnFragmentInteractionListener
-     */
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof AddEditRecipeFragment.OnFragmentInteractionListener) {
-            listener = (AddEditRecipeFragment.OnFragmentInteractionListener) context;
-        }
-        else {
-            throw new RuntimeException(context + "must implement OnFragmentInteractionListener");
-        }
-    }
-
-    /**
      * Method to set the fragment attributes
      * Sets the information of current Recipe if the tag is EDIT
      * Sets empty EditText views if the tag is ADD, and hides delete button
@@ -191,8 +172,8 @@ public class AddEditRecipeFragment extends DialogFragment {
                                 RecipeController controller = new RecipeController();
                                 controller.removeRecipe(currentRecipe);
                                 listener.onDeleteConfirmed(currentRecipe);
-                                Fragment frag = getActivity().getSupportFragmentManager().findFragmentByTag("EDIT");
-                                getActivity().getSupportFragmentManager().beginTransaction().remove(frag).commit();
+                                Fragment frag = getParentFragmentManager().findFragmentByTag("EDIT");
+                                getParentFragmentManager().beginTransaction().remove(frag).commit();
                                 Toast.makeText(getContext(), "Recipe Delete Successful", Toast.LENGTH_LONG).show();
                             }
                         })
@@ -367,13 +348,15 @@ public class AddEditRecipeFragment extends DialogFragment {
      * @param createNew {@link boolean} variable that indicates whether to create a new recipe
      * @return An Add/Edit Recipe fragment
      */
-    static AddEditRecipeFragment newInstance(Recipe recipe, boolean createNew) {
+    static AddEditRecipeFragment newInstance(Recipe recipe, boolean createNew , OnFragmentInteractionListener listener) {
         Bundle args = new Bundle();
         args.putSerializable("recipe",recipe);
         args.putSerializable("createNew", createNew);
 
         AddEditRecipeFragment fragment = new AddEditRecipeFragment();
         fragment.setArguments(args);
+        fragment.listener = listener;
+
         return fragment;
     }
 }

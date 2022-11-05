@@ -2,7 +2,6 @@ package com.example.a301project;
 
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -10,6 +9,9 @@ import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Switch;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,7 +24,7 @@ import java.util.Collections;
  *  handles sorting of recipes
  *  @return void
  */
-public class RecipeActivity extends NavActivity implements AddEditRecipeFragment.OnFragmentInteractionListener {
+public class RecipeFragment extends Fragment implements AddEditRecipeFragment.OnFragmentInteractionListener {
     private ListView listView;
     private ArrayAdapter<Recipe> recipeArrayAdapter;
     private ArrayList<Recipe> recipeDataList = new ArrayList<>();
@@ -33,42 +35,35 @@ public class RecipeActivity extends NavActivity implements AddEditRecipeFragment
     Button addButton;
     public int position = -1;
 
-    /**
-     * Method for the activity becomes active and can receive input
-     * Navigation panel finds the menu and displays it
-     */
-    @Override
-    protected void onResume() {
-        super.onResume();
-        bottomNav.getMenu().findItem(R.id.action_recipes).setChecked(true);
+    public RecipeFragment() {
+        super(R.layout.activity_recipe);
     }
 
     /**
      * Method for initializing attributes of this activity
+     * @param view The View returned by onCreateView.f
      * @param savedInstanceState {@link Bundle} the last saved instance of the fragment, NULL if newly created
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // We have to put our layout in the space for the content
-        ViewGroup content = findViewById(R.id.nav_content);
-        getLayoutInflater().inflate(R.layout.activity_recipe, content, true);
-        addButton = findViewById(R.id.add_recipe_button);
-        // Set the correct button to be selected
-        bottomNav.getMenu().findItem(R.id.action_recipes).setChecked(true);
+        getActivity().setTitle("My Recipes");
+
+        addButton = view.findViewById(R.id.add_recipe_button);
+
         // Fetch the data
         controller.getRecipes(res -> setRecipeDataList(res));
 
         // Attach to listView
-        recipeArrayAdapter = new RecipeListAdapter(this, recipeDataList);
-        listView = findViewById(R.id.recipeListView);
+        recipeArrayAdapter = new RecipeListAdapter(getContext(), recipeDataList);
+        listView = view.findViewById(R.id.recipeListView);
         listView.setAdapter(recipeArrayAdapter);
 
         // Setup sorting
         // sort by title, prep time, servings, category
-        sortSpinner = findViewById(R.id.recipeSortSpinner);
-        sortSwitch = findViewById(R.id.recipeSortSwitch);
-        ArrayAdapter<String> sortAdapter = new ArrayAdapter<>(this, com.google.android.material.R.layout.support_simple_spinner_dropdown_item, sortOptions);
+        sortSpinner = view.findViewById(R.id.recipeSortSpinner);
+        sortSwitch = view.findViewById(R.id.recipeSortSwitch);
+        ArrayAdapter<String> sortAdapter = new ArrayAdapter<>(getContext(), com.google.android.material.R.layout.support_simple_spinner_dropdown_item, sortOptions);
         sortSpinner.setAdapter(sortAdapter);
         sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             /**
@@ -104,7 +99,7 @@ public class RecipeActivity extends NavActivity implements AddEditRecipeFragment
             @Override
             public void onClick(View view) {
                 Recipe newRecipe = new Recipe("","","","", 0L, 0L,new ArrayList<>());
-                AddEditRecipeFragment.newInstance(newRecipe,true).show(getSupportFragmentManager(),"ADD");
+                AddEditRecipeFragment.newInstance(newRecipe,true, RecipeFragment.this).show(getChildFragmentManager(),"ADD");
             }
         });
         sortSwitch.setChecked(true);
@@ -134,8 +129,7 @@ public class RecipeActivity extends NavActivity implements AddEditRecipeFragment
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 // when a Recipe item is clicked, open Edit Recipe fragment
                 position = i;
-                Recipe selected = (Recipe) adapterView.getItemAtPosition(i);
-                AddEditRecipeFragment.newInstance(recipeArrayAdapter.getItem(position), false).show(getSupportFragmentManager(), "EDIT");
+                AddEditRecipeFragment.newInstance(recipeArrayAdapter.getItem(position), false, RecipeFragment.this).show(getChildFragmentManager(), "EDIT");
             }
         });
 
@@ -158,8 +152,8 @@ public class RecipeActivity extends NavActivity implements AddEditRecipeFragment
      */
     private void sortDataBySpinner() {
         // Make sure views are defined
-        sortSpinner = findViewById(R.id.recipeSortSpinner);
-        sortSwitch = findViewById(R.id.recipeSortSwitch);
+        sortSpinner = getView().findViewById(R.id.recipeSortSpinner);
+        sortSwitch = getView().findViewById(R.id.recipeSortSwitch);
 
         String sortBy = sortSpinner.getSelectedItem().toString();
         Integer asc = sortSwitch.isChecked() ? 1 : -1;
