@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 /**
  * Represents an individual meal plan with ingredients and recipes.
- * MealPlanActivity contains multiple instances of these.
+ * MealPlanFragment contains multiple instances of these.
  */
 public class MealPlan {
     private ArrayList<Ingredient> ingredients;

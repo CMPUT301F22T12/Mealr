@@ -1,7 +1,7 @@
 package com.example.a301project;
 
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 
 import android.app.Activity;
 
@@ -56,67 +56,66 @@ public class NavActivityTest {
     }
 
     /**
-     * Tests that the IngredientActivity can open when the it's selected in the menu
+     * Tests that the IngredientFragment can open when the it's selected in the menu
      */
     @Test
-    public void openIngredientActivity() {
+    public void openIngredientFragment() {
         // Asserts that the current activity is the NavActivity. Otherwise show "Wrong Activity"
         solo.assertCurrentActivity("Not in NavActivity", NavActivity.class);
 
         // Click on button
         solo.clickOnMenuItem("Ingredients");
 
-        // check if IngredientActivity opens
-        assertTrue(solo.waitForText("My Ingredients", 1, 2000));
-        solo.assertCurrentActivity("Did not open IngredientActivity", IngredientActivity.class);
+        // check if IngredientFragment opens
+        assertNotNull(rule.getActivity().getSupportFragmentManager().findFragmentByTag("IngredientFragment"));
     }
 
     /**
-     * Tests that the RecipeActivity can open when the it's selected in the menu
+     * Tests that the RecipeFragment can open when the it's selected in the menu
      */
     @Test
-    public void openRecipeActivity() {
+    public void openRecipeFragment() {
         // Asserts that the current activity is the NavActivity. Otherwise show "Wrong Activity"
         solo.assertCurrentActivity("Not in NavActivity", NavActivity.class);
 
         // Click on button
         solo.clickOnMenuItem("Recipes");
 
-        // check if IngredientActivity opens
-        assertTrue(solo.waitForText("My Recipes", 1, 2000));
-        solo.assertCurrentActivity("Did not open RecipeActivity", RecipeActivity.class);
+        // check if RecipeFragment opens
+        solo.waitForText("My Recipes");
+        assertNotNull(rule.getActivity().getSupportFragmentManager().findFragmentByTag("RecipeFragment"));
     }
 
     /**
-     * Tests that the MealPlanActivity can open when the it's selected in the menu
+     * Tests that the MealPlanFragment can open when the it's selected in the menu
      */
     @Test
-    public void openMealPlanActivity() {
+    public void openMealPlanFragment() {
         // Asserts that the current activity is the NavActivity. Otherwise show "Wrong Activity"
         solo.assertCurrentActivity("Not in NavActivity", NavActivity.class);
 
         // Click on button
         solo.clickOnMenuItem("Meal Plan");
 
-        // check if IngredientActivity opens
-        assertTrue(solo.waitForText("My Meal Plans", 1, 2000));
-        solo.assertCurrentActivity("Did not open MealPlanActivity", MealPlanActivity.class);
+        // check if MealPlanFragment opens
+        solo.waitForText("My Meal Plans");
+        assertNotNull(rule.getActivity().getSupportFragmentManager().findFragmentByTag("MealPlanFragment"));
     }
 
     /**
-     * Tests that the ShoppingListActivity can open when the it's selected in the menu
+     * Tests that the ShoppingListFragment can open when the it's selected in the menu
      */
     @Test
-    public void openShoppingListActivity() {
+    public void openShoppingListFragment() {
         // Asserts that the current activity is the NavActivity. Otherwise show "Wrong Activity"
         solo.assertCurrentActivity("Not in NavActivity", NavActivity.class);
 
         // Click on button
         solo.clickOnMenuItem("Shopping List");
 
-        // check if IngredientActivity opens
-        assertTrue(solo.waitForText("My Shopping List", 1, 2000));
-        solo.assertCurrentActivity("Did not open ShoppingListActivity", ShoppingListActivity.class);
+        // check if ShoppingListFragment opens
+        solo.waitForText("My Shopping List");
+        assertNotNull(rule.getActivity().getSupportFragmentManager().findFragmentByTag("ShoppingListFragment"));
 
     }
 

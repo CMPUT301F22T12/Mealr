@@ -10,6 +10,9 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Switch;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -21,7 +24,7 @@ import java.util.Collections;
  *  handles sorting
  *  @return void
  */
-public class ShoppingListActivity extends NavActivity {
+public class ShoppingListFragment extends Fragment {
     private ListView listView;
     private ArrayAdapter<ShoppingItem> shoppingItemArrayAdapter;
     private ArrayList<ShoppingItem> shoppingItemDataList = new ArrayList<>();
@@ -30,43 +33,36 @@ public class ShoppingListActivity extends NavActivity {
     private Spinner sortSpinner;
     private Switch sortSwitch;
 
-    /**
-     * Method for the activity becomes active and can receive input
-     * Navigation panel finds the menu and displays it
-     */
-    @Override
-    protected void onResume() {
-        super.onResume();
-        bottomNav.getMenu().findItem(R.id.action_shopping_list).setChecked(true);
+    public ShoppingListFragment() {
+        super(R.layout.activity_shopping_list);
     }
 
     /**
      * Method for initializing attributes of this activity
+     * @param view The View returned by onCreateView.f
      * @param savedInstanceState {@link Bundle} the last saved instance of the fragment, NULL if newly created
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivity().setTitle("My Shopping List");
 
         // We have to put our layout in the space for the content
-        ViewGroup content = findViewById(R.id.nav_content);
+        ViewGroup content = view.findViewById(R.id.nav_content);
         getLayoutInflater().inflate(R.layout.activity_shopping_list, content, true);
-
-        // Set the correct button to be selected
-        bottomNav.getMenu().findItem(R.id.action_shopping_list).setChecked(true);
 
         // Fetch the data
         controller.getShoppingItems(res -> setShoppingItemDataList(res));
 
         // Attach to listView
-        shoppingItemArrayAdapter = new ShoppingListAdapter(this, shoppingItemDataList);
-        listView = findViewById(R.id.shoppingItemListView);
+        shoppingItemArrayAdapter = new ShoppingListAdapter(getContext(), shoppingItemDataList);
+        listView = view.findViewById(R.id.shoppingItemListView);
         listView.setAdapter(shoppingItemArrayAdapter);
 
         // Setup sorting
-        sortSpinner = findViewById(R.id.shoppingSortSpinner);
-        sortSwitch = findViewById(R.id.shoppingSortSwitch);
-        ArrayAdapter<String> sortAdapter = new ArrayAdapter<>(this, com.google.android.material.R.layout.support_simple_spinner_dropdown_item, sortOptions);
+        sortSpinner = view.findViewById(R.id.shoppingSortSpinner);
+        sortSwitch = view.findViewById(R.id.shoppingSortSwitch);
+        ArrayAdapter<String> sortAdapter = new ArrayAdapter<>(getContext(), com.google.android.material.R.layout.support_simple_spinner_dropdown_item, sortOptions);
         sortSpinner.setAdapter(sortAdapter);
         sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             /**
@@ -124,8 +120,8 @@ public class ShoppingListActivity extends NavActivity {
      */
     private void sortDataBySpinner() {
         // Make sure views are defined
-        sortSpinner = findViewById(R.id.shoppingSortSpinner);
-        sortSwitch = findViewById(R.id.shoppingSortSwitch);
+        sortSpinner = getView().findViewById(R.id.shoppingSortSpinner);
+        sortSwitch = getView().findViewById(R.id.shoppingSortSwitch);
 
         String sortBy = sortSpinner.getSelectedItem().toString();
         Integer asc = sortSwitch.isChecked() ? 1 : -1;

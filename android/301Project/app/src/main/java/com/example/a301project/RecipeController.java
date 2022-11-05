@@ -15,11 +15,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This {@link RecipeController} class allows the {@link RecipeActivity} to communicate with
+ * This {@link RecipeController} class allows the {@link RecipeFragment} to communicate with
  * the Firestore database backend. This class contains methods to add or remove {@link Recipe} objects to the
  * database, as well as edit functionality.
  *
- * This class should be used exclusively by the {@link RecipeActivity} class to handle database communication.
+ * This class should be used exclusively by the {@link RecipeFragment} class to handle database communication.
  */
 public class RecipeController {
     private FirebaseFirestore db;
