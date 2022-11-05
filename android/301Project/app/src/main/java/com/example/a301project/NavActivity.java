@@ -96,7 +96,6 @@ public class NavActivity extends AppCompatActivity {
      */
     @Override
     public void onBackPressed() {
-        Log.i("cnt", String.valueOf(getSupportFragmentManager().getBackStackEntryCount()));
         if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             super.onBackPressed();
         } else {
