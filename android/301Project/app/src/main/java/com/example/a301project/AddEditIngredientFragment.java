@@ -1,9 +1,11 @@
 package com.example.a301project;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -22,7 +24,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A class for a fragment that handles adding and editing ingredients
@@ -41,6 +48,11 @@ public class AddEditIngredientFragment extends DialogFragment {
     private Button deleteButton;
     private Ingredient currentIngredient;
     private boolean createNewIngredient;
+    private EditText customUnit;
+    private Resources res = getResources();
+    private List<String> unitsarray = List.of(res.getStringArray(R.array.units_array));
+    private ArrayList<String> unitOptions = new ArrayList<>(unitsarray);
+    private Button doneCustomUnit;
 
     /**
      * Method that responds when the fragment has been interacted with
@@ -61,6 +73,7 @@ public class AddEditIngredientFragment extends DialogFragment {
      *                                         fragment is newly created
      * @return dialog fragment with the appropriate fields
      */
+    @SuppressLint("MissingInflatedId")
     @Override
     @NonNull
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -86,6 +99,8 @@ public class AddEditIngredientFragment extends DialogFragment {
         unitName = view.findViewById(R.id.edit_unit);
         categoryName = view.findViewById(R.id.edit_category);
         deleteButton = view.findViewById(R.id.delete_ingredient_button);
+        customUnit = view.findViewById(R.id.custom_unit);
+        doneCustomUnit = view.findViewById(R.id.done_customUnit);
 
         // sets title of the fragment depending on whether the tag is ADD or EDIT
         String title;
@@ -196,9 +211,8 @@ public class AddEditIngredientFragment extends DialogFragment {
 
 
         // Unit spinner
-        ArrayAdapter<CharSequence> unitAdapter = ArrayAdapter.createFromResource(this.getContext(),
-                R.array.units_array, R.layout.ingredient_unit_item);
-
+        unitOptions = new ArrayList<>(unitsarray);
+        ArrayAdapter<String> unitAdapter = new ArrayAdapter<>(this.getContext(), com.google.android.material.R.layout.support_simple_spinner_dropdown_item, unitOptions);
         unitAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         unitName.setAdapter(unitAdapter);
         unitName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -211,8 +225,33 @@ public class AddEditIngredientFragment extends DialogFragment {
              * @param l {@link Long} the row ID of the item that was selected
              */
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                unitName.setSelection(i);
-                currentIngredient.setUnit(adapterView.getItemAtPosition(i).toString());
+                // if Add unit is selected, set the textbox to visible
+                if (unitAdapter.getItem(i)=="Add Unit") {
+                    customUnit.setVisibility(view.VISIBLE);
+                    doneCustomUnit.setOnClickListener(new View.OnClickListener() {
+                        /**
+                         * Method for when the Done button is clicked
+                         * @param view the current view of the adapter
+                         * adds the new custom unit to the units array, change adapter
+                         * set new custom unit as the unit
+                         */
+                        @Override
+                        public void onClick(View view) {
+                            String newUnit = customUnit.getText().toString();
+                            unitOptions.add(newUnit);
+                            unitAdapter.notifyDataSetChanged();
+                            int j = unitAdapter.getPosition(newUnit);
+                            unitName.setSelection(j);
+                            currentIngredient.setUnit(adapterView.getItemAtPosition(j).toString());
+                        }
+                    });
+
+                }
+                else {
+                    // user didn't select the add custom option
+                    unitName.setSelection(i);
+                    currentIngredient.setUnit(adapterView.getItemAtPosition(i).toString());
+                }
             }
 
             /**
