@@ -191,6 +191,7 @@ public class IngredientFragment extends Fragment implements AddEditIngredientFra
      * @return void
      */
     public void sortDataBySpinner() {
+        if (getView() == null) return;
         sortSpinner = getView().findViewById(R.id.ingredientSortSpinner);
         sortSwitch = getView().findViewById(R.id.ingredientSortSwitch);
 

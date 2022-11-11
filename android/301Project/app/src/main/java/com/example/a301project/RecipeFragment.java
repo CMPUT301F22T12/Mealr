@@ -151,6 +151,7 @@ public class RecipeFragment extends Fragment implements AddEditRecipeFragment.On
      * Sort By parameters: Title, Prep Time, Servings, Category
      */
     private void sortDataBySpinner() {
+        if (getView() == null) return;
         // Make sure views are defined
         sortSpinner = getView().findViewById(R.id.recipeSortSpinner);
         sortSwitch = getView().findViewById(R.id.recipeSortSwitch);

@@ -34,6 +34,11 @@ public class Ingredient implements Serializable {
         this.amount = amount;
     }
 
+    public Ingredient(String name, double amount) {
+        this.name = name;
+        this.amount = amount;
+    }
+
     /**
      * Gets the {@link Ingredient} object's ID
      * @return The ID of the object

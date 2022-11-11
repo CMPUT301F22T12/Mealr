@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <EditText
         android:id="@+id/edit_title"
@@ -20,19 +19,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="@dimen/ingredient_edit_padding">
+        android:paddingHorizontal="@dimen/ingredient_edit_padding">
 
         <ImageView
+            android:id="@+id/recipeImageView"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_gravity="center_vertical"
+            android:adjustViewBounds="true"
             android:background="@drawable/rounded_rect"
             android:foreground="@drawable/rounded_rect_trans"
-            android:src="@drawable/meal"
-            android:id="@+id/recipeImageView"
-            android:adjustViewBounds="true"
             android:scaleType="centerCrop"
-            />
+            android:src="@drawable/meal" />
+
         <Space
             android:layout_width="0dp"
             android:layout_height="1dp"
@@ -43,25 +42,26 @@
             android:layout_width="100dp"
             android:layout_height="50dp"
             android:layout_gravity="center_vertical"
-            android:text="Upload"
-            />
+            android:text="Upload" />
+
         <Space
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_weight="1" />
+
         <Button
             android:id="@+id/cameraButton"
             android:layout_width="100dp"
             android:layout_height="50dp"
             android:layout_gravity="center_vertical"
-            android:text="Camera"
-            />
+            android:text="Camera" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="@dimen/ingredient_edit_padding">
+        android:paddingHorizontal="@dimen/ingredient_edit_padding">
 
         <TextView
             android:id="@+id/prep_time_label"
@@ -77,17 +77,17 @@
             android:id="@+id/edit_prep_time"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inputType="numberDecimal"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="Prep Time" />
+            android:hint="Prep Time"
+            android:inputType="numberDecimal" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="@dimen/ingredient_edit_padding">
+        android:paddingHorizontal="@dimen/ingredient_edit_padding">
 
         <TextView
             android:id="@+id/servings_label"
@@ -102,17 +102,17 @@
             android:id="@+id/edit_servings"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inputType="number"
             android:layout_weight="1"
-            android:padding="5sp"
-            android:hint="Servings" />
+            android:hint="Servings"
+            android:inputType="number"
+            android:padding="5sp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="@dimen/ingredient_edit_padding">
+        android:paddingHorizontal="@dimen/ingredient_edit_padding">
 
         <TextView
             android:id="@+id/comments_label"
@@ -137,7 +137,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="@dimen/ingredient_edit_padding">
+        android:paddingHorizontal="@dimen/ingredient_edit_padding">
 
         <TextView
             android:id="@+id/category_label"
@@ -159,9 +159,53 @@
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/ingredient_edit_padding">
+        <TextView
+            android:id="@+id/ingredients_label"
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="Ingredients"
+            android:layout_weight="1"
+            android:textSize="20dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal">
+
+            <AutoCompleteTextView
+                android:id="@+id/autoCompleteIngredient"
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:hint="Enter an ingredient"/>
+            <Button
+                android:layout_width="65dp"
+                android:layout_height="match_parent"
+                android:id="@+id/add_ingredient_button"
+                android:text="Add"/>
+
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/recipe_ingredients_listview"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:padding="5sp"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="5dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
         android:padding="15dp">
+
         <Button
             android:id="@+id/delete_recipe_button"
             android:layout_width="wrap_content"
