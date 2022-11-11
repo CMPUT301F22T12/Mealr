@@ -53,9 +53,8 @@ public class RecipeController {
         String comments = recipe.getComments();
         Long prepTime = recipe.getPrepTime();
         Long servings = recipe.getServings();
-
-        String photo = "";
-        ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
+        String photo = recipe.getPhoto();
+        ArrayList<Ingredient> ingredients = recipe.getIngredients();
 
         // put all the values into hashmap
         HashMap<String, Object> data = new HashMap<>();
@@ -127,6 +126,13 @@ public class RecipeController {
             ArrayList<Recipe> res = new ArrayList<>();
 
             queryDocumentSnapshots.forEach(doc -> {
+                ArrayList<Ingredient> ingredients = new ArrayList<>();
+
+                ArrayList<Map<String, Object>> objects = (ArrayList<Map<String, Object>>) doc.get("Ingredients");
+                objects.forEach(o -> {
+                    ingredients.add(new Ingredient((String) o.get("name"), ((Number) o.get("amount")).doubleValue()));
+                });
+
                 Recipe r = new Recipe(
                         doc.getString("Title"),
                         doc.getString("Category"),
@@ -134,7 +140,7 @@ public class RecipeController {
                         doc.getString("Photo"),
                         doc.getLong("PrepTime"),
                         doc.getLong("Servings"),
-                        new ArrayList<>()
+                        ingredients
                 );
                 r.setId(doc.getId());
                 res.add(r);

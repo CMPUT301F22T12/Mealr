@@ -1,7 +1,6 @@
 package com.example.a301project;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -11,6 +10,8 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+
+import java.util.Objects;
 
 /**
  * Wrapper class to add a navigation bar for other activities.
@@ -52,7 +53,7 @@ public class NavActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_content, IngredientFragment.class, null, "IngredientFragment")
                 .setReorderingAllowed(true)
-                .addToBackStack(null)
+                .addToBackStack("IngredientFragment")
                 .commit();
         bottomNav.getMenu().findItem(R.id.action_ingredients).setChecked(true);
     }
@@ -86,8 +87,10 @@ public class NavActivity extends AppCompatActivity {
         fragmentManager.beginTransaction()
                 .replace(R.id.nav_content, f, null, tag)
                 .setReorderingAllowed(true)
-                .addToBackStack(null)
+                .addToBackStack(tag)
                 .commit();
+
+        bottomNav.getMenu().findItem(R.id.action_ingredients).setChecked(true);
     }
 
     /**
@@ -98,6 +101,24 @@ public class NavActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             super.onBackPressed();
+
+            // Set the correct button to be selected
+            int index = getSupportFragmentManager().getBackStackEntryCount() - 1;
+            FragmentManager.BackStackEntry backEntry = getSupportFragmentManager().getBackStackEntryAt(index);
+            String tag = backEntry.getName();
+            Integer id = null;
+
+            if (Objects.equals(tag, "IngredientFragment")) {
+                id = R.id.action_ingredients;
+            } else if (Objects.equals(tag, "RecipeFragment")) {
+                id = R.id.action_recipes;
+            } else if (Objects.equals(tag, "MealPlanFragment")) {
+                id = R.id.action_meal_plan;
+            } else if (Objects.equals(tag, "ShoppingListFragment")) {
+                id = R.id.action_shopping_list;
+            }
+
+            bottomNav.getMenu().findItem(id).setChecked(true);
         } else {
             finish();
         }

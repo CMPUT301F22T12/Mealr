@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:layout_margin="10dp"
+    android:background="@drawable/rounded_rect"
+    android:orientation="horizontal"
+    android:padding="5dp">
+
+        <TextView
+            android:id="@+id/i_nameText"
+            android:layout_width="180dp"
+            android:layout_height="match_parent"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:padding="2dp"
+            android:text="Entry"
+            android:textSize="15dp"
+            android:textStyle="bold" />
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+        <EditText
+            android:id="@+id/edit_amount"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:gravity="right"
+            android:inputType="number"
+            android:text="Amount"
+            android:textSize="15dp"/>
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/delete_ingredient_button"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:padding="6dp"
+            android:background="@drawable/delete_rounded"
+            android:src="@drawable/delete"/>
+</LinearLayout>

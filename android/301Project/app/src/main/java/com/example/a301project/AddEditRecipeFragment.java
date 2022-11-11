@@ -3,6 +3,7 @@ package com.example.a301project;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,11 +13,14 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -40,6 +44,9 @@ import com.squareup.picasso.Picasso;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * A class for a fragment that handles adding and editing recipes
@@ -60,7 +67,14 @@ public class AddEditRecipeFragment extends DialogFragment {
     private Button cameraButton;
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private String photoUrl;
-
+    private ArrayAdapter<Ingredient> ingredientArrayAdapter;
+    private ArrayList<Ingredient> ingredientsDataList;
+    private ListView ingredientListView;
+    private Button ingredientsAddButton;
+    private AutoCompleteTextView ingredientAutoText;
+    private IngredientController ingredientController = new IngredientController();
+    private ArrayList<String> ingredientAutoCompleteList = new ArrayList<>();
+    private ArrayAdapter<String> ingredientAutoCompleteAdapter;
 
     /**
      * Method that responds when the fragment has been interacted with
@@ -70,6 +84,21 @@ public class AddEditRecipeFragment extends DialogFragment {
     public interface OnFragmentInteractionListener {
         void onConfirmPressed(Recipe currentRecipe, boolean createNewRecipe);
         void onDeleteConfirmed(Recipe currentRecipe);
+    }
+
+    /**
+     * Method to clear ingredient,
+     * Resets the internal recipe list the new one.
+     * @param r {@link ArrayList} list of recipes to set the data list to
+     */
+    private void setIngredientDataList(ArrayList<Ingredient> r) {
+        ingredientAutoCompleteList.clear();
+        for (Ingredient i : r) {
+            if (ingredientsDataList.stream().noneMatch(i1 -> i.getName().equals(i1.getName()))) {
+                ingredientAutoCompleteList.add(i.getName());
+            }
+        }
+        ingredientAutoCompleteAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -144,6 +173,9 @@ public class AddEditRecipeFragment extends DialogFragment {
         image = view.findViewById(R.id.recipeImageView);
         uploadButton = view.findViewById(R.id.uploadImageButton);
         cameraButton = view.findViewById(R.id.cameraButton);
+        ingredientListView = view.findViewById(R.id.recipe_ingredients_listview);
+        ingredientAutoText = view.findViewById(R.id.autoCompleteIngredient);
+        ingredientsAddButton = view.findViewById(R.id.add_ingredient_button);
 
         // if tag is ADD, hide delete button
         if (this.getTag().equals("ADD")) {
@@ -299,6 +331,68 @@ public class AddEditRecipeFragment extends DialogFragment {
             image.setClipToOutline(true);
             photoUrl = currentRecipe.getPhoto();
         }
+
+        // Load autocomplete ingredients
+        ingredientController.getIngredients(res -> setIngredientDataList(res));
+        ingredientAutoCompleteAdapter = new ArrayAdapter<>(getContext(),
+                android.R.layout.simple_dropdown_item_1line, ingredientAutoCompleteList);
+        ingredientAutoText.setAdapter(ingredientAutoCompleteAdapter);
+
+        // We want to show all the items on click but wait for keyboard first so delay it
+        ingredientAutoText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    new Timer().schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            getActivity().runOnUiThread(() -> ingredientAutoText.showDropDown());
+                        }
+                    }, 300); // 300 is the delay in millis
+                }
+            }
+        });
+
+        ingredientAutoText.setOnTouchListener((v, event) -> {
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    getActivity().runOnUiThread(() -> ingredientAutoText.showDropDown());
+                }
+            }, 300); // 300 is the delay in millis
+            return false;
+        });
+
+        // Load ingredients
+        ingredientsDataList = new ArrayList<>();
+        ingredientsDataList.addAll(currentRecipe.getIngredients());
+        ingredientArrayAdapter = new RecipeIngredientListAdapter(getContext(), ingredientsDataList);
+        ingredientListView.setAdapter(ingredientArrayAdapter);
+
+        ingredientsAddButton.setOnClickListener(view_ -> {
+            String ingredientName = ingredientAutoText.getText().toString();
+            if (!ingredientName.isEmpty()) {
+                ingredientsDataList.add(0, new Ingredient(ingredientName, 1));
+                ingredientArrayAdapter.notifyDataSetChanged();
+                ingredientAutoText.setText("");
+
+                // Hide the keyboard now
+                InputMethodManager inputManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputManager.hideSoftInputFromWindow(view_.getWindowToken(),
+                        InputMethodManager.HIDE_NOT_ALWAYS);
+
+                // Remove from autocomplete for future
+                if (ingredientAutoCompleteList.contains(ingredientName)) {
+                    ingredientAutoCompleteList.remove(ingredientName);
+
+                    // Idk why but we have to create a new one for this to work
+                    ingredientAutoCompleteAdapter = new ArrayAdapter<>(getContext(),
+                            android.R.layout.simple_dropdown_item_1line, ingredientAutoCompleteList);
+                    ingredientAutoText.setAdapter(ingredientAutoCompleteAdapter);
+                }
+            }
+        });
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         return builder
                 .setView(view)
@@ -322,7 +416,7 @@ public class AddEditRecipeFragment extends DialogFragment {
 
                         // check if any field is empty
                         // if empty, reject add
-                        boolean hasEmpty = title.isEmpty() || servings.isEmpty() || prepTime.isEmpty();
+                        boolean hasEmpty = title.isEmpty() || servings.isEmpty() || prepTime.isEmpty() || ingredientsDataList.stream().anyMatch(i_ -> i_.getName().isEmpty() || i_.getAmount().isNaN());
 
                         if (hasEmpty) {
                             Toast.makeText(getContext(),  " Rejected: Missing Field(s)",Toast.LENGTH_LONG).show();
@@ -336,6 +430,8 @@ public class AddEditRecipeFragment extends DialogFragment {
                         if (photoUrl != null && !photoUrl.isEmpty()) {
                             currentRecipe.setPhoto(photoUrl);
                         }
+                        currentRecipe.setIngredients(ingredientsDataList);
+
                         listener.onConfirmPressed(currentRecipe, createNewRecipe);
                     }
                 }).create();

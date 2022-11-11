@@ -13,18 +13,20 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This {@link IngredientController} class allows the {@link IngredientActivity} to communicate with
+ * This {@link IngredientController} class allows the {@link IngredientFragment} to communicate with
  * the Firestore database backend. This class contains methods to add or remove {@link Ingredient} objects to the
  * database, as well as edit functionality.
  *
- * This class should be used exclusively by the {@link IngredientActivity} class to handle database communication.
+ * This class should be used exclusively by the {@link IngredientFragment} class to handle database communication.
  */
 public class IngredientController {
     // connect to firebase and handles add and delete
@@ -160,5 +162,40 @@ public class IngredientController {
         db.collection(collectionName)
                 .document(ingredient.getId())
                 .update(userMap);
+    }
+
+    public interface getAllSuccessHandler {
+        void f(ArrayList<Ingredient> r);
+    }
+
+    /**
+     * Gets all recipes from Firebase
+     *
+     * @param s successHandler function to be called on success with
+     *          the ArrayList of Recipes
+     */
+    public void getIngredients(IngredientController.getAllSuccessHandler s) {
+        collectionReference.get().addOnSuccessListener(queryDocumentSnapshots -> {
+            ArrayList<Ingredient> res = new ArrayList<>();
+
+            queryDocumentSnapshots.forEach(doc -> {
+                Date date = doc.getDate("BestBeforeDate");
+                String pattern = "yyyy-MM-dd";
+                DateFormat df = new SimpleDateFormat(pattern);
+                String bbd = df.format(date);
+
+                Ingredient i = new Ingredient(
+                        doc.getString("Name"),
+                        doc.getDouble("Amount"),
+                        bbd,
+                        doc.getString("Location"),
+                        doc.getString("Unit"),
+                        doc.getString("Category")
+                );
+                i.setId(doc.getId());
+                res.add(i);
+            });
+            s.f(res);
+        });
     }
 }

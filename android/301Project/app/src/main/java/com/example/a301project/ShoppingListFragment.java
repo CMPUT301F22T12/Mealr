@@ -119,6 +119,7 @@ public class ShoppingListFragment extends Fragment {
      * Sort by parameters: Title, Category
      */
     private void sortDataBySpinner() {
+        if (getView() == null) return;
         // Make sure views are defined
         sortSpinner = getView().findViewById(R.id.shoppingSortSpinner);
         sortSwitch = getView().findViewById(R.id.shoppingSortSwitch);
