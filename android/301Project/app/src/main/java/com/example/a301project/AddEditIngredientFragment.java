@@ -95,7 +95,6 @@ public class AddEditIngredientFragment extends DialogFragment {
         categoryName = view.findViewById(R.id.edit_category);
         deleteButton = view.findViewById(R.id.delete_ingredient_button);
         //customUnit = view.findViewById(R.id.custom_unit);
-        doneCustomUnit = view.findViewById(R.id.done_customUnit);
 
 
         // sets title of the fragment depending on whether the tag is ADD or EDIT
