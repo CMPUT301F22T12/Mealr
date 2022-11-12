@@ -142,23 +142,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:padding="5sp" />
-        <EditText
-            android:id="@+id/custom_unit"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:padding="5sp"
-            android:hint="Add custom unit"
-            android:visibility="invisible"/>
-        <Button
-            android:id="@+id/done_customUnit"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1.2"
-            android:text="Done"
-            android:background="@drawable/circle"
-            android:visibility="invisible"
-            android:textSize="15sp"/>
+
 
     </LinearLayout>
 

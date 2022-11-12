@@ -95,7 +95,6 @@ public class AddEditIngredientFragment extends DialogFragment {
         categoryName = view.findViewById(R.id.edit_category);
         deleteButton = view.findViewById(R.id.delete_ingredient_button);
         //customUnit = view.findViewById(R.id.custom_unit);
-        doneCustomUnit = view.findViewById(R.id.done_customUnit);
 
         // sets title of the fragment depending on whether the tag is ADD or EDIT
         String title;
@@ -223,49 +222,32 @@ public class AddEditIngredientFragment extends DialogFragment {
              */
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 // if Add unit is selected, set the textbox to visible
-                if (unitAdapter.getItem(i)=="Add Unit") {
-                    final EditText customUnit = new EditText(getContext());
+                if (unitAdapter.getItem(i).equals("Add Unit")) {
+                    //final EditText customUnit = new EditText(getContext());
                     //customUnit.setVisibility(view.VISIBLE);
-                    new AlertDialog.Builder(getContext()).setMessage("Enter custom unit")
-                            .setView(view)
-                            .setNegativeButton("Cancel",null)
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setMessage("Enter custom unit")
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.cancel();
+                                }
+                            })
                             .setPositiveButton("OK",new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
-                                            String newUnit = customUnit.getText().toString();
+                                            String newUnit = "cup";
                                             unitOptions.add(newUnit);
                                             unitAdapter.notifyDataSetChanged();
                                             int j = unitAdapter.getPosition(newUnit);
-                                            unitName.setSelection(j);
+                                            //unitName.setSelection(j);
                                             currentIngredient.setUnit(adapterView.getItemAtPosition(j).toString());
                                         }
                             }).show();
                 }
-                    //doneCustomUnit.setOnClickListener(new View.OnClickListener() {
-//                        /**
-//                         * Method for when the Done button is clicked
-//                         * @param view the current view of the adapter
-//                         * adds the new custom unit to the units array, change adapter
-//                         * set new custom unit as the unit
-//                         */
-//                        @Override
-//                        public void onClick(View view) {
-//                            String newUnit = customUnit.getText().toString();
-//                            unitOptions.add(newUnit);
-//                            // make new adapter
-//                            ArrayAdapter<CharSequence> unitCustomAddedAdapter = new ArrayAdapter<>(getContext(),
-//                                    com.google.android.material.R.layout.support_simple_spinner_dropdown_item, unitOptions);
-//                            unitName.setAdapter(unitCustomAddedAdapter);
-//                            int j = unitCustomAddedAdapter.getPosition(newUnit);
-//                            unitName.setSelection(j);
-//                            currentIngredient.setUnit(adapterView.getItemAtPosition(j).toString());
-//                        }
-//                    });
-//
-//                }
                 else {
                     // user didn't select the add custom option
-                    unitName.setSelection(i);
+                    //unitName.setSelection(i);
                     currentIngredient.setUnit(adapterView.getItemAtPosition(i).toString());
                 }
             }
