@@ -338,7 +338,9 @@ public class AddEditRecipeFragment extends DialogFragment {
                 android.R.layout.simple_dropdown_item_1line, ingredientAutoCompleteList);
         ingredientAutoText.setAdapter(ingredientAutoCompleteAdapter);
 
-        // We want to show all the items on click but wait for keyboard first so delay it
+        // Set a HARDCODED delay to make sure the keyboard is up first and the dropdown
+        // appears above not behind the keyboard
+        int DELAY = 500;
         ingredientAutoText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -348,7 +350,7 @@ public class AddEditRecipeFragment extends DialogFragment {
                         public void run() {
                             getActivity().runOnUiThread(() -> ingredientAutoText.showDropDown());
                         }
-                    }, 300); // 300 is the delay in millis
+                    }, DELAY);
                 }
             }
         });
@@ -359,7 +361,7 @@ public class AddEditRecipeFragment extends DialogFragment {
                 public void run() {
                     getActivity().runOnUiThread(() -> ingredientAutoText.showDropDown());
                 }
-            }, 300); // 300 is the delay in millis
+            }, DELAY);
             return false;
         });
 
