@@ -7,6 +7,7 @@
         <item>lbs</item>
         <item>Ounces</item>
         <item>Cups</item>
+        <item>Add Unit</item>
     </string-array>
 
     <string-array name="category_array">
@@ -19,6 +20,7 @@
         <item>Preserved</item>
         <item>Seasoning</item>
         <item>Condiments</item>
+        <item>Add Category</item>
     </string-array>
 
     <string-array name="category_array_recipe">
@@ -27,6 +29,7 @@
         <item>Dinner</item>
         <item>Dessert</item>
         <item>Snack</item>
+        <item>Add Category</item>
     </string-array>
 
     <string-array name="location_array">
@@ -37,5 +40,6 @@
         <item>Kitchen Shelf</item>
         <item>Cabinet</item>
         <item>Cardboard box by the door</item>
+        <item>Add Location</item>
     </string-array>
 </resources>

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -22,7 +23,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * A class for a fragment that handles adding and editing ingredients
@@ -41,6 +44,9 @@ public class AddEditIngredientFragment extends DialogFragment {
     private Button deleteButton;
     private Ingredient currentIngredient;
     private boolean createNewIngredient;
+    private ArrayList<CharSequence> unitOptions;
+    private ArrayList<CharSequence> categoryOptions;
+    private ArrayList<CharSequence> locationOptions;
 
     /**
      * Method that responds when the fragment has been interacted with
@@ -165,8 +171,10 @@ public class AddEditIngredientFragment extends DialogFragment {
         });
 
         // Location spinner
-        ArrayAdapter<CharSequence> locationAdapter = ArrayAdapter.createFromResource(this.getContext(),
-                R.array.location_array, R.layout.ingredient_unit_item);
+        Resources res = getActivity().getResources();
+        List<CharSequence> locationsArray = List.of(res.getStringArray(R.array.location_array));
+        locationOptions = new ArrayList<>(locationsArray);
+        ArrayAdapter<CharSequence> locationAdapter = new ArrayAdapter<>(this.getContext(), com.google.android.material.R.layout.support_simple_spinner_dropdown_item, locationOptions);
         locationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         locationName.setAdapter(locationAdapter);
         locationName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -179,8 +187,34 @@ public class AddEditIngredientFragment extends DialogFragment {
              * @param l {@link Long} the row ID of the item that was selected
              */
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                locationName.setSelection(i);
-                currentIngredient.setLocation(adapterView.getItemAtPosition(i).toString());
+                if (locationAdapter.getItem(i).equals("Add Location")) {
+                    EditText customLocation = new EditText(getContext());
+                    //customUnit.setVisibility(view.VISIBLE);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setView(customLocation);
+                    builder.setMessage("Enter custom location")
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.cancel();
+                                }
+                            })
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    String newLocation = customLocation.getText().toString();
+                                    locationOptions.add(newLocation);
+                                    locationAdapter.notifyDataSetChanged();
+                                    int j = locationAdapter.getPosition(newLocation);
+                                    locationName.setSelection(j);
+                                }
+                            }).show();
+                }
+                else {
+                    // user didn't select the add custom option
+                    //unitName.setSelection(i);
+                    currentIngredient.setLocation(adapterView.getItemAtPosition(i).toString());
+                }
             }
 
             /**
@@ -190,15 +224,15 @@ public class AddEditIngredientFragment extends DialogFragment {
              */
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
+                // nothing happens
             }
         });
 
 
         // Unit spinner
-        ArrayAdapter<CharSequence> unitAdapter = ArrayAdapter.createFromResource(this.getContext(),
-                R.array.units_array, R.layout.ingredient_unit_item);
-
+        List<CharSequence> unitsarray = List.of(res.getStringArray(R.array.units_array));
+        unitOptions = new ArrayList<>(unitsarray);
+        ArrayAdapter<CharSequence> unitAdapter = new ArrayAdapter<>(this.getContext(), com.google.android.material.R.layout.support_simple_spinner_dropdown_item, unitOptions);
         unitAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         unitName.setAdapter(unitAdapter);
         unitName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -211,8 +245,35 @@ public class AddEditIngredientFragment extends DialogFragment {
              * @param l {@link Long} the row ID of the item that was selected
              */
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                unitName.setSelection(i);
-                currentIngredient.setUnit(adapterView.getItemAtPosition(i).toString());
+                // if Add unit is selected, set the textbox to visible
+                if (unitAdapter.getItem(i).equals("Add Unit")) {
+                    EditText customUnit = new EditText(getContext());
+                    //customUnit.setVisibility(view.VISIBLE);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setView(customUnit);
+                    builder.setMessage("Enter custom unit")
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.cancel();
+                                }
+                            })
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    String newUnit = customUnit.getText().toString();
+                                    unitOptions.add(newUnit);
+                                    unitAdapter.notifyDataSetChanged();
+                                    int j = unitAdapter.getPosition(newUnit);
+                                    unitName.setSelection(j);
+                                }
+                            }).show();
+                }
+                else {
+                    // user didn't select the add custom option
+                    //unitName.setSelection(i);
+                    currentIngredient.setUnit(adapterView.getItemAtPosition(i).toString());
+                }
             }
 
             /**
