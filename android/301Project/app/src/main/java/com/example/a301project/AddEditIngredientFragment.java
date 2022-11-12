@@ -141,8 +141,10 @@ public class AddEditIngredientFragment extends DialogFragment {
         });
 
         // Category spinner
-        ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(this.getContext(),
-                R.array.category_array, R.layout.ingredient_unit_item);
+        Resources res = getActivity().getResources();
+        List<CharSequence> categoryArray = List.of(res.getStringArray(R.array.category_array));
+        categoryOptions = new ArrayList<>(categoryArray);
+        ArrayAdapter<CharSequence> categoryAdapter = new ArrayAdapter<>(this.getContext(), com.google.android.material.R.layout.support_simple_spinner_dropdown_item, categoryOptions);
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categoryName.setAdapter(categoryAdapter);
         categoryName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -155,8 +157,33 @@ public class AddEditIngredientFragment extends DialogFragment {
              */
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                categoryName.setSelection(i);
-                currentIngredient.setCategory(adapterView.getItemAtPosition(i).toString());
+                if (categoryAdapter.getItem(i).equals("Add Category")) {
+                    EditText customCategory = new EditText(getContext());
+                    //customUnit.setVisibility(view.VISIBLE);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setView(customCategory);
+                    builder.setMessage("Enter custom category")
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.cancel();
+                                }
+                            })
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    String newCategory = customCategory.getText().toString();
+                                    categoryOptions.add(newCategory);
+                                    categoryAdapter.notifyDataSetChanged();
+                                    int j = categoryAdapter.getPosition(newCategory);
+                                    categoryName.setSelection(j);
+                                }
+                            }).show();
+                }
+                else {
+                    // user didn't select the add custom option
+                    currentIngredient.setCategory(adapterView.getItemAtPosition(i).toString());
+                }
             }
 
             /**
@@ -171,7 +198,6 @@ public class AddEditIngredientFragment extends DialogFragment {
         });
 
         // Location spinner
-        Resources res = getActivity().getResources();
         List<CharSequence> locationsArray = List.of(res.getStringArray(R.array.location_array));
         locationOptions = new ArrayList<>(locationsArray);
         ArrayAdapter<CharSequence> locationAdapter = new ArrayAdapter<>(this.getContext(), com.google.android.material.R.layout.support_simple_spinner_dropdown_item, locationOptions);
