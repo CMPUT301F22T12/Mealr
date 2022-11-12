@@ -48,10 +48,8 @@ public class AddEditIngredientFragment extends DialogFragment {
     private Button deleteButton;
     private Ingredient currentIngredient;
     private boolean createNewIngredient;
-    private Resources res = getResources();
-    private List<CharSequence> unitsarray = List.of(res.getStringArray(R.array.units_array));
-    private ArrayList<CharSequence> unitOptions = new ArrayList<>(unitsarray);
     private Button doneCustomUnit;
+    private ArrayList<CharSequence> unitOptions;
 
     /**
      * Method that responds when the fragment has been interacted with
@@ -208,6 +206,8 @@ public class AddEditIngredientFragment extends DialogFragment {
 
 
         // Unit spinner
+        Resources res = getActivity().getResources();
+        List<CharSequence> unitsarray = List.of(res.getStringArray(R.array.units_array));
         unitOptions = new ArrayList<>(unitsarray);
         ArrayAdapter<CharSequence> unitAdapter = new ArrayAdapter<>(this.getContext(), com.google.android.material.R.layout.support_simple_spinner_dropdown_item, unitOptions);
         unitAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
