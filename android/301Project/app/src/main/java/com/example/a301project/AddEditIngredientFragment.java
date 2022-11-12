@@ -224,9 +224,10 @@ public class AddEditIngredientFragment extends DialogFragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 // if Add unit is selected, set the textbox to visible
                 if (unitAdapter.getItem(i).equals("Add Unit")) {
-                    //final EditText customUnit = new EditText(getContext());
+                    EditText customUnit = new EditText(getContext());
                     //customUnit.setVisibility(view.VISIBLE);
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setView(customUnit);
                     builder.setMessage("Enter custom unit")
                             .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                 @Override
@@ -237,11 +238,11 @@ public class AddEditIngredientFragment extends DialogFragment {
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    String newUnit = "cup";
+                                    String newUnit = customUnit.getText().toString();
                                     unitOptions.add(newUnit);
                                     unitAdapter.notifyDataSetChanged();
                                     int j = unitAdapter.getPosition(newUnit);
-                                    //unitName.setSelection(j);
+                                    unitName.setSelection(j);
                                 }
                             }).show();
                 }
