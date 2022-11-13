@@ -274,7 +274,6 @@ public class AddEditIngredientFragment extends DialogFragment {
                 // if Add unit is selected, set the textbox to visible
                 if (unitAdapter.getItem(i).equals("Add Unit")) {
                     EditText customUnit = new EditText(getContext());
-                    //customUnit.setVisibility(view.VISIBLE);
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setView(customUnit);
                     builder.setMessage("Enter custom unit")
@@ -297,7 +296,6 @@ public class AddEditIngredientFragment extends DialogFragment {
                 }
                 else {
                     // user didn't select the add custom option
-                    //unitName.setSelection(i);
                     currentIngredient.setUnit(adapterView.getItemAtPosition(i).toString());
                 }
             }
