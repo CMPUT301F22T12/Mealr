@@ -50,37 +50,17 @@ public class AddEditIngredientController {
      */
     public DocumentReference getDocumentReference() {return this.documentReference;}
 
-
     /**
-     * Method to add an a category {@link String} to the Firebase database
-     * @param category This is the {@link Ingredient} category {@link String} to add to the Firebase
+     * Add an {@link Ingredient} category {@link String} to Firebase
+     * @param category the category {@link String} to add
      */
-    /*
-    public void addIngredientCategory(String category) {
-        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-
-                Map<String, Object> result = documentSnapshot.getData();
-                ArrayList<CharSequence> categoryOptions = (ArrayList<CharSequence>) result.get("IngredientCategories");
-                categoryOptions.add(category);
-                result.replace("IngredientCategories", categoryOptions);
-
-                // then rewrite the data
-                documentReference.set(result, SetOptions.merge());
-            }
-        });
-    }*/
-
     public void addIngredientCategory(String category) {
         addIngredientCustomization("IngredientCategories", category);
     }
 
-
-
     /**
      * Add an {@link Ingredient} location {@link String} to Firebase
-     * @param location the location {@link String} to store
+     * @param location the location {@link String} to add
      */
     public void addIngredientLocation(String location) {
         addIngredientCustomization("IngredientLocations", location);
@@ -88,7 +68,7 @@ public class AddEditIngredientController {
 
     /**
      * Add an {@link Ingredient} unit {@link String} to Firebase
-     * @param unit the unit {@link String} to store
+     * @param unit the unit {@link String} to add
      */
     public void addIngredientUnit(String unit) {
         addIngredientCustomization("IngredientUnits", unit);
