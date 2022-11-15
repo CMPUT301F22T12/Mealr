@@ -9,6 +9,9 @@ import java.util.ArrayList;
 public class MealPlan {
     private ArrayList<Ingredient> ingredients;
     private ArrayList<Recipe> recipes;
+    private String startDate;
+    private String endDate;
+    private String name;
 
     /**
      * Gets the {@link MealPlan} object's name
@@ -25,8 +28,11 @@ public class MealPlan {
     public void setName(String name) {
         this.name = name;
     }
+    public void setStartDate(String startDate) {this.startDate = startDate;}
+    public void setEndDate(String endDate) {this.endDate = endDate;}
+    private String getStartDate() {return startDate;}
+    private String getEndDate() {return endDate;}
 
-    private String name;
 
     /**
      * Constructor for an MealPlan's attributes containing ingredients and recipes
@@ -34,10 +40,12 @@ public class MealPlan {
      * @param recipes {@link Recipe}
      * @param name {@link String}
      */
-    public MealPlan(ArrayList<Ingredient> ingredients, ArrayList<Recipe> recipes, String name) {
+    public MealPlan(ArrayList<Ingredient> ingredients, ArrayList<Recipe> recipes, String name, String startDate, String endDate) {
         this.ingredients = ingredients;
         this.recipes = recipes;
         this.name = name;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     /**
@@ -45,8 +53,8 @@ public class MealPlan {
      * creates ArrayLists as new
      * @param name {@String}
      */
-    public MealPlan(String name) {
-        this(new ArrayList<>(), new ArrayList<>(), name);
-    }
+//    public MealPlan(String name) {
+//        this(new ArrayList<>(), new ArrayList<>(), name);
+//    }
 
 }
