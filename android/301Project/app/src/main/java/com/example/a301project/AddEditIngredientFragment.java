@@ -23,9 +23,18 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A class for a fragment that handles adding and editing ingredients
@@ -92,6 +101,10 @@ public class AddEditIngredientFragment extends DialogFragment {
         unitName = view.findViewById(R.id.edit_unit);
         categoryName = view.findViewById(R.id.edit_category);
         deleteButton = view.findViewById(R.id.delete_ingredient_button);
+        unitOptions = new ArrayList<>();
+        categoryOptions = new ArrayList<>();
+        locationOptions = new ArrayList<>();
+
 
         // sets title of the fragment depending on whether the tag is ADD or EDIT
         String title;
@@ -102,6 +115,7 @@ public class AddEditIngredientFragment extends DialogFragment {
         else {
             title = "Edit Entry";
         }
+
 
         deleteButton.setOnClickListener(new View.OnClickListener() {
             /**
@@ -142,8 +156,8 @@ public class AddEditIngredientFragment extends DialogFragment {
 
         // Category spinner
         Resources res = getActivity().getResources();
-        List<CharSequence> categoryArray = List.of(res.getStringArray(R.array.category_array));
-        categoryOptions = new ArrayList<>(categoryArray);
+        //List<CharSequence> categoryArray = List.of(res.getStringArray(R.array.category_array));
+        //categoryOptions = new ArrayList<>(categoryArray);
         ArrayAdapter<CharSequence> categoryAdapter = new ArrayAdapter<>(this.getContext(), com.google.android.material.R.layout.support_simple_spinner_dropdown_item, categoryOptions);
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categoryName.setAdapter(categoryAdapter);
@@ -198,8 +212,8 @@ public class AddEditIngredientFragment extends DialogFragment {
         });
 
         // Location spinner
-        List<CharSequence> locationsArray = List.of(res.getStringArray(R.array.location_array));
-        locationOptions = new ArrayList<>(locationsArray);
+        //List<CharSequence> locationsArray = List.of(res.getStringArray(R.array.location_array));
+        //locationOptions = new ArrayList<>(locationsArray);
         ArrayAdapter<CharSequence> locationAdapter = new ArrayAdapter<>(this.getContext(), com.google.android.material.R.layout.support_simple_spinner_dropdown_item, locationOptions);
         locationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         locationName.setAdapter(locationAdapter);
@@ -256,8 +270,8 @@ public class AddEditIngredientFragment extends DialogFragment {
 
 
         // Unit spinner
-        List<CharSequence> unitsarray = List.of(res.getStringArray(R.array.units_array));
-        unitOptions = new ArrayList<>(unitsarray);
+        //List<CharSequence> unitsarray = List.of(res.getStringArray(R.array.units_array));
+        //unitOptions = new ArrayList<>(unitsarray);
         ArrayAdapter<CharSequence> unitAdapter = new ArrayAdapter<>(this.getContext(), com.google.android.material.R.layout.support_simple_spinner_dropdown_item, unitOptions);
         unitAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         unitName.setAdapter(unitAdapter);
@@ -311,6 +325,42 @@ public class AddEditIngredientFragment extends DialogFragment {
             }
         });
 
+        // gets the spinner value from firebase
+        AddEditIngredientController addEditIngredientController = new AddEditIngredientController();
+        DocumentReference documentReference = addEditIngredientController.getDocumentReference();
+        Task<DocumentSnapshot> documentSnapshot = documentReference.get();
+        documentSnapshot.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                System.out.println("Hello");
+                if (task.isSuccessful()) {
+                    Map<String, Object> result = task.getResult().getData();
+
+                    // category
+                    categoryOptions = (ArrayList<CharSequence>) result.get("IngredientCategories");
+                    categoryOptions.add("Add Category");
+                    categoryAdapter.clear();
+                    categoryAdapter.addAll(categoryOptions);
+                    categoryAdapter.notifyDataSetChanged();
+
+                    // location
+                    locationOptions = (ArrayList<CharSequence>) result.get("IngredientLocations");
+                    locationOptions.add("Add Location");
+                    locationAdapter.clear();
+                    locationAdapter.addAll(locationOptions);
+                    locationAdapter.notifyDataSetChanged();
+
+                    // units
+                    unitOptions = (ArrayList<CharSequence>) result.get("IngredientUnits");
+                    unitOptions.add("Add Unit");
+                    unitAdapter.clear();
+                    unitAdapter.addAll(unitOptions);
+                    unitAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+
+        
         bbdName.setOnClickListener(new View.OnClickListener() {
             /**
              * Method invoked when the view is clicked
