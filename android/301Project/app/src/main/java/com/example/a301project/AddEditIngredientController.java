@@ -55,26 +55,28 @@ public class AddEditIngredientController {
      * Method to add an a category {@link String} to the Firebase database
      * @param category This is the {@link Ingredient} category {@link String} to add to the Firebase
      */
+    /*
     public void addIngredientCategory(String category) {
         documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-                ArrayList<String> categories = (ArrayList<String>) documentSnapshot.get("IngredientCategories");
-                categories.add(category);
+                Map<String, Object> result = documentSnapshot.getData();
+                ArrayList<CharSequence> categoryOptions = (ArrayList<CharSequence>) result.get("IngredientCategories");
+                categoryOptions.add(category);
+                result.replace("IngredientCategories", categoryOptions);
 
                 // then rewrite the data
-                documentReference.set(categories, SetOptions.merge());
-
+                documentReference.set(result, SetOptions.merge());
             }
         });
-    }
-    /*
+    }*/
+
     public void addIngredientCategory(String category) {
         addIngredientCustomization("IngredientCategories", category);
     }
 
-     */
+
 
     /**
      * Add an {@link Ingredient} location {@link String} to Firebase
@@ -103,11 +105,13 @@ public class AddEditIngredientController {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-                ArrayList<String> valueList = (ArrayList<String>) documentSnapshot.get(listName);
-                valueList.add(valueToAdd);
+                Map<String, Object> result = documentSnapshot.getData();
+                ArrayList<CharSequence> customizationOptions = (ArrayList<CharSequence>) result.get(listName);
+                customizationOptions.add(valueToAdd);
+                result.replace(listName, customizationOptions);
 
                 // then rewrite the data
-                documentReference.set(valueList, SetOptions.merge());
+                documentReference.set(result, SetOptions.merge());
             }
         });
     }

@@ -105,6 +105,9 @@ public class AddEditIngredientFragment extends DialogFragment {
         categoryOptions = new ArrayList<>();
         locationOptions = new ArrayList<>();
 
+        AddEditIngredientController addEditIngredientController = new AddEditIngredientController();
+        DocumentReference documentReference = addEditIngredientController.getDocumentReference();
+
 
         // sets title of the fragment depending on whether the tag is ADD or EDIT
         String title;
@@ -186,11 +189,19 @@ public class AddEditIngredientFragment extends DialogFragment {
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
+                                    // add the new category to the list and notify the adapter
                                     String newCategory = customCategory.getText().toString();
-                                    categoryOptions.add(newCategory);
+                                    int size = categoryOptions.size();
+                                    categoryOptions.add(size-1, newCategory);
                                     categoryAdapter.notifyDataSetChanged();
+
+                                    // add new category to firebase
+                                    addEditIngredientController.addIngredientCategory(newCategory);
+
+                                    // select the new category as the spinner value
                                     int j = categoryAdapter.getPosition(newCategory);
                                     categoryName.setSelection(j);
+                                    currentIngredient.setCategory(newCategory);
                                 }
                             }).show();
                 }
@@ -243,10 +254,17 @@ public class AddEditIngredientFragment extends DialogFragment {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     String newLocation = customLocation.getText().toString();
-                                    locationOptions.add(newLocation);
+                                    int size = locationOptions.size();
+                                    locationOptions.add(size-1, newLocation);
                                     locationAdapter.notifyDataSetChanged();
+
+                                    // add new location to firebase
+                                    addEditIngredientController.addIngredientLocation(newLocation);
+
+                                    // select the new location as the spinner value
                                     int j = locationAdapter.getPosition(newLocation);
                                     locationName.setSelection(j);
+                                    currentIngredient.setLocation(newLocation);
                                 }
                             }).show();
                 }
@@ -301,10 +319,17 @@ public class AddEditIngredientFragment extends DialogFragment {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     String newUnit = customUnit.getText().toString();
-                                    unitOptions.add(newUnit);
+                                    int size = unitOptions.size();
+                                    unitOptions.add(size-1, newUnit);
                                     unitAdapter.notifyDataSetChanged();
+
+                                    // add new unit to firebase
+                                    addEditIngredientController.addIngredientUnit(newUnit);
+
+                                    // select the new unit as the spinner value
                                     int j = unitAdapter.getPosition(newUnit);
                                     unitName.setSelection(j);
+                                    currentIngredient.setUnit(newUnit);
                                 }
                             }).show();
                 }
@@ -326,36 +351,33 @@ public class AddEditIngredientFragment extends DialogFragment {
         });
 
         // gets the spinner value from firebase
-        AddEditIngredientController addEditIngredientController = new AddEditIngredientController();
-        DocumentReference documentReference = addEditIngredientController.getDocumentReference();
         Task<DocumentSnapshot> documentSnapshot = documentReference.get();
         documentSnapshot.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                System.out.println("Hello");
                 if (task.isSuccessful()) {
                     Map<String, Object> result = task.getResult().getData();
 
                     // category
-                    categoryOptions = (ArrayList<CharSequence>) result.get("IngredientCategories");
+
+                    categoryOptions.addAll((ArrayList<CharSequence>) result.get("IngredientCategories"));
                     categoryOptions.add("Add Category");
-                    categoryAdapter.clear();
-                    categoryAdapter.addAll(categoryOptions);
                     categoryAdapter.notifyDataSetChanged();
 
                     // location
-                    locationOptions = (ArrayList<CharSequence>) result.get("IngredientLocations");
+                    locationOptions.addAll((ArrayList<CharSequence>) result.get("IngredientLocations"));
                     locationOptions.add("Add Location");
-                    locationAdapter.clear();
-                    locationAdapter.addAll(locationOptions);
                     locationAdapter.notifyDataSetChanged();
 
                     // units
-                    unitOptions = (ArrayList<CharSequence>) result.get("IngredientUnits");
+                    unitOptions.addAll(((ArrayList<CharSequence>) result.get("IngredientUnits")));
                     unitOptions.add("Add Unit");
-                    unitAdapter.clear();
-                    unitAdapter.addAll(unitOptions);
                     unitAdapter.notifyDataSetChanged();
+
+                    // set the spinners at the correct value for the current ingredient
+                    locationName.setSelection(locationAdapter.getPosition(currentIngredient.getLocation()));
+                    unitName.setSelection(unitAdapter.getPosition(currentIngredient.getUnit()));
+                    categoryName.setSelection(categoryAdapter.getPosition(currentIngredient.getCategory()));
                 }
             }
         });
@@ -396,10 +418,10 @@ public class AddEditIngredientFragment extends DialogFragment {
         // set EditText boxes to the specific fields of the current selected Food
         ingredientName.setText(currentIngredient.getName());
         bbdName.setText(currentIngredient.getbbd());
-        locationName.setSelection(locationAdapter.getPosition(currentIngredient.getLocation()));
-        unitName.setSelection(unitAdapter.getPosition(currentIngredient.getUnit()));
+        //locationName.setSelection(locationAdapter.getPosition(currentIngredient.getLocation()));
+        //unitName.setSelection(unitAdapter.getPosition(currentIngredient.getUnit()));
         amountName.setText(currentIngredient.getAmount().toString());
-        categoryName.setSelection(categoryAdapter.getPosition(currentIngredient.getCategory()));
+        //categoryName.setSelection(categoryAdapter.getPosition(currentIngredient.getCategory()));
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         return builder
                 .setView(view)
