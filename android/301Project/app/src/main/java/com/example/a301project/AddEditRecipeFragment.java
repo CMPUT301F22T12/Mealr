@@ -33,9 +33,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.common.io.Resources;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -45,6 +49,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -75,6 +81,9 @@ public class AddEditRecipeFragment extends DialogFragment {
     private IngredientController ingredientController = new IngredientController();
     private ArrayList<String> ingredientAutoCompleteList = new ArrayList<>();
     private ArrayAdapter<String> ingredientAutoCompleteAdapter;
+    private ArrayList<CharSequence> categoryOptions;
+    private AddEditRecipeController addEditRecipeController;
+    private DocumentReference documentReference;
 
     /**
      * Method that responds when the fragment has been interacted with
@@ -176,6 +185,11 @@ public class AddEditRecipeFragment extends DialogFragment {
         ingredientListView = view.findViewById(R.id.recipe_ingredients_listview);
         ingredientAutoText = view.findViewById(R.id.autoCompleteIngredient);
         ingredientsAddButton = view.findViewById(R.id.add_ingredient_button);
+
+        // initialize the category spinner and the FireBase controller
+        addEditRecipeController = new AddEditRecipeController();
+        documentReference = addEditRecipeController.getDocumentReference();
+        categoryOptions = new ArrayList<>();
 
         // if tag is ADD, hide delete button
         if (this.getTag().equals("ADD")) {
@@ -289,9 +303,9 @@ public class AddEditRecipeFragment extends DialogFragment {
             }
         });
 
-        // Category spinner
-        ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(this.getContext(),
-                R.array.category_array_recipe, R.layout.ingredient_unit_item);
+
+        // Create an adapter for the category spinner
+        ArrayAdapter<CharSequence> categoryAdapter = new ArrayAdapter<>(this.getContext(), com.google.android.material.R.layout.support_simple_spinner_dropdown_item, categoryOptions);
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categoryName.setAdapter(categoryAdapter);
         categoryName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -304,9 +318,41 @@ public class AddEditRecipeFragment extends DialogFragment {
              */
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                // set the category of current recipe
-                categoryName.setSelection(i);
-                currentRecipe.setCategory(adapterView.getItemAtPosition(i).toString());
+                if (categoryAdapter.getItem(i).equals("Add Category")) {
+                    EditText customCategory = new EditText(getContext());
+                    //customUnit.setVisibility(view.VISIBLE);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setView(customCategory);
+                    builder.setMessage("Enter custom category")
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.cancel();
+                                }
+                            })
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    // add the new category to the list and notify the adapter
+                                    String newCategory = customCategory.getText().toString();
+                                    int size = categoryOptions.size();
+                                    categoryOptions.add(size-1, newCategory);
+                                    categoryAdapter.notifyDataSetChanged();
+
+                                    // add new category to firebase
+                                    addEditRecipeController.addRecipeCategory(newCategory);
+
+                                    // select the new category as the spinner value
+                                    int j = categoryAdapter.getPosition(newCategory);
+                                    categoryName.setSelection(j);
+                                    currentRecipe.setCategory(newCategory);
+                                }
+                            }).show();
+                }
+                else {
+                    // user didn't select the add custom option
+                    currentRecipe.setCategory(adapterView.getItemAtPosition(i).toString());
+                }
             }
 
             /**
@@ -323,8 +369,10 @@ public class AddEditRecipeFragment extends DialogFragment {
         categoryName.setSelection(categoryAdapter.getPosition(currentRecipe.getCategory()));
         comments.setText(currentRecipe.getComments());
         title.setText(currentRecipe.getTitle());
-        servings.setText(String.valueOf(currentRecipe.getServings()));
-        prepTime.setText(String.valueOf(currentRecipe.getPrepTime()));
+        if(!createNewRecipe) {
+            servings.setText(String.valueOf(currentRecipe.getServings()));
+            prepTime.setText(String.valueOf(currentRecipe.getPrepTime()));
+        }
         // If we have a photo already, load it in
         if (currentRecipe.getPhoto() != null && !currentRecipe.getPhoto().isEmpty()) {
             Picasso.get().load(currentRecipe.getPhoto()).into(image);
@@ -395,6 +443,29 @@ public class AddEditRecipeFragment extends DialogFragment {
             }
         });
 
+        // gets the spinner value from firebase
+        Task<DocumentSnapshot> documentSnapshot = documentReference.get();
+        documentSnapshot.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            /**
+             * When the documentSnapshot has been successfully accessed from Firebase
+             * @param task
+             */
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    Map<String, Object> result = task.getResult().getData();
+
+                    // get the categories from firebase and append the "Add Category" option
+                    categoryOptions.addAll((ArrayList<CharSequence>) result.get("RecipeCategories"));
+                    categoryOptions.add("Add Category");
+                    categoryAdapter.notifyDataSetChanged();
+
+                    // set the category spinner at the correct value for the current recipe
+                    categoryName.setSelection(categoryAdapter.getPosition(currentRecipe.getCategory()));
+                }
+            }
+        });
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         return builder
                 .setView(view)
@@ -413,8 +484,8 @@ public class AddEditRecipeFragment extends DialogFragment {
                         String servings = AddEditRecipeFragment.this.servings.getText().toString();
                         String prepTime = AddEditRecipeFragment.this.prepTime.getText().toString();
 
-                        Long longServings = Long.valueOf(servings);
-                        Long longPrepTime = Long.valueOf(prepTime);
+
+
 
                         // check if any field is empty
                         // if empty, reject add
@@ -424,6 +495,9 @@ public class AddEditRecipeFragment extends DialogFragment {
                             Toast.makeText(getContext(),  " Rejected: Missing Field(s)",Toast.LENGTH_LONG).show();
                             return;
                         }
+
+                        Long longServings = Long.valueOf(servings);
+                        Long longPrepTime = Long.valueOf(prepTime);
 
                         currentRecipe.setTitle(title);
                         currentRecipe.setComments(comments);

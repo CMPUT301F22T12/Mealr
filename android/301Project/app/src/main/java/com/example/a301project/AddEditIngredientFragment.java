@@ -23,9 +23,18 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A class for a fragment that handles adding and editing ingredients
@@ -47,6 +56,8 @@ public class AddEditIngredientFragment extends DialogFragment {
     private ArrayList<CharSequence> unitOptions;
     private ArrayList<CharSequence> categoryOptions;
     private ArrayList<CharSequence> locationOptions;
+    private AddEditIngredientController addEditIngredientController;
+    private DocumentReference documentReference;
 
     /**
      * Method that responds when the fragment has been interacted with
@@ -92,6 +103,13 @@ public class AddEditIngredientFragment extends DialogFragment {
         unitName = view.findViewById(R.id.edit_unit);
         categoryName = view.findViewById(R.id.edit_category);
         deleteButton = view.findViewById(R.id.delete_ingredient_button);
+        unitOptions = new ArrayList<>();
+        categoryOptions = new ArrayList<>();
+        locationOptions = new ArrayList<>();
+
+        addEditIngredientController = new AddEditIngredientController();
+        documentReference = addEditIngredientController.getDocumentReference();
+
 
         // sets title of the fragment depending on whether the tag is ADD or EDIT
         String title;
@@ -102,6 +120,7 @@ public class AddEditIngredientFragment extends DialogFragment {
         else {
             title = "Edit Entry";
         }
+
 
         deleteButton.setOnClickListener(new View.OnClickListener() {
             /**
@@ -140,10 +159,7 @@ public class AddEditIngredientFragment extends DialogFragment {
             }
         });
 
-        // Category spinner
-        Resources res = getActivity().getResources();
-        List<CharSequence> categoryArray = List.of(res.getStringArray(R.array.category_array));
-        categoryOptions = new ArrayList<>(categoryArray);
+        // Category spinner and create a new category adapter for the spinner
         ArrayAdapter<CharSequence> categoryAdapter = new ArrayAdapter<>(this.getContext(), com.google.android.material.R.layout.support_simple_spinner_dropdown_item, categoryOptions);
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categoryName.setAdapter(categoryAdapter);
@@ -172,11 +188,19 @@ public class AddEditIngredientFragment extends DialogFragment {
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
+                                    // add the new category to the list and notify the adapter
                                     String newCategory = customCategory.getText().toString();
-                                    categoryOptions.add(newCategory);
+                                    int size = categoryOptions.size();
+                                    categoryOptions.add(size-1, newCategory);
                                     categoryAdapter.notifyDataSetChanged();
+
+                                    // add the new category to firebase
+                                    addEditIngredientController.addIngredientCategory(newCategory);
+
+                                    // select the new category as the spinner value
                                     int j = categoryAdapter.getPosition(newCategory);
                                     categoryName.setSelection(j);
+                                    currentIngredient.setCategory(newCategory);
                                 }
                             }).show();
                 }
@@ -198,8 +222,6 @@ public class AddEditIngredientFragment extends DialogFragment {
         });
 
         // Location spinner
-        List<CharSequence> locationsArray = List.of(res.getStringArray(R.array.location_array));
-        locationOptions = new ArrayList<>(locationsArray);
         ArrayAdapter<CharSequence> locationAdapter = new ArrayAdapter<>(this.getContext(), com.google.android.material.R.layout.support_simple_spinner_dropdown_item, locationOptions);
         locationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         locationName.setAdapter(locationAdapter);
@@ -229,16 +251,22 @@ public class AddEditIngredientFragment extends DialogFragment {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     String newLocation = customLocation.getText().toString();
-                                    locationOptions.add(newLocation);
+                                    int size = locationOptions.size();
+                                    locationOptions.add(size-1, newLocation);
                                     locationAdapter.notifyDataSetChanged();
+
+                                    // add new location to firebase
+                                    addEditIngredientController.addIngredientLocation(newLocation);
+
+                                    // select the new location as the spinner value
                                     int j = locationAdapter.getPosition(newLocation);
                                     locationName.setSelection(j);
+                                    currentIngredient.setLocation(newLocation);
                                 }
                             }).show();
                 }
                 else {
                     // user didn't select the add custom option
-                    //unitName.setSelection(i);
                     currentIngredient.setLocation(adapterView.getItemAtPosition(i).toString());
                 }
             }
@@ -256,8 +284,6 @@ public class AddEditIngredientFragment extends DialogFragment {
 
 
         // Unit spinner
-        List<CharSequence> unitsarray = List.of(res.getStringArray(R.array.units_array));
-        unitOptions = new ArrayList<>(unitsarray);
         ArrayAdapter<CharSequence> unitAdapter = new ArrayAdapter<>(this.getContext(), com.google.android.material.R.layout.support_simple_spinner_dropdown_item, unitOptions);
         unitAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         unitName.setAdapter(unitAdapter);
@@ -287,10 +313,17 @@ public class AddEditIngredientFragment extends DialogFragment {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     String newUnit = customUnit.getText().toString();
-                                    unitOptions.add(newUnit);
+                                    int size = unitOptions.size();
+                                    unitOptions.add(size-1, newUnit);
                                     unitAdapter.notifyDataSetChanged();
+
+                                    // add new unit to firebase
+                                    addEditIngredientController.addIngredientUnit(newUnit);
+
+                                    // select the new unit as the spinner value
                                     int j = unitAdapter.getPosition(newUnit);
                                     unitName.setSelection(j);
+                                    currentIngredient.setUnit(newUnit);
                                 }
                             }).show();
                 }
@@ -311,6 +344,38 @@ public class AddEditIngredientFragment extends DialogFragment {
             }
         });
 
+        // gets the spinner values from FireBase
+        Task<DocumentSnapshot> documentSnapshot = documentReference.get();
+        documentSnapshot.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    Map<String, Object> result = task.getResult().getData();
+
+                    // get the category spinner values (and append the "Add Category" option)
+                    categoryOptions.addAll((ArrayList<CharSequence>) result.get("IngredientCategories"));
+                    categoryOptions.add("Add Category");
+                    categoryAdapter.notifyDataSetChanged();
+
+                    // get the location spinner values (and append the "Add Location" option)
+                    locationOptions.addAll((ArrayList<CharSequence>) result.get("IngredientLocations"));
+                    locationOptions.add("Add Location");
+                    locationAdapter.notifyDataSetChanged();
+
+                    // get the unit spinner values (and append the "Add Unit" option)
+                    unitOptions.addAll(((ArrayList<CharSequence>) result.get("IngredientUnits")));
+                    unitOptions.add("Add Unit");
+                    unitAdapter.notifyDataSetChanged();
+
+                    // set the spinners at the correct value for the current ingredient
+                    locationName.setSelection(locationAdapter.getPosition(currentIngredient.getLocation()));
+                    unitName.setSelection(unitAdapter.getPosition(currentIngredient.getUnit()));
+                    categoryName.setSelection(categoryAdapter.getPosition(currentIngredient.getCategory()));
+                }
+            }
+        });
+
+        
         bbdName.setOnClickListener(new View.OnClickListener() {
             /**
              * Method invoked when the view is clicked
@@ -346,10 +411,7 @@ public class AddEditIngredientFragment extends DialogFragment {
         // set EditText boxes to the specific fields of the current selected Food
         ingredientName.setText(currentIngredient.getName());
         bbdName.setText(currentIngredient.getbbd());
-        locationName.setSelection(locationAdapter.getPosition(currentIngredient.getLocation()));
-        unitName.setSelection(unitAdapter.getPosition(currentIngredient.getUnit()));
         amountName.setText(currentIngredient.getAmount().toString());
-        categoryName.setSelection(categoryAdapter.getPosition(currentIngredient.getCategory()));
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         return builder
                 .setView(view)

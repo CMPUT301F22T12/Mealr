@@ -36,7 +36,7 @@
 
         <Spinner
             android:id="@+id/ingredientSortSpinner"
-            android:layout_width="119dp"
+            android:layout_width="wrap_content"
             android:layout_height="39dp"
             app:layout_constraintEnd_toStartOf="@id/ingredientSortSwitch"
             app:layout_constraintTop_toTopOf="parent" />
