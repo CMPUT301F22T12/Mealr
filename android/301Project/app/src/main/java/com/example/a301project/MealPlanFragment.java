@@ -44,11 +44,11 @@ public class MealPlanFragment extends Fragment {
 
         // Get Data
         // TODO create a controller and hook up to Firebase
-        for (DayOfWeek d: DayOfWeek.values()) {
-            mealPlanDataList.add(
-                    new MealPlan(d.getDisplayName(TextStyle.FULL, Locale.CANADA))
-            );
-        }
+//        for (DayOfWeek d: DayOfWeek.values()) {
+//            mealPlanDataList.add(
+//                    new MealPlan(d.getDisplayName(TextStyle.FULL, Locale.CANADA))
+//            );
+//        }
 
         // Attach to listview
         mealPlanArrayAdapter = new MealPlanListAdapter(getContext(), mealPlanDataList);
