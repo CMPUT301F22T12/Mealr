@@ -89,7 +89,6 @@ public class RecipeFragment extends Fragment implements AddEditRecipeFragment.On
 
             }
         });
-        recipeArrayAdapter.notifyDataSetChanged();
         addButton.setOnClickListener(new View.OnClickListener() {
             /**
              * Method invoked when the add button is clicked
@@ -116,7 +115,6 @@ public class RecipeFragment extends Fragment implements AddEditRecipeFragment.On
                 sortDataBySpinner();
             }
         });
-        sortDataBySpinner();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             /**
              * Method invoked when an item in this view is clicked
@@ -143,6 +141,7 @@ public class RecipeFragment extends Fragment implements AddEditRecipeFragment.On
     private void setRecipeDataList(ArrayList<Recipe> r) {
         recipeDataList.clear();
         recipeDataList.addAll(r);
+        sortDataBySpinner();
         recipeArrayAdapter.notifyDataSetChanged();
     }
 
@@ -204,7 +203,7 @@ public class RecipeFragment extends Fragment implements AddEditRecipeFragment.On
         else {
             controller.notifyUpdate(recipe);
         }
-        recipeArrayAdapter.notifyDataSetChanged();
+        sortDataBySpinner();
     }
 
     /**

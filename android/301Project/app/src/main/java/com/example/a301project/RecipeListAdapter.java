@@ -68,6 +68,9 @@ public class RecipeListAdapter extends ArrayAdapter<Recipe> {
             Picasso.get().load(r.getPhoto()).into(imageView);
             imageView.setClipToOutline(true);
         }
+        else {
+            imageView.setImageResource(R.drawable.meal);
+        }
 
         return view;
     }
