@@ -185,6 +185,7 @@ public class RecipeFragment extends Fragment implements AddEditRecipeFragment.On
      */
     public void addRecipe(Recipe recipe) {
         recipeArrayAdapter.add(recipe);
+        recipeArrayAdapter.notifyDataSetChanged();
         controller.addRecipe(recipe);
     }
 
