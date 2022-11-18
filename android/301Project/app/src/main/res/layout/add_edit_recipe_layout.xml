@@ -164,7 +164,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/ingredient_edit_padding">
+        android:paddingHorizontal="@dimen/ingredient_edit_padding">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="40dp">
@@ -202,7 +202,7 @@
         <ListView
             android:id="@+id/recipe_ingredients_listview"
             android:layout_width="match_parent"
-            android:layout_height="130dp"
+            android:layout_height="80dp"
             android:divider="@android:color/transparent"
             android:dividerHeight="5dp"
             android:padding="5sp" />
