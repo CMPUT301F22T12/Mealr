@@ -1,16 +1,23 @@
 package com.example.a301project;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
+import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -19,6 +26,45 @@ import java.util.Objects;
  */
 public class NavActivity extends AppCompatActivity {
     protected BottomNavigationView bottomNav;
+
+    /**
+     * Launcher for  sign in flow.
+     */
+    private final ActivityResultLauncher<Intent> signInLauncher = registerForActivityResult(
+            new FirebaseAuthUIActivityResultContract(),
+            this::onSignInResult
+    );
+
+    /**
+     * Calls the sign in launcher
+     */
+    private void signIn() {
+        // Sign in the user before doing anything
+        List<AuthUI.IdpConfig> providers = List.of(
+                new AuthUI.IdpConfig.EmailBuilder().build());
+
+        // Create and launch sign-in intent
+        Intent signInIntent = AuthUI.getInstance()
+                .createSignInIntentBuilder()
+                .setAvailableProviders(providers)
+                .setIsSmartLockEnabled(false)
+                .build();
+        signInLauncher.launch(signInIntent);
+    }
+
+
+    /**
+     * Handles the result of a user sign in.
+     * @param result result object from user's sign in
+     */
+    private void onSignInResult(FirebaseAuthUIAuthenticationResult result) {
+        if (result.getResultCode() == RESULT_OK) {
+            renderFragment(R.id.action_ingredients, true);
+        } else {
+            Toast.makeText(this, "Error, could not sign in.", Toast.LENGTH_LONG).show();
+            signIn();
+        }
+    }
 
     /**
      * Method for on creating the activity
@@ -43,28 +89,23 @@ public class NavActivity extends AppCompatActivity {
                 // in future prototypes this will become fragments
                 int id = item.getItemId();
 
-                renderFragment(id);
+                renderFragment(id, false);
 
                 return true;
             }
         });
 
-        // Render ingredient by default
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.nav_content, IngredientFragment.class, null, "IngredientFragment")
-                .setReorderingAllowed(true)
-                .addToBackStack("IngredientFragment")
-                .commit();
-        bottomNav.getMenu().findItem(R.id.action_ingredients).setChecked(true);
+        // Start the sign in flow
+        signIn();
     }
 
     /**
      * Renders the fragment with the given id
      * @param id id of menu item in the nav bar
      */
-    private void renderFragment(int id) {
+    private void renderFragment(int id, boolean force) {
         // Avoid duplicates if you press button on same screen
-        if (bottomNav.getSelectedItemId() == id) {return;}
+        if (bottomNav.getSelectedItemId() == id && !force) {return;}
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         Class<? extends Fragment> f = null;

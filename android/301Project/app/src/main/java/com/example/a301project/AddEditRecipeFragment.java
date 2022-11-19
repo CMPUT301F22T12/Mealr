@@ -37,7 +37,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.common.io.Resources;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -119,7 +120,9 @@ public class AddEditRecipeFragment extends DialogFragment {
         uploadButton.setEnabled(false);
         cameraButton.setEnabled(false);
         StorageReference storageRef = storage.getReference();
-        StorageReference imagesRef = storageRef.child("mealImages").child(title.getText().toString());
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        assert user.getEmail() != null;
+        StorageReference imagesRef = storageRef.child("mealImages").child(user.getEmail()).child(title.getText().toString());
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
@@ -320,7 +323,6 @@ public class AddEditRecipeFragment extends DialogFragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (categoryAdapter.getItem(i).equals("Add Category")) {
                     EditText customCategory = new EditText(getContext());
-                    //customUnit.setVisibility(view.VISIBLE);
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setView(customCategory);
                     builder.setMessage("Enter custom category")
@@ -455,9 +457,12 @@ public class AddEditRecipeFragment extends DialogFragment {
                 if (task.isSuccessful()) {
                     Map<String, Object> result = task.getResult().getData();
 
-                    // get the categories from firebase and append the "Add Category" option
-                    categoryOptions.addAll((ArrayList<CharSequence>) result.get("RecipeCategories"));
-                    categoryOptions.add("Add Category");
+                    if (result != null && result.containsKey("RecipeCategories")) {
+                        // get the categories from firebase and append the "Add Category" option
+                        categoryOptions.addAll((ArrayList<CharSequence>) result.get("RecipeCategories"));
+                    }
+
+                    categoryOptions.addAll(List.of("Breakfast", "Lunch", "Dinner", "Add Category"));
                     categoryAdapter.notifyDataSetChanged();
 
                     // set the category spinner at the correct value for the current recipe
@@ -483,8 +488,6 @@ public class AddEditRecipeFragment extends DialogFragment {
                         String comments = AddEditRecipeFragment.this.comments.getText().toString();
                         String servings = AddEditRecipeFragment.this.servings.getText().toString();
                         String prepTime = AddEditRecipeFragment.this.prepTime.getText().toString();
-
-
 
 
                         // check if any field is empty

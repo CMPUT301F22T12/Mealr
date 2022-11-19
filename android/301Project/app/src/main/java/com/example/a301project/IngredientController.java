@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -39,7 +41,10 @@ public class IngredientController {
      */
     public IngredientController() {
         db = FirebaseFirestore.getInstance();
-        collectionReference = db.collection(collectionName);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        assert user.getEmail() != null;
+        collectionReference = db.collection("User").document(user.getEmail()).collection(collectionName);
     }
 
     /**
@@ -159,7 +164,7 @@ public class IngredientController {
         userMap.put("Category",ingredient.getCategory());
         userMap.put("Unit",ingredient.getUnit());
         userMap.put("Location",ingredient.getLocation());
-        db.collection(collectionName)
+        collectionReference
                 .document(ingredient.getId())
                 .update(userMap);
     }

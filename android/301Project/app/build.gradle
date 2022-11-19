@@ -42,6 +42,8 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:31.0.1')
     implementation 'com.google.firebase:firebase-storage'
     implementation 'com.google.firebase:firebase-firestore'
+    implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
+    implementation "com.google.android.gms:play-services-auth:20.3.0"
     implementation 'com.squareup.picasso:picasso:2.8'
     testImplementation "org.mockito:mockito-core:3.+"
     androidTestImplementation 'androidx.test:runner:1.2.0'

@@ -353,18 +353,24 @@ public class AddEditIngredientFragment extends DialogFragment {
                     Map<String, Object> result = task.getResult().getData();
 
                     // get the category spinner values (and append the "Add Category" option)
-                    categoryOptions.addAll((ArrayList<CharSequence>) result.get("IngredientCategories"));
-                    categoryOptions.add("Add Category");
+                    if (result != null && result.containsKey("IngredientCategories")) {
+                        categoryOptions.addAll((ArrayList<CharSequence>) result.get("IngredientCategories"));
+                    }
+                    categoryOptions.addAll(List.of("Fruit", "Vegetable", "Dairy", "Protein", "Grain", "Add Category"));
                     categoryAdapter.notifyDataSetChanged();
 
                     // get the location spinner values (and append the "Add Location" option)
-                    locationOptions.addAll((ArrayList<CharSequence>) result.get("IngredientLocations"));
-                    locationOptions.add("Add Location");
+                    if (result != null && result.containsKey("IngredientLocations")) {
+                        locationOptions.addAll((ArrayList<CharSequence>) result.get("IngredientLocations"));
+                    }
+                    locationOptions.addAll(List.of("Fridge", "Freeze", "Pantry", "Add Location"));;
                     locationAdapter.notifyDataSetChanged();
 
                     // get the unit spinner values (and append the "Add Unit" option)
-                    unitOptions.addAll(((ArrayList<CharSequence>) result.get("IngredientUnits")));
-                    unitOptions.add("Add Unit");
+                    if (result != null && result.containsKey("IngredientUnits")) {
+                        unitOptions.addAll(((ArrayList<CharSequence>) result.get("IngredientUnits")));
+                    }
+                    unitOptions.addAll(List.of("Piece(s)", "Slice(s)", "Gram(s)", "Ounce(s)", "Kg(s)", "Add Unit"));;
                     unitAdapter.notifyDataSetChanged();
 
                     // set the spinners at the correct value for the current ingredient
