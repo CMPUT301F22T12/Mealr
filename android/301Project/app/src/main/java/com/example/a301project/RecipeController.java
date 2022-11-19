@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -24,13 +26,18 @@ import java.util.Map;
 public class RecipeController {
     private FirebaseFirestore db;
     private CollectionReference cr;
+    private final String collectionName = "Recipe";
 
     /**
      * The constructor for the {@link RecipeController}. Sets up the {@link #db} and {@link #cr}
      */
     public RecipeController() {
         this.db = FirebaseFirestore.getInstance();
-        this.cr = db.collection("Recipe");
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        assert user.getEmail() != null;
+        cr = db.collection("User").document(user.getEmail()).collection(collectionName);
+
     }
 
     /**
@@ -168,8 +175,8 @@ public class RecipeController {
         userMap.put("Servings", recipe.getServings());
         userMap.put("PrepTime", recipe.getPrepTime());
         String id = recipe.getId();
-        db.collection("Recipe")
-                .document(id)
-                .update(userMap);
+        cr
+            .document(id)
+            .update(userMap);
     }
 }

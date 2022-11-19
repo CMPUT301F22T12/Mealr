@@ -10,6 +10,8 @@ import androidx.annotation.Nullable;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -39,7 +41,11 @@ public class AddEditIngredientController {
      */
     public AddEditIngredientController() {
         db = FirebaseFirestore.getInstance();
-        collectionReference = db.collection(collectionName);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        assert user.getEmail() != null;
+        collectionReference = db.collection("User").document(user.getEmail()).collection(collectionName);
+
         documentReference = collectionReference.document(documentName);
     }
 
@@ -86,6 +92,14 @@ public class AddEditIngredientController {
             public void onSuccess(DocumentSnapshot documentSnapshot) {
 
                 Map<String, Object> result = documentSnapshot.getData();
+
+                if (result == null) {
+                    result = new HashMap<>();
+                }
+                if (!result.containsKey(listName)) {
+                    result.put(listName, new ArrayList<CharSequence>());
+                }
+
                 ArrayList<CharSequence> customizationOptions = (ArrayList<CharSequence>) result.get(listName);
                 customizationOptions.add(valueToAdd);
                 result.replace(listName, customizationOptions);

@@ -1,6 +1,8 @@
 package com.example.a301project;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -8,6 +10,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class AddEditRecipeController {
@@ -25,7 +28,11 @@ public class AddEditRecipeController {
      */
     public AddEditRecipeController() {
         db = FirebaseFirestore.getInstance();
-        collectionReference = db.collection(collectionName);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        assert user.getEmail() != null;
+        collectionReference = db.collection("User").document(user.getEmail()).collection(collectionName);
+
         documentReference = collectionReference.document(documentName);
     }
 
@@ -45,6 +52,11 @@ public class AddEditRecipeController {
             public void onSuccess(DocumentSnapshot documentSnapshot) {
 
                 Map<String, Object> result = documentSnapshot.getData();
+
+                if (result == null) {
+                    result = new HashMap<>();
+                    result.put("RecipeCategories", new ArrayList<CharSequence>());
+                }
                 ArrayList<CharSequence> customizationOptions = (ArrayList<CharSequence>) result.get("RecipeCategories");
                 customizationOptions.add(newCategory);
                 result.replace("RecipeCategories", customizationOptions);

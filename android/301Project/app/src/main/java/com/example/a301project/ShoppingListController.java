@@ -1,5 +1,7 @@
 package com.example.a301project;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -15,13 +17,17 @@ import java.util.ArrayList;
 public class ShoppingListController {
     private FirebaseFirestore db;
     private CollectionReference cr;
+    private final String collectionName = "Ingredient";
 
     /**
      * The constructor for the {@link ShoppingListController}. Sets up the {@link #db} and {@link #cr}
      */
     public ShoppingListController() {
         this.db = FirebaseFirestore.getInstance();
-        this.cr = db.collection("Ingredient");
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        assert user.getEmail() != null;
+        cr = db.collection("User").document(user.getEmail()).collection(collectionName);
     }
 
     public interface successHandler {
