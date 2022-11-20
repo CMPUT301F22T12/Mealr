@@ -12,6 +12,7 @@ public class MealPlan {
     private String startDate;
     private String endDate;
     private String name;
+    private String id = null;
 
     /**
      * Gets the {@link MealPlan} object's name
@@ -30,8 +31,47 @@ public class MealPlan {
     }
     public void setStartDate(String startDate) {this.startDate = startDate;}
     public void setEndDate(String endDate) {this.endDate = endDate;}
-    private String getStartDate() {return startDate;}
-    private String getEndDate() {return endDate;}
+    public String getStartDate() {return startDate;}
+    public String getEndDate() {return endDate;}
+
+    public ArrayList<Ingredient> getIngredients() {
+        return ingredients;
+    }
+
+    /**
+     * Sets the {@link MealPlan} ingredient array as the one passed in
+     * @param ingredients {@link ArrayList} servings of photo of recipe
+     */
+    public void setIngredients(ArrayList<Ingredient> ingredients) {
+        this.ingredients = ingredients;
+    }
+
+    public ArrayList<Recipe> getRecipes() {
+        return recipes;
+    }
+
+    /**
+     * Sets the {@link MealPlan} ingredient array as the one passed in
+     * @param recipes {@link ArrayList} servings of photo of recipe
+     */
+    public void setRecipes(ArrayList<Recipe> recipes) {
+        this.recipes = recipes;
+    }
+
+    /**
+     * Sets the {@link Recipe} ID as the one passed in
+     * @param id {@link String} ID of recipe
+     */
+    public void setId(String id) {
+        this.id = id;
+    }
+    /**
+     * gets the ID of {@link Recipe} object
+     * @return {@link String} ID of Recipe
+     */
+    public String getId() {
+        return this.id;
+    }
 
 
     /**
@@ -48,13 +88,5 @@ public class MealPlan {
         this.endDate = endDate;
     }
 
-    /**
-     * Constructor for MealPlan that only takes a name
-     * creates ArrayLists as new
-     * @param name {@String}
-     */
-//    public MealPlan(String name) {
-//        this(new ArrayList<>(), new ArrayList<>(), name);
-//    }
 
 }
