@@ -1,12 +1,13 @@
 package com.example.a301project;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Represents an individual meal plan with ingredients and recipes.
  * MealPlanFragment contains multiple instances of these.
  */
-public class MealPlan {
+public class MealPlan implements Serializable {
     private ArrayList<Ingredient> ingredients;
     private ArrayList<Recipe> recipes;
     private String startDate;

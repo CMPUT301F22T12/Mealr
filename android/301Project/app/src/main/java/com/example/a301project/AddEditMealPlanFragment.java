@@ -3,11 +3,13 @@ package com.example.a301project;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -23,6 +25,8 @@ import androidx.fragment.app.Fragment;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class AddEditMealPlanFragment extends DialogFragment {
     private ListView ingredientList;
@@ -93,7 +97,7 @@ public class AddEditMealPlanFragment extends DialogFragment {
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-            currentMealPlan = (MealPlan) bundle.get("recipe");
+            currentMealPlan = (MealPlan) bundle.get("mealplan");
             createNewMeal = (boolean) bundle.get("createNew");
         }
         // populate text boxes with information on meal plan
@@ -123,7 +127,7 @@ public class AddEditMealPlanFragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setMessage("Are you sure you want to delete this Meal?")
+                builder.setMessage("Are you sure you want to delete this Meal Plan?")
                         .setCancelable(false)
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             /**
@@ -138,7 +142,7 @@ public class AddEditMealPlanFragment extends DialogFragment {
                                 listener.onDeleteConfirmed(currentMealPlan);
                                 Fragment frag = getParentFragmentManager().findFragmentByTag("EDIT");
                                 getParentFragmentManager().beginTransaction().remove(frag).commit();
-                                Toast.makeText(getContext(), "Recipe Delete Successful", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getContext(), "Meal Plan Delete Successful", Toast.LENGTH_LONG).show();
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -156,5 +160,121 @@ public class AddEditMealPlanFragment extends DialogFragment {
                 alert.show();
             }
         });
+
+        // Load autocomplete ingredients
+        ingredientController.getIngredients(res -> setIngredientDataList(res));
+        ingredientAutoCompleteAdapter = new ArrayAdapter<>(getContext(),
+                android.R.layout.simple_dropdown_item_1line, ingredientAutoCompleteList);
+        ingredientAutoText.setAdapter(ingredientAutoCompleteAdapter);
+
+        // Set a HARDCODED delay to make sure the keyboard is up first and the dropdown
+        // appears above not behind the keyboard
+        int DELAY = 500;
+        ingredientAutoText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    new Timer().schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            getActivity().runOnUiThread(() -> ingredientAutoText.showDropDown());
+                        }
+                    }, DELAY);
+                }
+            }
+        });
+
+        ingredientAutoText.setOnTouchListener((v, event) -> {
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    getActivity().runOnUiThread(() -> ingredientAutoText.showDropDown());
+                }
+            }, DELAY);
+            return false;
+        });
+
+        // Load ingredients
+        ingredientsDataList = new ArrayList<>();
+        ingredientsDataList.addAll(currentMealPlan.getIngredients());
+        ingredientArrayAdapter = new RecipeIngredientListAdapter(getContext(), ingredientsDataList);
+        ingredientList.setAdapter(ingredientArrayAdapter);
+
+        addIngredientButton.setOnClickListener(view_ -> {
+            String ingredientName = ingredientAutoText.getText().toString();
+            if (!ingredientName.isEmpty()) {
+                ingredientsDataList.add(0, new Ingredient(ingredientName, 1));
+                ingredientArrayAdapter.notifyDataSetChanged();
+                ingredientAutoText.setText("");
+
+                // Hide the keyboard now
+                InputMethodManager inputManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputManager.hideSoftInputFromWindow(view_.getWindowToken(),
+                        InputMethodManager.HIDE_NOT_ALWAYS);
+
+                // Remove from autocomplete for future
+                if (ingredientAutoCompleteList.contains(ingredientName)) {
+                    ingredientAutoCompleteList.remove(ingredientName);
+
+                    // Idk why but we have to create a new one for this to work
+                    ingredientAutoCompleteAdapter = new ArrayAdapter<>(getContext(),
+                            android.R.layout.simple_dropdown_item_1line, ingredientAutoCompleteList);
+                    ingredientAutoText.setAdapter(ingredientAutoCompleteAdapter);
+                }
+            }
+        });
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        return builder
+                .setView(view)
+                .setTitle("Add/Edit Meal Plan")
+                .setNegativeButton("Cancel",null)
+                .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                    /**
+                     * Method for getting and setting attributes of current recipe
+                     * @param dialogInterface {@link DialogInterface} the dialog interface of this fragment
+                     * @param i {@link Integer} ID of the selected item
+                     */
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String startDate = AddEditMealPlanFragment.this.startDate.getText().toString();
+                        String endDate = AddEditMealPlanFragment.this.endDate.getText().toString();
+
+
+                        // check if any field is empty
+                        // if empty, reject add
+                        boolean hasEmpty = startDate.isEmpty() || endDate.isEmpty() || ingredientsDataList.stream().anyMatch(i_ -> i_.getName().isEmpty() || i_.getAmount().isNaN());
+
+                        if (hasEmpty) {
+                            Toast.makeText(getContext(),  " Rejected: Missing Field(s)",Toast.LENGTH_LONG).show();
+                            return;
+                        }
+
+                        currentMealPlan.setStartDate(startDate);
+                        currentMealPlan.setEndDate(endDate);
+                        currentMealPlan.setIngredients(ingredientsDataList);
+
+                        listener.onConfirmPressed(currentMealPlan, createNewMeal);
+                    }
+                }).create();
+
     }
+    /**
+     * Method to create a new AddEditRecipe fragment
+     * @param mealplan {@link Recipe} the current recipe
+     * @param createNew {@link boolean} variable that indicates whether to create a new recipe
+     * @return An Add/Edit Recipe fragment
+     */
+    static AddEditMealPlanFragment newInstance(MealPlan mealplan, boolean createNew , AddEditMealPlanFragment.OnFragmentInteractionListener listener) {
+        Bundle args = new Bundle();
+        args.putSerializable("mealplan",mealplan);
+        args.putSerializable("createNew", createNew);
+
+        AddEditMealPlanFragment fragment = new AddEditMealPlanFragment();
+        fragment.setArguments(args);
+        fragment.listener = listener;
+
+        return fragment;
+    }
+
 }
