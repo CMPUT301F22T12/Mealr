@@ -499,13 +499,13 @@ public class AddEditRecipeFragment extends DialogFragment {
                             return;
                         }
 
-                        Long longServings = Long.valueOf(servings);
-                        Long longPrepTime = Long.valueOf(prepTime);
+                        Long Servings = Long.valueOf(servings);
+                        Long PrepTime = Long.valueOf(prepTime);
 
                         currentRecipe.setTitle(title);
                         currentRecipe.setComments(comments);
-                        currentRecipe.setServings(longServings);
-                        currentRecipe.setPrepTime(longPrepTime);
+                        currentRecipe.setServings(Double.valueOf(Servings));
+                        currentRecipe.setPrepTime(PrepTime);
                         if (photoUrl != null && !photoUrl.isEmpty()) {
                             currentRecipe.setPhoto(photoUrl);
                         }

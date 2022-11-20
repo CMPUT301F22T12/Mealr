@@ -37,6 +37,11 @@ public class Recipe implements Serializable {
         this.ingredients = ingredients;
     }
 
+    public Recipe(String name, Long servings) {
+        this.title = title;
+        this.servings = servings;
+    }
+
     /**
      * gets the {@link Recipe} title
      * @return {@link String}title of object
@@ -129,7 +134,7 @@ public class Recipe implements Serializable {
      * Sets the {@link Recipe} servings as the one passed in
      * @param servings {@link Long} servings of photo of recipe
      */
-    public void setServings(Long servings) {
+    public void setServings(Double servings) {
         this.servings = servings;
     }
 
