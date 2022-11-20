@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -24,6 +25,9 @@ public class MealPlanFragment extends Fragment {
     private ListView listView;
     private ArrayAdapter<MealPlan> mealPlanArrayAdapter;
     private ArrayList<MealPlan> mealPlanDataList = new ArrayList<>();
+    private MealPlanController controller = new MealPlanController();
+    Button addMealButton;
+    public int position = -1;
 
     public MealPlanFragment() {
         super(R.layout.activity_meal_plan);
@@ -37,6 +41,8 @@ public class MealPlanFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActivity().setTitle("My Meal Plans");
+
+        addMealButton = view.findViewById(R.id.add_meal_button);
 
         // We have to put our layout in the space for the content
         ViewGroup content = view.findViewById(R.id.nav_content);

@@ -5,6 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MealPlanFragment">
+    <Button
+        android:id="@+id/add_meal_button"
+        android:layout_width="70dp"
+        android:layout_height="40dp"
+        android:text="Add"
+        android:textAllCaps="false"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
     <ListView
         android:id="@+id/mealPlanListView"
         android:layout_width="0dp"
