@@ -6,6 +6,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -25,6 +28,7 @@ import androidx.fragment.app.Fragment;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -43,7 +47,9 @@ public class AddEditMealPlanFragment extends DialogFragment {
     private AutoCompleteTextView ingredientAutoText;
     private AutoCompleteTextView recipeAutoText;
     private ArrayAdapter<Ingredient> ingredientArrayAdapter;
+    private ArrayAdapter<Recipe> recipeArrayAdapter;
     private ArrayList<Ingredient> ingredientsDataList;
+    private ArrayList<Recipe> recipesDataList;
     private IngredientController ingredientController = new IngredientController();
     private ArrayList<String> ingredientAutoCompleteList = new ArrayList<>();
     private ArrayAdapter<String> ingredientAutoCompleteAdapter;
@@ -80,6 +86,23 @@ public class AddEditMealPlanFragment extends DialogFragment {
         ingredientAutoCompleteAdapter.notifyDataSetChanged();
     }
 
+
+    /**
+     * Method to clear recipe,
+     * Resets the internal meal plan list the new one.
+     *
+     * @param r {@link ArrayList} list of recipes to set the data list to
+     */
+    private void setRecipeDataList(ArrayList<Recipe> r) {
+        recipeAutoCompleteList.clear();
+        for (Recipe i : r) {
+            if (recipesDataList.stream().noneMatch(i1 -> i.getTitle().equals(i1.getTitle()))) {
+                recipeAutoCompleteList.add(i.getTitle());
+            }
+        }
+        recipeAutoCompleteAdapter.notifyDataSetChanged();
+    }
+
     /**
      * Method to set the fragment attributes
      * Sets the information of current Recipe if the tag is EDIT
@@ -94,6 +117,12 @@ public class AddEditMealPlanFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.add_edit_mealplan_layout, null);
+
+        // get the current date as the default in date picker
+        Calendar calendar = Calendar.getInstance();
+        final int year = calendar.get(Calendar.YEAR);
+        final int month = calendar.get(Calendar.MONTH);
+        final int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -113,8 +142,13 @@ public class AddEditMealPlanFragment extends DialogFragment {
         recipeAutoText = view.findViewById(R.id.autoCompleteRecipe_mealplan);
 
         // if tag is ADD, hide delete button
+        String title;
         if (this.getTag().equals("ADD")) {
+            title = "Add Entry";
             deleteMealButton.setVisibility(View.GONE);
+        }
+        else {
+            title = "Edit Entry";
         }
         // OnClickListener for delete button
         deleteMealButton.setOnClickListener(new View.OnClickListener() {
@@ -203,7 +237,7 @@ public class AddEditMealPlanFragment extends DialogFragment {
         addIngredientButton.setOnClickListener(view_ -> {
             String ingredientName = ingredientAutoText.getText().toString();
             if (!ingredientName.isEmpty()) {
-                ingredientsDataList.add(0, new Ingredient(ingredientName, 1));
+                ingredientsDataList.add(0,  new Ingredient(ingredientName, 1));
                 ingredientArrayAdapter.notifyDataSetChanged();
                 ingredientAutoText.setText("");
 
@@ -224,10 +258,141 @@ public class AddEditMealPlanFragment extends DialogFragment {
             }
         });
 
+        // Load autocomplete recipes
+        recipeController.getRecipes(res -> setRecipeDataList(res));
+        recipeAutoCompleteAdapter = new ArrayAdapter<>(getContext(),
+                android.R.layout.simple_dropdown_item_1line, recipeAutoCompleteList);
+        recipeAutoText.setAdapter(recipeAutoCompleteAdapter);
+
+        // Set a HARDCODED delay to make sure the keyboard is up first and the dropdown
+        // appears above not behind the keyboard
+        recipeAutoText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    new Timer().schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            getActivity().runOnUiThread(() -> recipeAutoText.showDropDown());
+                        }
+                    }, DELAY);
+                }
+            }
+        });
+
+        recipeAutoText.setOnTouchListener((v, event) -> {
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    getActivity().runOnUiThread(() -> recipeAutoText.showDropDown());
+                }
+            }, DELAY);
+            return false;
+        });
+
+        // Load recipes
+        recipesDataList = new ArrayList<>();
+        recipesDataList.addAll(currentMealPlan.getRecipes());
+        recipeArrayAdapter = new MealPlanRecipeListAdapter(getContext(), recipesDataList);
+        recipeList.setAdapter(recipeArrayAdapter);
+
+        addRecipeButton.setOnClickListener(view_ -> {
+            String recipeName = recipeAutoText.getText().toString();
+            if (!recipeName.isEmpty()) {
+                recipesDataList.add(0, new Recipe(recipeName, (long) 1.0));
+                recipeArrayAdapter.notifyDataSetChanged();
+                recipeAutoText.setText("");
+
+                // Hide the keyboard now
+                InputMethodManager inputManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputManager.hideSoftInputFromWindow(view_.getWindowToken(),
+                        InputMethodManager.HIDE_NOT_ALWAYS);
+
+                // Remove from autocomplete for future
+                if (recipeAutoCompleteList.contains(recipeName)) {
+                    recipeAutoCompleteList.remove(recipeName);
+
+                    // Idk why but we have to create a new one for this to work
+                    recipeAutoCompleteAdapter = new ArrayAdapter<>(getContext(),
+                            android.R.layout.simple_dropdown_item_1line, recipeAutoCompleteList);
+                    recipeAutoText.setAdapter(recipeAutoCompleteAdapter);
+                }
+            }
+        });
+
+        // set the date pickers for start date
+        startDate.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Method invoked when the view is clicked
+             * shows date picker
+             * @param view {@link View} the view that contains the selected date
+             */
+            @Override
+            public void onClick(View view) {
+                DatePickerDialog datePicker = new DatePickerDialog(
+                        getActivity(), android.R.style.Theme_Holo_Light_Dialog_MinWidth, dateSetListener, year, month, day);
+                datePicker.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                datePicker.show();
+            }
+        });
+
+        dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            /**
+             * Method invoked a date is selected
+             * sets the selected date as the best before date for this ingredient
+             * @param datePicker {@link DatePicker} the date picker in view
+             * @param year {@link Integer}  the year selected
+             * @param month {@link Integer} the month selected
+             * @param dayOfMonth {@link Integer} the day selected
+             */
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+                month = month + 1;
+                String startdate = year + "-" + String.format("%02d", month) + "-" + String.format("%02d", dayOfMonth);
+                startDate.setText(startdate);
+            }
+        };
+
+        // set the date pickers for end date
+        endDate.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Method invoked when the view is clicked
+             * shows date picker
+             * @param view {@link View} the view that contains the selected date
+             */
+            @Override
+            public void onClick(View view) {
+                DatePickerDialog datePicker = new DatePickerDialog(
+                        getActivity(), android.R.style.Theme_Holo_Light_Dialog_MinWidth, dateSetListener, year, month, day);
+                datePicker.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                datePicker.show();
+            }
+        });
+
+        dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            /**
+             * Method invoked a date is selected
+             * sets the selected date as the best before date for this ingredient
+             * @param datePicker {@link DatePicker} the date picker in view
+             * @param year {@link Integer}  the year selected
+             * @param month {@link Integer} the month selected
+             * @param dayOfMonth {@link Integer} the day selected
+             */
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+                month = month + 1;
+                String enddate = year + "-" + String.format("%02d", month) + "-" + String.format("%02d", dayOfMonth);
+                endDate.setText(enddate);
+            }
+        };
+
+        // set the text boxes in case they were edit and the date was already picked previously
+        startDate.setText(currentMealPlan.getStartDate());
+        endDate.setText(currentMealPlan.getEndDate());
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         return builder
                 .setView(view)
-                .setTitle("Add/Edit Meal Plan")
+                .setTitle(title)
                 .setNegativeButton("Cancel",null)
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     /**
@@ -261,7 +426,7 @@ public class AddEditMealPlanFragment extends DialogFragment {
     }
     /**
      * Method to create a new AddEditRecipe fragment
-     * @param mealplan {@link Recipe} the current recipe
+     * @param mealplan {@link MealPlan} the current recipe
      * @param createNew {@link boolean} variable that indicates whether to create a new recipe
      * @return An Add/Edit Recipe fragment
      */
