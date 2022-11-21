@@ -24,6 +24,7 @@ import com.google.firebase.firestore.SetOptions;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class AddEditIngredientController {
@@ -41,11 +42,9 @@ public class AddEditIngredientController {
      */
     public AddEditIngredientController() {
         db = FirebaseFirestore.getInstance();
-
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         assert user.getEmail() != null;
         collectionReference = db.collection("User").document(user.getEmail()).collection(collectionName);
-
         documentReference = collectionReference.document(documentName);
     }
 
@@ -69,7 +68,7 @@ public class AddEditIngredientController {
      * @param location the location {@link String} to add
      */
     public void addIngredientLocation(String location) {
-        addIngredientCustomization("IngredientLocations", location);
+       addIngredientCustomization("IngredientLocations", location);
     }
 
     /**
@@ -90,7 +89,6 @@ public class AddEditIngredientController {
         documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-
                 Map<String, Object> result = documentSnapshot.getData();
 
                 if (result == null) {
@@ -101,12 +99,27 @@ public class AddEditIngredientController {
                 }
 
                 ArrayList<CharSequence> customizationOptions = (ArrayList<CharSequence>) result.get(listName);
-                customizationOptions.add(valueToAdd);
-                result.replace(listName, customizationOptions);
 
-                // then rewrite the data
-                documentReference.set(result, SetOptions.merge());
+                // check if the value to add already exists in firebase
+                Iterator<CharSequence> listIterator = customizationOptions.iterator();
+                Boolean exists = false;
+                while (listIterator.hasNext()) {
+                    if (listIterator.next().toString().toLowerCase().equals(valueToAdd.toLowerCase())) {
+                        exists = true;
+                        break;
+                    }
+                }
+
+                // if the value isn't already in the list -> then add it
+                if (!exists) {
+                    customizationOptions.add(valueToAdd);
+                    result.replace(listName, customizationOptions);
+
+                    // then rewrite the data
+                    documentReference.set(result, SetOptions.merge());
+                }
             }
+
         });
     }
 }
