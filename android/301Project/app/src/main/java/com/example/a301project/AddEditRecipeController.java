@@ -11,6 +11,7 @@ import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class AddEditRecipeController {
@@ -32,7 +33,6 @@ public class AddEditRecipeController {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         assert user.getEmail() != null;
         collectionReference = db.collection("User").document(user.getEmail()).collection(collectionName);
-
         documentReference = collectionReference.document(documentName);
     }
 
@@ -52,17 +52,37 @@ public class AddEditRecipeController {
             public void onSuccess(DocumentSnapshot documentSnapshot) {
 
                 Map<String, Object> result = documentSnapshot.getData();
+                String listName = "RecipeCategories";
 
+                // check if the document is empty and if so -> create a new hashmap
                 if (result == null) {
                     result = new HashMap<>();
-                    result.put("RecipeCategories", new ArrayList<CharSequence>());
                 }
-                ArrayList<CharSequence> customizationOptions = (ArrayList<CharSequence>) result.get("RecipeCategories");
-                customizationOptions.add(newCategory);
-                result.replace("RecipeCategories", customizationOptions);
+                // check if the result hashmap contains the RecipeCategories array
+                if (!result.containsKey(listName)) {
+                    result.put(listName, new ArrayList<CharSequence>());
+                }
 
-                // then rewrite the data
-                documentReference.set(result, SetOptions.merge());
+                ArrayList<CharSequence> customizationOptions = (ArrayList<CharSequence>) result.get(listName);
+
+                // check if the value to add already exists in firebase
+                Iterator<CharSequence> listIterator = customizationOptions.iterator();
+                Boolean exists = false;
+                while (listIterator.hasNext()) {
+                    if (listIterator.next().toString().equalsIgnoreCase(newCategory)) {
+                        exists = true;
+                        break;
+                    }
+                }
+
+                // if the value isn't already in the list -> then add it
+                if (!exists) {
+                    customizationOptions.add(newCategory);
+                    result.replace(listName, customizationOptions);
+
+                    // then rewrite the data
+                    documentReference.set(result, SetOptions.merge());
+                }
             }
         });
     }
