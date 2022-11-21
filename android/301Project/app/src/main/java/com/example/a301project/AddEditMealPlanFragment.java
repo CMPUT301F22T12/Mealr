@@ -45,6 +45,7 @@ public class AddEditMealPlanFragment extends DialogFragment {
     private DatePickerDialog.OnDateSetListener enddateSetListener;
     private EditText startDate;
     private EditText endDate;
+    private EditText mealTitle;
     private AutoCompleteTextView ingredientAutoText;
     private AutoCompleteTextView recipeAutoText;
     private ArrayAdapter<Ingredient> ingredientArrayAdapter;
@@ -387,7 +388,8 @@ public class AddEditMealPlanFragment extends DialogFragment {
             }
         };
 
-        // set the text boxes in case they were edit and the date was already picked previously
+        // set the text boxes for when tag is EDIT
+        mealTitle.setText(currentMealPlan.getName());
         startDate.setText(currentMealPlan.getStartDate());
         endDate.setText(currentMealPlan.getEndDate());
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -403,6 +405,7 @@ public class AddEditMealPlanFragment extends DialogFragment {
                      */
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        String mealTitle = AddEditMealPlanFragment.this.mealTitle.getText().toString();
                         String startDate = AddEditMealPlanFragment.this.startDate.getText().toString();
                         String endDate = AddEditMealPlanFragment.this.endDate.getText().toString();
 
@@ -416,9 +419,11 @@ public class AddEditMealPlanFragment extends DialogFragment {
                             return;
                         }
 
+                        currentMealPlan.setName(mealTitle);
                         currentMealPlan.setStartDate(startDate);
                         currentMealPlan.setEndDate(endDate);
                         currentMealPlan.setIngredients(ingredientsDataList);
+                        currentMealPlan.setRecipes(recipesDataList);
 
                         listener.onConfirmPressed(currentMealPlan, createNewMeal);
                     }
