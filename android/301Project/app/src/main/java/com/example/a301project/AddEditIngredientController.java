@@ -1,27 +1,13 @@
 package com.example.a301project;
 
-import static android.content.ContentValues.TAG;
-
-import android.util.Log;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -44,6 +30,7 @@ public class AddEditIngredientController {
         db = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         assert user.getEmail() != null;
+
         collectionReference = db.collection("User").document(user.getEmail()).collection(collectionName);
         documentReference = collectionReference.document(documentName);
     }
@@ -91,9 +78,11 @@ public class AddEditIngredientController {
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 Map<String, Object> result = documentSnapshot.getData();
 
+                // check if the document is empty and if so -> create a new hashmap
                 if (result == null) {
                     result = new HashMap<>();
                 }
+                // check if the result hashmap contains the IngredientCustomization listName
                 if (!result.containsKey(listName)) {
                     result.put(listName, new ArrayList<CharSequence>());
                 }

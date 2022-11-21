@@ -6,11 +6,13 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -50,6 +52,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
@@ -85,6 +88,7 @@ public class AddEditRecipeFragment extends DialogFragment {
     private ArrayList<CharSequence> categoryOptions;
     private AddEditRecipeController addEditRecipeController;
     private DocumentReference documentReference;
+    private Resources res;
 
     /**
      * Method that responds when the fragment has been interacted with
@@ -193,6 +197,21 @@ public class AddEditRecipeFragment extends DialogFragment {
         addEditRecipeController = new AddEditRecipeController();
         documentReference = addEditRecipeController.getDocumentReference();
         categoryOptions = new ArrayList<>();
+        res = getActivity().getResources();
+
+        // max length of 10 characters
+        InputFilter[] filterArray = new InputFilter[2];
+        filterArray[0] = new InputFilter.LengthFilter(10);
+        // only a-zA-Z and spaces
+        filterArray[1] = (source, start, end, dest, dstart, dend) -> {
+            if (source.equals("")) {
+                return source;
+            }
+            if (source.toString().matches("[a-zA-Z ]+")) {
+                return source;
+            }
+            return source.subSequence(start, end-1);
+        };
 
         // if tag is ADD, hide delete button
         if (this.getTag().equals("ADD")) {
@@ -322,7 +341,13 @@ public class AddEditRecipeFragment extends DialogFragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (categoryAdapter.getItem(i).equals("Add Category")) {
+
+                    // create the edit text and set constraints
                     EditText customCategory = new EditText(getContext());
+                    customCategory.setHint("Only letters allowed");
+                    customCategory.setFilters(filterArray);
+
+                    // build the alert dialog -> which will prompt the user to enter a new category
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setView(customCategory);
                     builder.setMessage("Enter custom category")
@@ -330,30 +355,67 @@ public class AddEditRecipeFragment extends DialogFragment {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     dialogInterface.cancel();
+
+                                    // set the category back to the what it was before
+                                    categoryName.setSelection(categoryAdapter.getPosition(currentRecipe.getCategory()));
                                 }
                             })
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    // add the new category to the list and notify the adapter
-                                    String newCategory = customCategory.getText().toString();
-                                    int size = categoryOptions.size();
-                                    categoryOptions.add(size-1, newCategory);
-                                    categoryAdapter.notifyDataSetChanged();
-
-                                    // add new category to firebase
-                                    addEditRecipeController.addRecipeCategory(newCategory);
-
-                                    // select the new category as the spinner value
-                                    int j = categoryAdapter.getPosition(newCategory);
-                                    categoryName.setSelection(j);
-                                    currentRecipe.setCategory(newCategory);
                                 }
-                            }).show();
+                            });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                        /**
+                         * When the 'OK' button is clicked on the Alert Dialog which prompts user to enter a new category
+                         * @param v: The {@link View} - which is the 'OK' button
+                         */
+                        @Override
+                        public void onClick(View v) {
+                            // get the user input -> and check that it is not empty
+                            String newCategory = customCategory.getText().toString().trim();
+                            if (newCategory.isEmpty()) {
+                                customCategory.setError("Can't be empty");
+                                return;
+                            }
+
+                            // if the category is not empty -> check if it already exist
+                            Iterator<CharSequence> listIterator = categoryOptions.iterator();
+                            Boolean exists = false;
+                            while (listIterator.hasNext()) {
+                                String nextValue = listIterator.next().toString();
+                                if (nextValue.equalsIgnoreCase(newCategory)) {
+                                    exists = true;
+                                    newCategory = nextValue;
+                                }
+                            }
+
+                            // if the category doesn't already exist -> add the data
+                            if (!exists) {
+                                int size = categoryOptions.size();
+                                categoryOptions.add(size-1, newCategory);
+                                categoryAdapter.notifyDataSetChanged();
+
+                                // add the data to firebase
+                                addEditRecipeController.addRecipeCategory(newCategory);
+                            }
+
+                            // select the spinner value
+                            int j = categoryAdapter.getPosition(newCategory);
+                            categoryName.setSelection(j);
+                            currentRecipe.setCategory(newCategory);
+
+                            // close the dialog
+                            dialog.dismiss();
+                        }
+                    });
+
                 }
                 else {
                     // user didn't select the add custom option
-                    currentRecipe.setCategory(adapterView.getItemAtPosition(i).toString());
+                    currentRecipe.setCategory(categoryAdapter.getItem(i).toString());
                 }
             }
 
@@ -457,12 +519,12 @@ public class AddEditRecipeFragment extends DialogFragment {
                 if (task.isSuccessful()) {
                     Map<String, Object> result = task.getResult().getData();
 
+                    // add the default spinner values and get the custom categories from firebase (if they exist)
+                    List<CharSequence> defaultCategories = List.of(res.getStringArray(R.array.category_array_recipe));
+                    categoryOptions.addAll(defaultCategories);
                     if (result != null && result.containsKey("RecipeCategories")) {
-                        // get the categories from firebase and append the "Add Category" option
-                        categoryOptions.addAll((ArrayList<CharSequence>) result.get("RecipeCategories"));
+                        categoryOptions.addAll(categoryOptions.size()-1,(ArrayList<CharSequence>) result.get("RecipeCategories"));
                     }
-
-                    categoryOptions.addAll(List.of("Breakfast", "Lunch", "Dinner", "Add Category"));
                     categoryAdapter.notifyDataSetChanged();
 
                     // set the category spinner at the correct value for the current recipe

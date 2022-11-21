@@ -7,8 +7,8 @@ import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,7 +18,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -28,16 +27,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * A class for a fragment that handles adding and editing ingredients
@@ -61,6 +57,7 @@ public class AddEditIngredientFragment extends DialogFragment {
     private ArrayList<CharSequence> locationOptions;
     private AddEditIngredientController addEditIngredientController;
     private DocumentReference documentReference;
+    private Resources res;
 
     /**
      * Method that responds when the fragment has been interacted with
@@ -106,14 +103,28 @@ public class AddEditIngredientFragment extends DialogFragment {
         unitName = view.findViewById(R.id.edit_unit);
         categoryName = view.findViewById(R.id.edit_category);
         deleteButton = view.findViewById(R.id.delete_ingredient_button);
+
         unitOptions = new ArrayList<>();
         categoryOptions = new ArrayList<>();
-        Resources res = getActivity().getResources();
-
         locationOptions = new ArrayList<>();
+        res = getActivity().getResources();
 
         addEditIngredientController = new AddEditIngredientController();
         documentReference = addEditIngredientController.getDocumentReference();
+
+        // max length of 10 characters
+        InputFilter[] filterArray = new InputFilter[2];
+        filterArray[0] = new InputFilter.LengthFilter(10);
+        // only a-zA-Z and spaces
+        filterArray[1] = (source, start, end, dest, dstart, dend) -> {
+            if (source.equals("")) {
+                return source;
+            }
+            if (source.toString().matches("[a-zA-Z ]+")) {
+                return source;
+            }
+            return source.subSequence(start, end-1);
+        };
 
 
         // sets title of the fragment depending on whether the tag is ADD or EDIT
@@ -179,8 +190,13 @@ public class AddEditIngredientFragment extends DialogFragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (categoryAdapter.getItem(i).equals("Add Category")) {
+
+                    // create the edit text and set constraints
                     EditText customCategory = new EditText(getContext());
-                    //customUnit.setVisibility(view.VISIBLE);
+                    customCategory.setHint("Only letters allowed");
+                    customCategory.setFilters(filterArray);
+
+                    // build the alert dialog -> which will prompt the user to enter a new category
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setView(customCategory);
                     builder.setMessage("Enter custom category")
@@ -201,6 +217,10 @@ public class AddEditIngredientFragment extends DialogFragment {
                     AlertDialog dialog = builder.create();
                     dialog.show();
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                        /**
+                         * When the 'OK' button is clicked on the Alert Dialog which prompts user to enter a new category
+                         * @param v: The {@link View} - which is the 'OK' button
+                         */
                         @Override
                         public void onClick(View v) {
                             // get the user input -> and check that it is not empty
@@ -274,8 +294,13 @@ public class AddEditIngredientFragment extends DialogFragment {
              */
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (locationAdapter.getItem(i).equals("Add Location")) {
+
+                    // create the edit text and set constraints
                     EditText customLocation = new EditText(getContext());
-                    //customUnit.setVisibility(view.VISIBLE);
+                    customLocation.setHint("Only letters allowed");
+                    customLocation.setFilters(filterArray);
+
+                    // build the alert dialog -> which will prompt the user to enter a new location
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setView(customLocation);
                     builder.setMessage("Enter custom location")
@@ -283,29 +308,67 @@ public class AddEditIngredientFragment extends DialogFragment {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     dialogInterface.cancel();
+
+                                    // set the location back to the what it was before
+                                    locationName.setSelection(locationAdapter.getPosition(currentIngredient.getLocation()));
                                 }
                             })
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    String newLocation = customLocation.getText().toString();
-                                    int size = locationOptions.size();
-                                    locationOptions.add(size-1, newLocation);
-                                    locationAdapter.notifyDataSetChanged();
-
-                                    // add new location to firebase
-                                    addEditIngredientController.addIngredientLocation(newLocation);
-
-                                    // select the new location as the spinner value
-                                    int j = locationAdapter.getPosition(newLocation);
-                                    locationName.setSelection(j);
-                                    currentIngredient.setLocation(newLocation);
                                 }
-                            }).show();
+                            });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                        /**
+                         * When the 'OK' button is clicked on the Alert Dialog which prompts user to enter a new location
+                         * @param v: The {@link View} - which is the 'OK' button
+                         */
+                        @Override
+                        public void onClick(View v) {
+                            // get the user input -> and check that it is not empty
+                            String newLocation = customLocation.getText().toString().trim();
+                            if (newLocation.isEmpty()) {
+                                customLocation.setError("Can't be empty");
+                                return;
+                            }
+
+                            // if the location is not empty -> check if it already exist
+                            Iterator<CharSequence> listIterator = locationOptions.iterator();
+                            Boolean exists = false;
+                            while (listIterator.hasNext()) {
+                                String nextValue = listIterator.next().toString();
+                                if (nextValue.equalsIgnoreCase(newLocation)) {
+                                    exists = true;
+                                    newLocation = nextValue;
+                                }
+                            }
+
+                            // if the location doesn't already exist -> add the data
+                            if (!exists) {
+                                int size = locationOptions.size();
+                                locationOptions.add(size-1, newLocation);
+                                locationAdapter.notifyDataSetChanged();
+
+                                // add the data to firebase
+                                addEditIngredientController.addIngredientLocation(newLocation);
+                            }
+
+                            // select the spinner value
+                            int j = locationAdapter.getPosition(newLocation);
+                            locationName.setSelection(j);
+                            currentIngredient.setLocation(newLocation);
+
+                            // close the dialog
+                            dialog.dismiss();
+                        }
+                    });
+
                 }
                 else {
                     // user didn't select the add custom option
-                    currentIngredient.setLocation(adapterView.getItemAtPosition(i).toString());
+                    currentIngredient.setLocation(locationAdapter.getItem(i).toString());
                 }
             }
 
@@ -335,9 +398,14 @@ public class AddEditIngredientFragment extends DialogFragment {
              * @param l {@link Long} the row ID of the item that was selected
              */
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                // if Add unit is selected, set the textbox to visible
                 if (unitAdapter.getItem(i).equals("Add Unit")) {
+
+                    // create the edit text and set constraints
                     EditText customUnit = new EditText(getContext());
+                    customUnit.setHint("Only letters allowed");
+                    customUnit.setFilters(filterArray);
+
+                    // build the alert dialog -> which will prompt the user to enter a new unit
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setView(customUnit);
                     builder.setMessage("Enter custom unit")
@@ -345,29 +413,67 @@ public class AddEditIngredientFragment extends DialogFragment {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     dialogInterface.cancel();
+
+                                    // set the category back to the what it was before
+                                    unitName.setSelection(unitAdapter.getPosition(currentIngredient.getUnit()));
                                 }
                             })
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    String newUnit = customUnit.getText().toString();
-                                    int size = unitOptions.size();
-                                    unitOptions.add(size-1, newUnit);
-                                    unitAdapter.notifyDataSetChanged();
-
-                                    // add new unit to firebase
-                                    addEditIngredientController.addIngredientUnit(newUnit);
-
-                                    // select the new unit as the spinner value
-                                    int j = unitAdapter.getPosition(newUnit);
-                                    unitName.setSelection(j);
-                                    currentIngredient.setUnit(newUnit);
                                 }
-                            }).show();
+                            });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                        /**
+                         * When the 'OK' button is clicked on the Alert Dialog which prompts user to enter a new location
+                         * @param v: The {@link View} - which is the 'OK' button
+                         */
+                        @Override
+                        public void onClick(View v) {
+                            // get the user input -> and check that it is not empty
+                            String newUnit = customUnit.getText().toString().trim();
+                            if (newUnit.isEmpty()) {
+                                customUnit.setError("Can't be empty");
+                                return;
+                            }
+
+                            // if the unit is not empty -> check if it already exist
+                            Iterator<CharSequence> listIterator = unitOptions.iterator();
+                            Boolean exists = false;
+                            while (listIterator.hasNext()) {
+                                String nextValue = listIterator.next().toString();
+                                if (nextValue.equalsIgnoreCase(newUnit)) {
+                                    exists = true;
+                                    newUnit = nextValue;
+                                }
+                            }
+
+                            // if the unit doesn't already exist -> add the data
+                            if (!exists) {
+                                int size = unitOptions.size();
+                                unitOptions.add(size-1, newUnit);
+                                unitAdapter.notifyDataSetChanged();
+
+                                // add the data to firebase
+                                addEditIngredientController.addIngredientUnit(newUnit);
+                            }
+
+                            // select the spinner value
+                            int j = unitAdapter.getPosition(newUnit);
+                            unitName.setSelection(j);
+                            currentIngredient.setUnit(newUnit);
+
+                            // close the dialog
+                            dialog.dismiss();
+                        }
+                    });
+
                 }
                 else {
                     // user didn't select the add custom option
-                    currentIngredient.setUnit(adapterView.getItemAtPosition(i).toString());
+                    currentIngredient.setUnit(unitAdapter.getItem(i).toString());
                 }
             }
 
@@ -390,27 +496,28 @@ public class AddEditIngredientFragment extends DialogFragment {
                 if (task.isSuccessful()) {
                     Map<String, Object> result = task.getResult().getData();
 
-                    // get the category spinner values
+                    // add the default spinner values and get the custom categories from firebase (if they exist)
                     List<CharSequence> defaultCategories = List.of(res.getStringArray(R.array.category_array));
                     categoryOptions.addAll(defaultCategories);
-
                     if (result != null && result.containsKey("IngredientCategories")) {
                         categoryOptions.addAll(categoryOptions.size()-1,(ArrayList<CharSequence>) result.get("IngredientCategories"));
                     }
                     categoryAdapter.notifyDataSetChanged();
 
-                    // get the location spinner values (and append the "Add Location" option)
+                    // add the default spinner values and get the custom locations from firebase (if they exist)
+                    List<CharSequence> defaultLocations = List.of(res.getStringArray(R.array.location_array));
+                    locationOptions.addAll(defaultLocations);
                     if (result != null && result.containsKey("IngredientLocations")) {
-                        locationOptions.addAll((ArrayList<CharSequence>) result.get("IngredientLocations"));
+                        locationOptions.addAll(locationOptions.size()-1, (ArrayList<CharSequence>) result.get("IngredientLocations"));
                     }
-                    locationOptions.addAll(List.of("Fridge", "Freeze", "Pantry", "Add Location"));;
                     locationAdapter.notifyDataSetChanged();
 
-                    // get the unit spinner values (and append the "Add Unit" option)
+                    // add the default spinner values and get the custom units from firebase (if they exist)
+                    List<CharSequence> defaultUnits = List.of(res.getStringArray(R.array.units_array));
+                    unitOptions.addAll(defaultUnits);
                     if (result != null && result.containsKey("IngredientUnits")) {
-                        unitOptions.addAll(((ArrayList<CharSequence>) result.get("IngredientUnits")));
+                        unitOptions.addAll(unitOptions.size()-1, ((ArrayList<CharSequence>) result.get("IngredientUnits")));
                     }
-                    unitOptions.addAll(List.of("Piece(s)", "Slice(s)", "Gram(s)", "Ounce(s)", "Kg(s)", "Add Unit"));;
                     unitAdapter.notifyDataSetChanged();
 
                     // set the spinners at the correct value for the current ingredient

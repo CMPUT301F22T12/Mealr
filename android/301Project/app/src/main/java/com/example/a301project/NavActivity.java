@@ -29,7 +29,7 @@ import java.util.Objects;
  */
 public class NavActivity extends AppCompatActivity {
     protected BottomNavigationView bottomNav;
-    private final boolean DEBUG = false; // Set this to true for auto login as admin
+    private final boolean DEBUG = true; // Set this to true for auto login as admin
 
     /**
      * Launcher for  sign in flow.
