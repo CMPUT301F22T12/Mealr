@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +33,9 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -105,6 +108,8 @@ public class AddEditIngredientFragment extends DialogFragment {
         deleteButton = view.findViewById(R.id.delete_ingredient_button);
         unitOptions = new ArrayList<>();
         categoryOptions = new ArrayList<>();
+        Resources res = getActivity().getResources();
+
         locationOptions = new ArrayList<>();
 
         addEditIngredientController = new AddEditIngredientController();
@@ -183,30 +188,63 @@ public class AddEditIngredientFragment extends DialogFragment {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     dialogInterface.cancel();
+
+                                    // set the category back to the what it was before
+                                    categoryName.setSelection(categoryAdapter.getPosition(currentIngredient.getCategory()));
                                 }
                             })
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    // add the new category to the list and notify the adapter
-                                    String newCategory = customCategory.getText().toString();
-                                    int size = categoryOptions.size();
-                                    categoryOptions.add(size-1, newCategory);
-                                    categoryAdapter.notifyDataSetChanged();
-
-                                    // add the new category to firebase
-                                    addEditIngredientController.addIngredientCategory(newCategory);
-
-                                    // select the new category as the spinner value
-                                    int j = categoryAdapter.getPosition(newCategory);
-                                    categoryName.setSelection(j);
-                                    currentIngredient.setCategory(newCategory);
                                 }
-                            }).show();
+                            });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // get the user input -> and check that it is not empty
+                            String newCategory = customCategory.getText().toString().trim();
+                            if (newCategory.isEmpty()) {
+                                customCategory.setError("Can't be empty");
+                                return;
+                            }
+
+                            // if the category is not empty -> check if it already exist
+                            Iterator<CharSequence> listIterator = categoryOptions.iterator();
+                            Boolean exists = false;
+                            while (listIterator.hasNext()) {
+                                String nextValue = listIterator.next().toString();
+                                if (nextValue.equalsIgnoreCase(newCategory)) {
+                                    exists = true;
+                                    newCategory = nextValue;
+                                }
+                            }
+
+                            // if the category doesn't already exist -> add the data
+                            if (!exists) {
+                                int size = categoryOptions.size();
+                                categoryOptions.add(size-1, newCategory);
+                                categoryAdapter.notifyDataSetChanged();
+
+                                // add the data to firebase
+                                addEditIngredientController.addIngredientCategory(newCategory);
+                            }
+
+                            // select the spinner value
+                            int j = categoryAdapter.getPosition(newCategory);
+                            categoryName.setSelection(j);
+                            currentIngredient.setCategory(newCategory);
+
+                            // close the dialog
+                            dialog.dismiss();
+                        }
+                    });
+
                 }
                 else {
                     // user didn't select the add custom option
-                    currentIngredient.setCategory(adapterView.getItemAtPosition(i).toString());
+                    currentIngredient.setCategory(categoryAdapter.getItem(i).toString());
                 }
             }
 
@@ -352,11 +390,13 @@ public class AddEditIngredientFragment extends DialogFragment {
                 if (task.isSuccessful()) {
                     Map<String, Object> result = task.getResult().getData();
 
-                    // get the category spinner values (and append the "Add Category" option)
+                    // get the category spinner values
+                    List<CharSequence> defaultCategories = List.of(res.getStringArray(R.array.category_array));
+                    categoryOptions.addAll(defaultCategories);
+
                     if (result != null && result.containsKey("IngredientCategories")) {
-                        categoryOptions.addAll((ArrayList<CharSequence>) result.get("IngredientCategories"));
+                        categoryOptions.addAll(categoryOptions.size()-1,(ArrayList<CharSequence>) result.get("IngredientCategories"));
                     }
-                    categoryOptions.addAll(List.of("Fruit", "Vegetable", "Dairy", "Protein", "Grain", "Add Category"));
                     categoryAdapter.notifyDataSetChanged();
 
                     // get the location spinner values (and append the "Add Location" option)
