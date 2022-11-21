@@ -134,7 +134,7 @@ public class Recipe implements Serializable {
      * Sets the {@link Recipe} servings as the one passed in
      * @param servings {@link Long} servings of photo of recipe
      */
-    public void setServings(Double servings) {
+    public void setServings(Long servings) {
         this.servings = servings;
     }
 

@@ -67,7 +67,7 @@ public class MealPlanRecipeListAdapter extends ArrayAdapter<Recipe> {
             @Override
             public void onTextChanged(CharSequence charSequence, int i_, int i1, int i2) {
                 try {
-                    Double d = Double.parseDouble(editServings.getText().toString());
+                    Long d = Long.parseLong(editServings.getText().toString());
                     i.setServings(d);
                 } catch (NumberFormatException e) {
                     editServings.setText(i.getServings().toString());

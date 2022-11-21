@@ -504,7 +504,7 @@ public class AddEditRecipeFragment extends DialogFragment {
 
                         currentRecipe.setTitle(title);
                         currentRecipe.setComments(comments);
-                        currentRecipe.setServings(Double.valueOf(Servings));
+                        currentRecipe.setServings(Servings);
                         currentRecipe.setPrepTime(PrepTime);
                         if (photoUrl != null && !photoUrl.isEmpty()) {
                             currentRecipe.setPhoto(photoUrl);
