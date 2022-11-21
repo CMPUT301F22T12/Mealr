@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -46,23 +48,37 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingItem> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         ShoppingItem s = shoppingItems.get(position);
 
+
         View view = convertView;
         if (view == null) {
             view = LayoutInflater.from(context).inflate(R.layout.shopping_row_layout, parent, false);
         }
 
-        // list view to attributes of each shopping item object
+        // if the purchased button is checked
+        CheckBox shoppingItemCheckBox = view.findViewById(R.id.shoppingItemCheckbox);
+        shoppingItemCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    // then add the ingredient to storage
+                    shoppingItems.remove(position);
+
+                }
+            }
+        });
+
+                // list view to attributes of each shopping item object
         // by finding view textboxes to their ID
         TextView shoppingItemName = view.findViewById(R.id.s_nameText);
         TextView amountName = view.findViewById(R.id.s_amountText);
-        TextView unitName = view.findViewById(R.id.s_unitText);
-        TextView categoryName = view.findViewById(R.id.s_categoryText);
+        //TextView unitName = view.findViewById(R.id.s_unitText);
+        //TextView categoryName = view.findViewById(R.id.s_categoryText);
 
         // sets the text
         shoppingItemName.setText(s.getName());
-        amountName.setText(s.getAmount().toString());
-        unitName.setText(s.getUnit());
-        categoryName.setText(s.getCategory());
+        amountName.setText("Need: " + s.getAmount().toString());
+        //unitName.setText(s.getUnit());
+        //categoryName.setText(s.getCategory());
 
         return view;
     }

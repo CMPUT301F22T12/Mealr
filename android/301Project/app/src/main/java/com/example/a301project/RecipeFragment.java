@@ -29,7 +29,7 @@ public class RecipeFragment extends Fragment implements AddEditRecipeFragment.On
     private ArrayAdapter<Recipe> recipeArrayAdapter;
     private ArrayList<Recipe> recipeDataList = new ArrayList<>();
     private RecipeController controller = new RecipeController();
-    private final String[] sortOptions = {"Title", "Prep Time", "Servings", "Category"};
+    private final String[] sortOptions = {"Name", "Prep Time", "Servings", "Category"};
     private Spinner sortSpinner;
     private Switch sortSwitch;
     Button addButton;

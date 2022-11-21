@@ -54,12 +54,14 @@
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
                 android:text="Unit"
-                android:textSize="25dp" />
+                android:textSize="25dp"
+                android:visibility="invisible" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="30dp">
+
             <TextView
                 android:id="@+id/s_categoryText"
                 android:layout_width="110dp"
@@ -72,7 +74,8 @@
                 android:maxLines="1"
                 android:text="Category"
                 android:textSize="20dp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="invisible" />
 
             <Space
                 android:layout_width="0dp"

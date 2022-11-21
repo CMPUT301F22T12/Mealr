@@ -29,7 +29,7 @@ public class ShoppingListFragment extends Fragment {
     private ArrayAdapter<ShoppingItem> shoppingItemArrayAdapter;
     private ArrayList<ShoppingItem> shoppingItemDataList = new ArrayList<>();
     private ShoppingListController controller = new ShoppingListController();
-    private final String[] sortOptions = {"Title", "Category"};
+    private final String[] sortOptions = {"Name", "Category"};
     private Spinner sortSpinner;
     private Switch sortSwitch;
 
