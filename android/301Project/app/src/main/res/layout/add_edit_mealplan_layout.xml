@@ -13,7 +13,6 @@
         android:gravity="center_horizontal"
         android:hint="Meal Plan Name"
         android:padding="5dp"
-        android:text="Meal Plan Name"
         android:textSize="34dp" />
 
     <LinearLayout
@@ -52,7 +51,7 @@
         <ListView
             android:id="@+id/mealplan_ingredients_listview"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="120dp"
             android:padding="5sp"
             android:divider="@android:color/transparent"
             android:dividerHeight="5dp"/>
@@ -96,7 +95,7 @@
         <ListView
             android:id="@+id/mealplan_recipes_listview"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="120dp"
             android:divider="@android:color/transparent"
             android:dividerHeight="5dp"
             android:padding="5sp" />
