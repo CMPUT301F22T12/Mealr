@@ -25,18 +25,18 @@ import java.util.Map;
  */
 public class RecipeController {
     private FirebaseFirestore db;
-    private CollectionReference cr;
+    private CollectionReference collectionReference;
     private final String collectionName = "Recipe";
 
     /**
-     * The constructor for the {@link RecipeController}. Sets up the {@link #db} and {@link #cr}
+     * The constructor for the {@link RecipeController}. Sets up the {@link #db} and {@link #collectionReference}
      */
     public RecipeController() {
         this.db = FirebaseFirestore.getInstance();
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         assert user.getEmail() != null;
-        cr = db.collection("User").document(user.getEmail()).collection(collectionName);
+        collectionReference = db.collection("User").document(user.getEmail()).collection(collectionName);
 
     }
 
@@ -46,7 +46,7 @@ public class RecipeController {
      */
     public RecipeController(FirebaseFirestore db) {
         this.db = db;
-        this.cr = db.collection("Recipe");
+        this.collectionReference = db.collection("Recipe");
     }
 
     /**
@@ -74,7 +74,7 @@ public class RecipeController {
         data.put("Servings", servings);
 
         // collection reference
-        cr
+        collectionReference
                 .add(data)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
@@ -105,7 +105,7 @@ public class RecipeController {
      */
     public void removeRecipe(Recipe recipe) {
         String id = recipe.getId();
-        db.collection("Recipe").document(id)
+        collectionReference.document(id)
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -129,7 +129,7 @@ public class RecipeController {
      *          the ArrayList of Recipes
      */
     public void getRecipes(successHandler s) {
-        cr.get().addOnSuccessListener(queryDocumentSnapshots -> {
+        collectionReference.get().addOnSuccessListener(queryDocumentSnapshots -> {
             ArrayList<Recipe> res = new ArrayList<>();
 
             queryDocumentSnapshots.forEach(doc -> {
@@ -175,7 +175,7 @@ public class RecipeController {
         userMap.put("Servings", recipe.getServings());
         userMap.put("PrepTime", recipe.getPrepTime());
         String id = recipe.getId();
-        cr
+        collectionReference
             .document(id)
             .update(userMap);
     }

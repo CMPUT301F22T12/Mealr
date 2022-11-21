@@ -1,5 +1,7 @@
 package com.example.a301project;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,6 +14,7 @@ import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import com.google.firebase.firestore.CollectionReference;
@@ -127,7 +130,6 @@ public class IngredientFragment extends Fragment implements AddEditIngredientFra
                 Ingredient selected = (Ingredient) adapterView.getItemAtPosition(i);
 
                 AddEditIngredientFragment.newInstance(ingredientAdapter.getItem(position),false, IngredientFragment.this).show(getChildFragmentManager(),"EDIT");
-
             }
         });
 

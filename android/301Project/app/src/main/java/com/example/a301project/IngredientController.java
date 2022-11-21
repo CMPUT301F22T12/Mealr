@@ -135,7 +135,7 @@ public class IngredientController {
      */
     public void removeIngredient(Ingredient ingredient) {
         String id = ingredient.getId();
-        db.collection(collectionName).document(id)
+        collectionReference.document(id)
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
