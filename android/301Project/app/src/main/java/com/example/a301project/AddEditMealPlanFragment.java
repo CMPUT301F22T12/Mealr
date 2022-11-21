@@ -41,7 +41,8 @@ public class AddEditMealPlanFragment extends DialogFragment {
     private Button deleteMealButton;
     private MealPlan currentMealPlan;
     private boolean createNewMeal;
-    private DatePickerDialog.OnDateSetListener dateSetListener;
+    private DatePickerDialog.OnDateSetListener startdateSetListener;
+    private DatePickerDialog.OnDateSetListener enddateSetListener;
     private EditText startDate;
     private EditText endDate;
     private AutoCompleteTextView ingredientAutoText;
@@ -330,13 +331,13 @@ public class AddEditMealPlanFragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 DatePickerDialog datePicker = new DatePickerDialog(
-                        getActivity(), android.R.style.Theme_Holo_Light_Dialog_MinWidth, dateSetListener, year, month, day);
+                        getActivity(), android.R.style.Theme_Holo_Light_Dialog_MinWidth, startdateSetListener, year, month, day);
                 datePicker.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 datePicker.show();
             }
         });
 
-        dateSetListener = new DatePickerDialog.OnDateSetListener() {
+        startdateSetListener = new DatePickerDialog.OnDateSetListener() {
             /**
              * Method invoked a date is selected
              * sets the selected date as the best before date for this ingredient
@@ -363,13 +364,13 @@ public class AddEditMealPlanFragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 DatePickerDialog datePicker = new DatePickerDialog(
-                        getActivity(), android.R.style.Theme_Holo_Light_Dialog_MinWidth, dateSetListener, year, month, day);
+                        getActivity(), android.R.style.Theme_Holo_Light_Dialog_MinWidth, enddateSetListener, year, month, day);
                 datePicker.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 datePicker.show();
             }
         });
 
-        dateSetListener = new DatePickerDialog.OnDateSetListener() {
+        enddateSetListener = new DatePickerDialog.OnDateSetListener() {
             /**
              * Method invoked a date is selected
              * sets the selected date as the best before date for this ingredient
