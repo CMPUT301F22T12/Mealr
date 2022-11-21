@@ -566,7 +566,7 @@ public class AddEditIngredientFragment extends DialogFragment {
         bbdName.setText(currentIngredient.getbbd());
         amountName.setText(currentIngredient.getAmount().toString());
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        return builder
+        builder
                 .setView(view)
                 .setTitle(title)
                 .setNegativeButton("Cancel",null)
@@ -578,6 +578,16 @@ public class AddEditIngredientFragment extends DialogFragment {
                      */
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                AlertDialog alertDialog = (AlertDialog) dialog;
+                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
                         // retrieve text from the text boxes
                         String ingredientName = AddEditIngredientFragment.this.ingredientName.getText().toString();
                         String bestbefore = AddEditIngredientFragment.this.bbdName.getText().toString();
@@ -585,11 +595,19 @@ public class AddEditIngredientFragment extends DialogFragment {
                         Double doubleAmount = 0.0;
 
                         // check if any field is empty
-                        // if empty, reject add
+                        // if empty, reject add - reject add and show error message
                         boolean hasEmpty = ingredientName.isEmpty() || bestbefore.isEmpty() || amount.isEmpty();
+                        if (ingredientName.isEmpty()) {
+                            AddEditIngredientFragment.this.ingredientName.setError("Can't be empty");
+                        }
+                        if (bestbefore.isEmpty()) {
+                            AddEditIngredientFragment.this.bbdName.setError("Can't be empty");
+                        }
+                        if (amount.isEmpty()) {
+                            AddEditIngredientFragment.this.amountName.setError("Can't be empty");
+                        }
 
                         if (hasEmpty) {
-                            Toast.makeText(getContext(),  title + " Rejected: Missing Field(s)",Toast.LENGTH_LONG).show();
                             return;
                         } else {
                             doubleAmount = Double.valueOf(amount);
@@ -601,9 +619,18 @@ public class AddEditIngredientFragment extends DialogFragment {
                         currentIngredient.setAmount(doubleAmount);
 
                         listener.onConfirmPressed(currentIngredient, createNewIngredient);
+
+                        // close the dialog
+                        dialog.dismiss();
                     }
-                }).create();
+                });
+            }
+        });
+        return dialog;
     }
+
+
+
     /**
      * Method to create a new AddEditRecipe fragment
      * @param ingredient {@link Ingredient} the current ingredient

@@ -533,19 +533,31 @@ public class AddEditRecipeFragment extends DialogFragment {
             }
         });
 
+        // create a new builder
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        return builder
+        builder
                 .setView(view)
                 .setTitle("Add/Edit Recipe")
                 .setNegativeButton("Cancel",null)
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-                    /**
-                     * Method for getting and setting attributes of current recipe
-                     * @param dialogInterface {@link DialogInterface} the dialog interface of this fragment
-                     * @param i {@link Integer} ID of the selected item
-                     */
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+        AlertDialog dialog = builder.create();
+
+        // modify the positive button so it doesn't close automatically if there are errors
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                AlertDialog alertDialog = (AlertDialog) dialog;
+                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                    /**
+                     * Add functionality to the 'Confirm' button
+                     * @param v The View (in this case the 'Confirm' button)
+                     */
+                    @Override
+                    public void onClick(View v) {
                         String title = AddEditRecipeFragment.this.title.getText().toString();
                         String comments = AddEditRecipeFragment.this.comments.getText().toString();
                         String servings = AddEditRecipeFragment.this.servings.getText().toString();
@@ -553,11 +565,19 @@ public class AddEditRecipeFragment extends DialogFragment {
 
 
                         // check if any field is empty
-                        // if empty, reject add
                         boolean hasEmpty = title.isEmpty() || servings.isEmpty() || prepTime.isEmpty() || ingredientsDataList.stream().anyMatch(i_ -> i_.getName().isEmpty() || i_.getAmount().isNaN());
 
+                        // show errors
+                        if(title.isEmpty()) {
+                            AddEditRecipeFragment.this.title.setError("Can't be empty");
+                        }
+                        if(servings.isEmpty()) {
+                            AddEditRecipeFragment.this.servings.setError("Can't be empty");
+                        }
+                        if(prepTime.isEmpty()) {
+                            AddEditRecipeFragment.this.prepTime.setError("Can't be empty");
+                        }
                         if (hasEmpty) {
-                            Toast.makeText(getContext(),  " Rejected: Missing Field(s)",Toast.LENGTH_LONG).show();
                             return;
                         }
 
@@ -574,9 +594,12 @@ public class AddEditRecipeFragment extends DialogFragment {
                         currentRecipe.setIngredients(ingredientsDataList);
 
                         listener.onConfirmPressed(currentRecipe, createNewRecipe);
+                        dialog.dismiss();
                     }
-                }).create();
-
+                });
+            }
+        });
+        return dialog;
     }
 
     /**
