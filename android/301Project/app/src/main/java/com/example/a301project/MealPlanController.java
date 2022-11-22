@@ -130,7 +130,7 @@ public class MealPlanController {
                 });
                 ArrayList<Map<String, Object>> objects2 = (ArrayList<Map<String, Object>>) doc.get("Recipes");
                 objects2.forEach(o -> {
-                    ingredients.add(new Ingredient((String) o.get("name"), ((Number) o.get("amount")).doubleValue()));
+                    recipes.add(new Recipe((String) o.get("title"), ((Number) o.get("servings")).longValue()));
                 });
 
                 MealPlan m = new MealPlan(

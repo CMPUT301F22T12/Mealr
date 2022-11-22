@@ -37,7 +37,7 @@ public class Recipe implements Serializable {
         this.ingredients = ingredients;
     }
 
-    public Recipe(String name, Long servings) {
+    public Recipe(String title, Long servings) {
         this.title = title;
         this.servings = servings;
     }

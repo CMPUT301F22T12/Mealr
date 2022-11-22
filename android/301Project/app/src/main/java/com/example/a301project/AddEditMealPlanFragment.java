@@ -140,6 +140,7 @@ public class AddEditMealPlanFragment extends DialogFragment {
         addRecipeButton = view.findViewById(R.id.add_recipe_button_mealplan);
         startDate = view.findViewById(R.id.edit_start_date);
         endDate = view.findViewById(R.id.edit_end_date);
+        mealTitle = view.findViewById(R.id.edit_title_mealplan);
         ingredientAutoText = view.findViewById(R.id.autoCompleteIngredient_mealplan);
         recipeAutoText = view.findViewById(R.id.autoCompleteRecipe_mealplan);
 

@@ -106,7 +106,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="@dimen/ingredient_edit_padding">
+        android:padding="5dp">
 
         <TextView
             android:id="@+id/start_date"
@@ -135,7 +135,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="@dimen/ingredient_edit_padding">
+        android:padding="5dp">
 
         <TextView
             android:id="@+id/end_date"
