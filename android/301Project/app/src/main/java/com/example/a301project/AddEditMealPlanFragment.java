@@ -143,6 +143,11 @@ public class AddEditMealPlanFragment extends DialogFragment {
         ingredientAutoText = view.findViewById(R.id.autoCompleteIngredient_mealplan);
         recipeAutoText = view.findViewById(R.id.autoCompleteRecipe_mealplan);
 
+        mealTitle = view.findViewById(R.id.edit_title_mealplan);
+        startDate = view.findViewById(R.id.edit_start_date);
+        endDate = view.findViewById(R.id.edit_end_date);
+
+
         // if tag is ADD, hide delete button
         String title;
         if (this.getTag().equals("ADD")) {
