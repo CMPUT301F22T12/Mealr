@@ -37,6 +37,11 @@ public class Recipe implements Serializable {
         this.ingredients = ingredients;
     }
 
+    public Recipe(String title, Long servings) {
+        this.title = title;
+        this.servings = servings;
+    }
+
     /**
      * gets the {@link Recipe} title
      * @return {@link String}title of object
