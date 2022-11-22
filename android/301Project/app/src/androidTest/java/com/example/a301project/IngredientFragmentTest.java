@@ -83,21 +83,6 @@ public class IngredientFragmentTest {
      * 5. Toggle the Ascending switch
      * 6. Ensure that the Ascending switch starting state is CHECKED
      */
-    /*
-    @Test
-    public void testTogglingAscendingSwitch() {
-
-        // Asserts that the current activity is the IngredientFragment.
-
-        // get the switch
-        Switch ascendingSwitch = (Switch) solo.getView(R.id.ingredientSortSwitch);
-
-        // toggle the switch
-        // need to implement this*
-
-        // check that Switch is on
-        assertTrue(ascendingSwitch.isChecked());
-    }*/
 
     /**
      * Tests that the Name value is the default value in the SortBy {@link android.widget.Spinner}
@@ -265,7 +250,7 @@ public class IngredientFragmentTest {
      * in the Add Ingredient fragment
      * Steps1:
      * 1. Open Add Ingredient fragment
-     * 2. Try to open the datepicker and select a value
+     * 2. Try to open the date-picker and select a value
      * 3. Check that the date was selected
      */
     @Test

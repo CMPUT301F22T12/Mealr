@@ -14,10 +14,8 @@ import androidx.fragment.app.FragmentManager;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
@@ -29,7 +27,6 @@ import java.util.Objects;
  */
 public class NavActivity extends AppCompatActivity {
     protected BottomNavigationView bottomNav;
-    private final boolean DEBUG = true; // Set this to true for auto login as admin
 
     /**
      * Launcher for  sign in flow.
@@ -101,6 +98,8 @@ public class NavActivity extends AppCompatActivity {
             }
         });
 
+        // Set this to true for auto login as admin
+        boolean DEBUG = true;
         if (DEBUG) {
             FirebaseAuth mAuth = FirebaseAuth.getInstance();
             mAuth.signInWithEmailAndPassword("admin@admin.com", "admin123")

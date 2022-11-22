@@ -1,5 +1,6 @@
 package com.example.a301project;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -39,6 +40,7 @@ import java.util.Map;
  * A class for a fragment that handles adding and editing ingredients
  * Fragment is activated when user clicks certain buttons
  */
+@SuppressWarnings({"SpellCheckingInspection", "UnusedAssignment", "unchecked"})
 public class AddEditIngredientFragment extends DialogFragment {
     // fragment used for adding and editing an ingredient
     private EditText ingredientName;
@@ -49,14 +51,12 @@ public class AddEditIngredientFragment extends DialogFragment {
     private Spinner categoryName;
     private OnFragmentInteractionListener listener;
     private DatePickerDialog.OnDateSetListener setListener;
-    private Button deleteButton;
     private Ingredient currentIngredient;
     private boolean createNewIngredient;
     private ArrayList<CharSequence> unitOptions;
     private ArrayList<CharSequence> categoryOptions;
     private ArrayList<CharSequence> locationOptions;
     private AddEditIngredientController addEditIngredientController;
-    private DocumentReference documentReference;
     private Resources res;
 
     /**
@@ -102,7 +102,7 @@ public class AddEditIngredientFragment extends DialogFragment {
         amountName = view.findViewById(R.id.edit_amount);
         unitName = view.findViewById(R.id.edit_unit);
         categoryName = view.findViewById(R.id.edit_category);
-        deleteButton = view.findViewById(R.id.delete_ingredient_button);
+        Button deleteButton = view.findViewById(R.id.delete_ingredient_button);
 
         unitOptions = new ArrayList<>();
         categoryOptions = new ArrayList<>();
@@ -110,7 +110,7 @@ public class AddEditIngredientFragment extends DialogFragment {
         res = getActivity().getResources();
 
         addEditIngredientController = new AddEditIngredientController();
-        documentReference = addEditIngredientController.getDocumentReference();
+        DocumentReference documentReference = addEditIngredientController.getDocumentReference();
 
         // max length of 10 characters
         InputFilter[] filterArray = new InputFilter[2];
@@ -232,7 +232,7 @@ public class AddEditIngredientFragment extends DialogFragment {
 
                             // if the category is not empty -> check if it already exist
                             Iterator<CharSequence> listIterator = categoryOptions.iterator();
-                            Boolean exists = false;
+                            boolean exists = false;
                             while (listIterator.hasNext()) {
                                 String nextValue = listIterator.next().toString();
                                 if (nextValue.equalsIgnoreCase(newCategory)) {
@@ -336,7 +336,7 @@ public class AddEditIngredientFragment extends DialogFragment {
 
                             // if the location is not empty -> check if it already exist
                             Iterator<CharSequence> listIterator = locationOptions.iterator();
-                            Boolean exists = false;
+                            boolean exists = false;
                             while (listIterator.hasNext()) {
                                 String nextValue = listIterator.next().toString();
                                 if (nextValue.equalsIgnoreCase(newLocation)) {
@@ -441,7 +441,7 @@ public class AddEditIngredientFragment extends DialogFragment {
 
                             // if the unit is not empty -> check if it already exist
                             Iterator<CharSequence> listIterator = unitOptions.iterator();
-                            Boolean exists = false;
+                            boolean exists = false;
                             while (listIterator.hasNext()) {
                                 String nextValue = listIterator.next().toString();
                                 if (nextValue.equalsIgnoreCase(newUnit)) {
@@ -556,7 +556,7 @@ public class AddEditIngredientFragment extends DialogFragment {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
                 month = month + 1;
-                String date = year + "-" + String.format("%02d", month) + "-" + String.format("%02d", dayOfMonth);
+                @SuppressLint("DefaultLocale") String date = year + "-" + String.format("%02d", month) + "-" + String.format("%02d", dayOfMonth);
                 bbdName.setText(date);
             }
         };
@@ -590,9 +590,9 @@ public class AddEditIngredientFragment extends DialogFragment {
                     public void onClick(View v) {
                         // retrieve text from the text boxes
                         String ingredientName = AddEditIngredientFragment.this.ingredientName.getText().toString();
-                        String bestbefore = AddEditIngredientFragment.this.bbdName.getText().toString();
+                        @SuppressWarnings("SpellCheckingInspection") String bestbefore = AddEditIngredientFragment.this.bbdName.getText().toString();
                         String amount = AddEditIngredientFragment.this.amountName.getText().toString();
-                        Double doubleAmount = 0.0;
+                        double doubleAmount = 0.0;
 
                         // check if any field is empty
                         // if empty, reject add - reject add and show error message
@@ -610,7 +610,7 @@ public class AddEditIngredientFragment extends DialogFragment {
                         if (hasEmpty) {
                             return;
                         } else {
-                            doubleAmount = Double.valueOf(amount);
+                            doubleAmount = Double.parseDouble(amount);
                         }
 
                         // set the name of the current food as the edited fields

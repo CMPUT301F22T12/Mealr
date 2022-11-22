@@ -15,9 +15,8 @@ import java.util.ArrayList;
  * This class should be used exclusively by the {@link ShoppingListFragment} class to handle database communication.
  */
 public class ShoppingListController {
-    private FirebaseFirestore db;
-    private CollectionReference cr;
-    private final String collectionName = "Ingredient";
+    private final FirebaseFirestore db;
+    private final CollectionReference cr;
 
     /**
      * The constructor for the {@link ShoppingListController}. Sets up the {@link #db} and {@link #cr}
@@ -27,6 +26,7 @@ public class ShoppingListController {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         assert user.getEmail() != null;
+        String collectionName = "Ingredient";
         cr = db.collection("User").document(user.getEmail()).collection(collectionName);
     }
 

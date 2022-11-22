@@ -62,6 +62,7 @@ import java.util.TimerTask;
  * A class for a fragment that handles adding and editing recipes
  * Fragment is activated when user clicks certain buttons
  */
+@SuppressWarnings({"SpellCheckingInspection", "unchecked"})
 public class AddEditRecipeFragment extends DialogFragment {
     private Spinner categoryName;
     private EditText comments;
@@ -69,25 +70,21 @@ public class AddEditRecipeFragment extends DialogFragment {
     private EditText servings;
     private EditText prepTime;
     private AddEditRecipeFragment.OnFragmentInteractionListener listener;
-    private Button deleteButton;
     private Recipe currentRecipe;
     private boolean createNewRecipe;
     private ImageView image;
     private Button uploadButton;
     private Button cameraButton;
-    private FirebaseStorage storage = FirebaseStorage.getInstance();
+    private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private String photoUrl;
     private ArrayAdapter<Ingredient> ingredientArrayAdapter;
     private ArrayList<Ingredient> ingredientsDataList;
-    private ListView ingredientListView;
-    private Button ingredientsAddButton;
     private AutoCompleteTextView ingredientAutoText;
-    private IngredientController ingredientController = new IngredientController();
-    private ArrayList<String> ingredientAutoCompleteList = new ArrayList<>();
+    private final IngredientController ingredientController = new IngredientController();
+    private final ArrayList<String> ingredientAutoCompleteList = new ArrayList<>();
     private ArrayAdapter<String> ingredientAutoCompleteAdapter;
     private ArrayList<CharSequence> categoryOptions;
     private AddEditRecipeController addEditRecipeController;
-    private DocumentReference documentReference;
     private Resources res;
 
     /**
@@ -185,17 +182,17 @@ public class AddEditRecipeFragment extends DialogFragment {
         title = view.findViewById(R.id.edit_title);
         servings = view.findViewById(R.id.edit_servings);
         prepTime = view.findViewById(R.id.edit_prep_time);
-        deleteButton = view.findViewById(R.id.delete_recipe_button);
+        Button deleteButton = view.findViewById(R.id.delete_recipe_button);
         image = view.findViewById(R.id.recipeImageView);
         uploadButton = view.findViewById(R.id.uploadImageButton);
         cameraButton = view.findViewById(R.id.cameraButton);
-        ingredientListView = view.findViewById(R.id.recipe_ingredients_listview);
+        ListView ingredientListView = view.findViewById(R.id.recipe_ingredients_listview);
         ingredientAutoText = view.findViewById(R.id.autoCompleteIngredient);
-        ingredientsAddButton = view.findViewById(R.id.add_ingredient_button);
+        Button ingredientsAddButton = view.findViewById(R.id.add_ingredient_button);
 
         // initialize the category spinner and the FireBase controller
         addEditRecipeController = new AddEditRecipeController();
-        documentReference = addEditRecipeController.getDocumentReference();
+        DocumentReference documentReference = addEditRecipeController.getDocumentReference();
         categoryOptions = new ArrayList<>();
         res = getActivity().getResources();
 
@@ -383,7 +380,7 @@ public class AddEditRecipeFragment extends DialogFragment {
 
                             // if the category is not empty -> check if it already exist
                             Iterator<CharSequence> listIterator = categoryOptions.iterator();
-                            Boolean exists = false;
+                            boolean exists = false;
                             while (listIterator.hasNext()) {
                                 String nextValue = listIterator.next().toString();
                                 if (nextValue.equalsIgnoreCase(newCategory)) {
@@ -512,7 +509,7 @@ public class AddEditRecipeFragment extends DialogFragment {
         documentSnapshot.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             /**
              * When the documentSnapshot has been successfully accessed from Firebase
-             * @param task
+             * @param task the {@link Task<DocumentSnapshot>}
              */
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {

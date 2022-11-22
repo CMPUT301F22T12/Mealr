@@ -25,10 +25,9 @@ import java.util.Collections;
  *  @return void
  */
 public class ShoppingListFragment extends Fragment {
-    private ListView listView;
     private ArrayAdapter<ShoppingItem> shoppingItemArrayAdapter;
-    private ArrayList<ShoppingItem> shoppingItemDataList = new ArrayList<>();
-    private ShoppingListController controller = new ShoppingListController();
+    private final ArrayList<ShoppingItem> shoppingItemDataList = new ArrayList<>();
+    private final ShoppingListController controller = new ShoppingListController();
     private final String[] sortOptions = {"Name", "Category"};
     private Spinner sortSpinner;
     private Switch sortSwitch;
@@ -56,7 +55,7 @@ public class ShoppingListFragment extends Fragment {
 
         // Attach to listView
         shoppingItemArrayAdapter = new ShoppingListAdapter(getContext(), shoppingItemDataList);
-        listView = view.findViewById(R.id.shoppingItemListView);
+        ListView listView = view.findViewById(R.id.shoppingItemListView);
         listView.setAdapter(shoppingItemArrayAdapter);
 
         // Setup sorting
@@ -125,7 +124,7 @@ public class ShoppingListFragment extends Fragment {
         sortSwitch = getView().findViewById(R.id.shoppingSortSwitch);
 
         String sortBy = sortSpinner.getSelectedItem().toString();
-        Integer asc = sortSwitch.isChecked() ? 1 : -1;
+        int asc = sortSwitch.isChecked() ? 1 : -1;
 
         // determine which sort option was selected, then sort them in ascending or descending order
         // ascending or descending is based on the asc variable

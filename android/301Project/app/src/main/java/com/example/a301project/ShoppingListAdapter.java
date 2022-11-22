@@ -19,8 +19,8 @@ import java.util.ArrayList;
  * contains a constructor and a method that returns a view of the custom list
  */
 public class ShoppingListAdapter extends ArrayAdapter<ShoppingItem> {
-    private ArrayList<ShoppingItem> shoppingItems;
-    private Context context;
+    private final ArrayList<ShoppingItem> shoppingItems;
+    private final Context context;
 
 
     /**
@@ -68,7 +68,7 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingItem> {
         });
 
                 // list view to attributes of each shopping item object
-        // by finding view textboxes to their ID
+        // by finding view text boxes to their ID
         TextView shoppingItemName = view.findViewById(R.id.s_nameText);
         TextView amountName = view.findViewById(R.id.s_amountText);
         //TextView unitName = view.findViewById(R.id.s_unitText);
@@ -77,8 +77,6 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingItem> {
         // sets the text
         shoppingItemName.setText(s.getName());
         amountName.setText("Need: " + s.getAmount().toString());
-        //unitName.setText(s.getUnit());
-        //categoryName.setText(s.getCategory());
 
         return view;
     }

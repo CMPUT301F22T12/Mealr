@@ -1,7 +1,6 @@
 package com.example.a301project;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,7 +13,6 @@ import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import com.google.firebase.firestore.CollectionReference;
@@ -39,14 +37,12 @@ import java.util.Date;
 
 public class IngredientFragment extends Fragment implements AddEditIngredientFragment.OnFragmentInteractionListener {
     private IngredientController ingredientController;
-    private ListView ingredientList;
     private ArrayAdapter<Ingredient> ingredientAdapter;
     private ArrayList<Ingredient> dataList;
-    private String[] sortOptions = {"Name", "Location", "Expiry", "Category"};
+    private final String[] sortOptions = {"Name", "Location", "Expiry", "Category"};
     private Spinner sortSpinner;
     private Switch sortSwitch;
     public int position = -1;
-    private Button addButton;
 
     public IngredientFragment() {
         super(R.layout.activity_ingredient);
@@ -62,9 +58,9 @@ public class IngredientFragment extends Fragment implements AddEditIngredientFra
         super.onCreate(savedInstanceState);
         getActivity().setTitle("My Ingredients");
 
-        addButton = view.findViewById(R.id.add_ingredient_button);
+        Button addButton = view.findViewById(R.id.add_ingredient_button);
         // create list of ingredients
-        ingredientList = view.findViewById(R.id.ingredientListView);
+        ListView ingredientList = view.findViewById(R.id.ingredientListView);
         dataList = new ArrayList<>();
 
         ingredientAdapter = new CustomList(getContext(),dataList);
@@ -93,7 +89,6 @@ public class IngredientFragment extends Fragment implements AddEditIngredientFra
             /**
              * Method for when no spinner item is selected
              * @param adapterView {@link AdapterView} the AdapterView where the selection happened
-             * @return void
              */
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
@@ -106,7 +101,6 @@ public class IngredientFragment extends Fragment implements AddEditIngredientFra
              * Method for when sort switch is clicked
              * @param compoundButton {@link CompoundButton} the switch button view that has changed
              * @param b {@link boolean} the checked state of the button
-             * @return void
              */
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -155,7 +149,6 @@ public class IngredientFragment extends Fragment implements AddEditIngredientFra
              * Method for when data changes from collection reference
              * @param value {@link QuerySnapshot}
              * @param error {@link com.google.firebase.firestore.FirebaseFirestore}
-             * @return void
              */
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -164,7 +157,7 @@ public class IngredientFragment extends Fragment implements AddEditIngredientFra
                 for(QueryDocumentSnapshot doc: value) {
                     Date date = doc.getDate("BestBeforeDate");
                     String pattern = "yyyy-MM-dd";
-                    DateFormat df = new SimpleDateFormat(pattern);
+                    @SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat(pattern);
                     String bbd = df.format(date);
 
                     // create new ingredient in firebase
@@ -190,7 +183,6 @@ public class IngredientFragment extends Fragment implements AddEditIngredientFra
      * Method for sorting ingredients by selected attributes
      * sortable attributes: location, category, unit
      * sort switch will arrange in ascending or descending order
-     * @return void
      */
     public void sortDataBySpinner() {
         if (getView() == null) return;
@@ -199,7 +191,7 @@ public class IngredientFragment extends Fragment implements AddEditIngredientFra
 
         // retrieve the sort information
         String sortBy = sortSpinner.getSelectedItem().toString();
-        Integer asc = sortSwitch.isChecked() ? 1:-1;
+        int asc = sortSwitch.isChecked() ? 1:-1;
 
         // sort ingredient list based on the sort option
         //
@@ -221,7 +213,6 @@ public class IngredientFragment extends Fragment implements AddEditIngredientFra
      * Method for adding ingredients
      * trigger when Add button clicked
      * @param ingredient {@link Ingredient} an ingredient to be added
-     * @return void
      */
     public void addIngredient(Ingredient ingredient) {
         ingredientAdapter.add(ingredient);
@@ -233,7 +224,6 @@ public class IngredientFragment extends Fragment implements AddEditIngredientFra
      * @param currentIngredient {@link Ingredient}
      * @param createNewIngredient {@link boolean}
      * checks whether to create new ingredient or to update existing
-     * @return void
      */
     @Override
     public void onConfirmPressed(Ingredient currentIngredient, boolean createNewIngredient) {

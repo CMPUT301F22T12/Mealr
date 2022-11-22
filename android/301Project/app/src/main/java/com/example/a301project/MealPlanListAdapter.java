@@ -17,8 +17,8 @@ import java.util.ArrayList;
  * by a ListView in MealPlanFragment
  */
 public class MealPlanListAdapter extends ArrayAdapter<MealPlan> {
-    private ArrayList<MealPlan> mealPlans;
-    private Context context;
+    private final ArrayList<MealPlan> mealPlans;
+    private final Context context;
 
     /**
      * Constructor for the adapter, takes context and ArrayList of MealPlan

@@ -21,9 +21,7 @@ import java.util.Locale;
  * currently incomplete
  */
 public class MealPlanFragment extends Fragment {
-    private ListView listView;
-    private ArrayAdapter<MealPlan> mealPlanArrayAdapter;
-    private ArrayList<MealPlan> mealPlanDataList = new ArrayList<>();
+    private final ArrayList<MealPlan> mealPlanDataList = new ArrayList<>();
 
     public MealPlanFragment() {
         super(R.layout.activity_meal_plan);
@@ -51,8 +49,8 @@ public class MealPlanFragment extends Fragment {
         }
 
         // Attach to listview
-        mealPlanArrayAdapter = new MealPlanListAdapter(getContext(), mealPlanDataList);
-        listView = view.findViewById(R.id.mealPlanListView);
+        ArrayAdapter<MealPlan> mealPlanArrayAdapter = new MealPlanListAdapter(getContext(), mealPlanDataList);
+        ListView listView = view.findViewById(R.id.mealPlanListView);
         listView.setAdapter(mealPlanArrayAdapter);
     }
 }

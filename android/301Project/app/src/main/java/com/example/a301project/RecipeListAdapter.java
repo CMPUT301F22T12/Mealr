@@ -20,8 +20,8 @@ import java.util.ArrayList;
  * recipe activity
  */
 public class RecipeListAdapter extends ArrayAdapter<Recipe> {
-    private ArrayList<Recipe> recipes;
-    private Context context;
+    private final ArrayList<Recipe> recipes;
+    private final Context context;
 
     /**
      * Constructor for RecipeListAdapter using its attributes
@@ -52,7 +52,7 @@ public class RecipeListAdapter extends ArrayAdapter<Recipe> {
             view = LayoutInflater.from(context).inflate(R.layout.recipe_row_layout, parent, false);
         }
 
-        // Find the views by searching textbox ID
+        // Find the views by searching text box ID
         TextView titleTV = view.findViewById(R.id.r_titleTextView);
         TextView prepTimeTV = view.findViewById(R.id.r_prepTimeTextView);
         TextView servingsTV = view.findViewById(R.id.r_servingsTextView);

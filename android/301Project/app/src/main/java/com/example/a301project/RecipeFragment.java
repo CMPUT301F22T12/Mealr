@@ -25,10 +25,9 @@ import java.util.Collections;
  *  @return void
  */
 public class RecipeFragment extends Fragment implements AddEditRecipeFragment.OnFragmentInteractionListener {
-    private ListView listView;
     private ArrayAdapter<Recipe> recipeArrayAdapter;
-    private ArrayList<Recipe> recipeDataList = new ArrayList<>();
-    private RecipeController controller = new RecipeController();
+    private final ArrayList<Recipe> recipeDataList = new ArrayList<>();
+    private final RecipeController controller = new RecipeController();
     private final String[] sortOptions = {"Name", "Prep Time", "Servings", "Category"};
     private Spinner sortSpinner;
     private Switch sortSwitch;
@@ -56,7 +55,7 @@ public class RecipeFragment extends Fragment implements AddEditRecipeFragment.On
 
         // Attach to listView
         recipeArrayAdapter = new RecipeListAdapter(getContext(), recipeDataList);
-        listView = view.findViewById(R.id.recipeListView);
+        ListView listView = view.findViewById(R.id.recipeListView);
         listView.setAdapter(recipeArrayAdapter);
 
         // Setup sorting
@@ -156,7 +155,7 @@ public class RecipeFragment extends Fragment implements AddEditRecipeFragment.On
         sortSwitch = getView().findViewById(R.id.recipeSortSwitch);
 
         String sortBy = sortSpinner.getSelectedItem().toString();
-        Integer asc = sortSwitch.isChecked() ? 1 : -1;
+        int asc = sortSwitch.isChecked() ? 1 : -1;
 
         // determine which sort option was selected, then sort them in ascending or descending order
         // ascending or descending is based on the asc variable

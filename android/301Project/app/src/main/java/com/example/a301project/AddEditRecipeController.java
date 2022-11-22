@@ -14,14 +14,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+@SuppressWarnings("unchecked")
 public class AddEditRecipeController {
 
     // connect to firebase and handle adding spinner items
-    private String collectionName = "Customization";
-    private String documentName = "RecipeCustomization";
-    private FirebaseFirestore db;
-    private CollectionReference collectionReference;
-    private DocumentReference documentReference;
+    private final String collectionName = "Customization";
+    private final FirebaseFirestore db;
+    private final CollectionReference collectionReference;
+    private final DocumentReference documentReference;
 
     /**
      * The constructor for the {@link AddEditRecipeController}. Sets up the {@link #db} and {@link #collectionReference}
@@ -33,6 +33,7 @@ public class AddEditRecipeController {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         assert user.getEmail() != null;
         collectionReference = db.collection("User").document(user.getEmail()).collection(collectionName);
+        String documentName = "RecipeCustomization";
         documentReference = collectionReference.document(documentName);
     }
 
@@ -67,7 +68,7 @@ public class AddEditRecipeController {
 
                 // check if the value to add already exists in firebase
                 Iterator<CharSequence> listIterator = customizationOptions.iterator();
-                Boolean exists = false;
+                boolean exists = false;
                 while (listIterator.hasNext()) {
                     if (listIterator.next().toString().equalsIgnoreCase(newCategory)) {
                         exists = true;

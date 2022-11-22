@@ -7,8 +7,6 @@ import java.util.ArrayList;
  * MealPlanFragment contains multiple instances of these.
  */
 public class MealPlan {
-    private ArrayList<Ingredient> ingredients;
-    private ArrayList<Recipe> recipes;
 
     /**
      * Gets the {@link MealPlan} object's name
@@ -35,8 +33,6 @@ public class MealPlan {
      * @param name {@link String}
      */
     public MealPlan(ArrayList<Ingredient> ingredients, ArrayList<Recipe> recipes, String name) {
-        this.ingredients = ingredients;
-        this.recipes = recipes;
         this.name = name;
     }
 

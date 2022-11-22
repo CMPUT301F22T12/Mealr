@@ -19,7 +19,6 @@ import java.util.Map;
 
 public class RecipeControllerTest {
     private RecipeController controller;
-    private FirebaseFirestore mockFirestore;
     private CollectionReference mockCollectionRef;
 
     private Recipe mockRecipe() {
@@ -29,7 +28,7 @@ public class RecipeControllerTest {
     @Before
     public void setUp() {
         // Add our mock classes
-        mockFirestore = mock(FirebaseFirestore.class);
+        FirebaseFirestore mockFirestore = mock(FirebaseFirestore.class);
         mockCollectionRef = mock(CollectionReference.class, RETURNS_DEEP_STUBS);
 
         when(mockFirestore.collection(anyString()))
