@@ -389,7 +389,7 @@ public class AddEditMealPlanFragment extends DialogFragment {
         };
 
         // set the text boxes for when tag is EDIT
-        mealTitle.setText(currentMealPlan.getName());
+        //mealTitle.setText(currentMealPlan.getName());
         startDate.setText(currentMealPlan.getStartDate());
         endDate.setText(currentMealPlan.getEndDate());
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
