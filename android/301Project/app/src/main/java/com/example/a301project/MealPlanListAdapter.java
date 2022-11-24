@@ -5,10 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -48,10 +51,18 @@ public class MealPlanListAdapter extends ArrayAdapter<MealPlan> {
             view = LayoutInflater.from(context).inflate(R.layout.meal_plan_layout, parent, false);
         }
 
-        // TODO: Render recipe and ingredient list items
+        // Find text views and list views for meal plan
         TextView name = view.findViewById(R.id.mp_nameText);
+        TextView startDate = view.findViewById(R.id.startDateTextView);
+        TextView endDate = view.findViewById(R.id.endDateTextView);
+        ListView ingrientList = view.findViewById(R.id.mp_ingredientList);
+        ListView recipeList = view.findViewById(R.id.mp_recipeList);
 
+        // set the text to each field
         name.setText(mp.getName());
+        startDate.setText(mp.getStartDate());
+        endDate.setText(mp.getEndDate());
+
 
         return view;
     }
