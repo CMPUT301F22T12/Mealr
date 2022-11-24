@@ -94,7 +94,7 @@ public class MealPlanController {
      */
     public void removeMealPlan(MealPlan mealplan) {
         String id = mealplan.getId();
-        db.collection("MealPlan").document(id)
+        cr.document(id)
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
