@@ -149,8 +149,7 @@ public class AddEditMealPlanFragment extends DialogFragment {
         if (this.getTag().equals("ADD")) {
             title = "Add Entry";
             deleteMealButton.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             title = "Edit Entry";
         }
         // OnClickListener for delete button
@@ -240,12 +239,12 @@ public class AddEditMealPlanFragment extends DialogFragment {
         addIngredientButton.setOnClickListener(view_ -> {
             String ingredientName = ingredientAutoText.getText().toString();
             if (!ingredientName.isEmpty()) {
-                ingredientsDataList.add(0,  new Ingredient(ingredientName, 1));
+                ingredientsDataList.add(0, new Ingredient(ingredientName, 1));
                 ingredientArrayAdapter.notifyDataSetChanged();
                 ingredientAutoText.setText("");
 
                 // Hide the keyboard now
-                InputMethodManager inputManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputManager.hideSoftInputFromWindow(view_.getWindowToken(),
                         InputMethodManager.HIDE_NOT_ALWAYS);
 
@@ -307,7 +306,7 @@ public class AddEditMealPlanFragment extends DialogFragment {
                 recipeAutoText.setText("");
 
                 // Hide the keyboard now
-                InputMethodManager inputManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputManager.hideSoftInputFromWindow(view_.getWindowToken(),
                         InputMethodManager.HIDE_NOT_ALWAYS);
 
@@ -328,6 +327,7 @@ public class AddEditMealPlanFragment extends DialogFragment {
             /**
              * Method invoked when the view is clicked
              * shows date picker
+             *
              * @param view {@link View} the view that contains the selected date
              */
             @Override
@@ -343,9 +343,10 @@ public class AddEditMealPlanFragment extends DialogFragment {
             /**
              * Method invoked a date is selected
              * sets the selected date as the best before date for this ingredient
+             *
              * @param datePicker {@link DatePicker} the date picker in view
-             * @param year {@link Integer}  the year selected
-             * @param month {@link Integer} the month selected
+             * @param year       {@link Integer}  the year selected
+             * @param month      {@link Integer} the month selected
              * @param dayOfMonth {@link Integer} the day selected
              */
             @Override
@@ -361,6 +362,7 @@ public class AddEditMealPlanFragment extends DialogFragment {
             /**
              * Method invoked when the view is clicked
              * shows date picker
+             *
              * @param view {@link View} the view that contains the selected date
              */
             @Override
@@ -376,9 +378,10 @@ public class AddEditMealPlanFragment extends DialogFragment {
             /**
              * Method invoked a date is selected
              * sets the selected date as the best before date for this ingredient
+             *
              * @param datePicker {@link DatePicker} the date picker in view
-             * @param year {@link Integer}  the year selected
-             * @param month {@link Integer} the month selected
+             * @param year       {@link Integer}  the year selected
+             * @param month      {@link Integer} the month selected
              * @param dayOfMonth {@link Integer} the day selected
              */
             @Override
@@ -394,29 +397,49 @@ public class AddEditMealPlanFragment extends DialogFragment {
         startDate.setText(currentMealPlan.getStartDate());
         endDate.setText(currentMealPlan.getEndDate());
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        return builder
+        builder
                 .setView(view)
                 .setTitle(title)
-                .setNegativeButton("Cancel",null)
+                .setNegativeButton("Cancel", null)
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     /**
                      * Method for getting and setting attributes of current recipe
+                     *
                      * @param dialogInterface {@link DialogInterface} the dialog interface of this fragment
-                     * @param i {@link Integer} ID of the selected item
+                     * @param i               {@link Integer} ID of the selected item
                      */
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                AlertDialog alertDialog = (AlertDialog) dialog;
+                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
                         String mealTitle = AddEditMealPlanFragment.this.mealTitle.getText().toString();
                         String startDate = AddEditMealPlanFragment.this.startDate.getText().toString();
                         String endDate = AddEditMealPlanFragment.this.endDate.getText().toString();
 
 
                         // check if any field is empty
-                        // if empty, reject add
+                        // if empty, reject add and show missing fields
                         boolean hasEmpty = startDate.isEmpty() || endDate.isEmpty() || ingredientsDataList.stream().anyMatch(i_ -> i_.getName().isEmpty() || i_.getAmount().isNaN());
 
+                        if (mealTitle.isEmpty()) {
+                            AddEditMealPlanFragment.this.mealTitle.setError("Can't be empty");
+                        }
+                        if (startDate.isEmpty()) {
+                            AddEditMealPlanFragment.this.startDate.setError("Can't be empty");
+                        }
+                        if (endDate.isEmpty()) {
+                            AddEditMealPlanFragment.this.endDate.setError("Can't be empty");
+                        }
+
                         if (hasEmpty) {
-                            Toast.makeText(getContext(),  " Rejected: Missing Field(s)",Toast.LENGTH_LONG).show();
                             return;
                         }
 
@@ -427,10 +450,14 @@ public class AddEditMealPlanFragment extends DialogFragment {
                         currentMealPlan.setRecipes(recipesDataList);
 
                         listener.onConfirmPressed(currentMealPlan, createNewMeal);
+                        dialog.dismiss();
                     }
-                }).create();
-
+                });
+            }
+        });
+        return dialog;
     }
+
     /**
      * Method to create a new AddEditRecipe fragment
      * @param mealplan {@link MealPlan} the current recipe
