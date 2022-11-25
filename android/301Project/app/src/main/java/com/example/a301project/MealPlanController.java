@@ -1,5 +1,7 @@
 package com.example.a301project;
 
+import static android.content.ContentValues.TAG;
+
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -15,6 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import static android.content.ContentValues.TAG;
 
 public class MealPlanController {
     private FirebaseFirestore db;
@@ -99,14 +102,14 @@ public class MealPlanController {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Log.d("ContentValues", "Successfully deleted meal plan with ID: " + id);
+                        Log.d(TAG, "Successfully deleted meal plan with ID: " + id);
 
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w("ContentValues", "Could not delete document with ID: " + id, e);
+                        Log.w(TAG, "Could not delete document with ID: " + id, e);
                     }
                 });
     }
