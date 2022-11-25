@@ -58,29 +58,40 @@ public class ShoppingListController {
         ingredient_cr.get().addOnSuccessListener(queryDocumentSnapshots -> {
             ArrayList<ShoppingItem> shoppingItemDataList = new ArrayList<>();
 
-            mealPlanItemsDataList.forEach(item -> {
-                ingredientStorageItemsDataList.forEach(item2 -> {
-                    if(item.getName().equalsIgnoreCase(item2.getName())) {
-                        double amount1 = item.getAmount();
-                        double amount2 = item2.getAmount();
-                        if (amount2 >= amount1) {
-                            item2.setAmount(amount2-amount1);
-                            amount1 = 0;
-                            mealPlanItemsDataList.remove(item);
-                        } else {
-                            amount1-=amount2;
-                            ingredientStorageItemsDataList.remove(item2);
-                            ShoppingItem newItem = new ShoppingItem(
-                                    item.getName(),
-                                    amount1,
-                                    item.getUnit(),
-                                    item.getCategory()
-                            );
-                            shoppingItemDataList.add(newItem);
+            if (mealPlanItemsDataList != null) {
+                for (int i = 0; i < mealPlanItemsDataList.size(); i++) {
+                    ShoppingItem item = mealPlanItemsDataList.get(i);
+                    boolean matches = false;
+                    for (int j = 0; j < ingredientStorageItemsDataList.size(); j++) {
+                        ShoppingItem item2 = ingredientStorageItemsDataList.get(j);
+                        if(item.getName().equalsIgnoreCase(item2.getName())) {
+                            matches = true;
+                            double amount1 = item.getAmount();
+                            double amount2 = item2.getAmount();
+                            if (amount2 >= amount1) {
+                                item2.setAmount(amount2-amount1);
+                                amount1 = 0;
+                                mealPlanItemsDataList.remove(item);
+                                i--;
+                            } else {
+                                amount1-=amount2;
+                                ingredientStorageItemsDataList.remove(item2);
+                                j--;
+                                ShoppingItem newItem = new ShoppingItem(
+                                        item.getName(),
+                                        amount1,
+                                        item.getUnit(),
+                                        item.getCategory()
+                                );
+                                shoppingItemDataList.add(newItem);
+                            }
                         }
                     }
-                });
-            });
+                    if (!matches) {
+                        shoppingItemDataList.add(item);
+                    }
+                }
+            }
             s.f(shoppingItemDataList);
         });
     }
@@ -96,18 +107,19 @@ public class ShoppingListController {
 
             queryDocumentSnapshots.forEach(doc -> {
                 ArrayList<HashMap<String, Object>> values = (ArrayList<HashMap<String, Object>>) doc.get("Ingredients");
-                values.forEach(value -> {
-                    ShoppingItem ingredient = new ShoppingItem(
-                            String.valueOf(value.get("name")),
-                            (double) value.get("amount"),
-                            String.valueOf(value.get("unit")),
-                            String.valueOf(value.get("category"))
-                    );
-                    mealPlanItemsDataList.add(ingredient);
-                });
+                if (values != null) {
+                    values.forEach(value -> {
+                        ShoppingItem ingredient = new ShoppingItem(
+                                String.valueOf(value.get("name")),
+                                (double) value.get("amount"),
+                                String.valueOf(value.get("unit")),
+                                String.valueOf(value.get("category"))
+                        );
+                        mealPlanItemsDataList.add(ingredient);
+                    });
+                }
 
                 ArrayList<HashMap<String, Object>> recipes = (ArrayList<HashMap<String, Object>>) doc.get("Recipes");
-                System.out.println(recipes);
                 recipes.forEach(recipe -> {
                     ArrayList<HashMap<String, Object>> recipeIngredients = (ArrayList<HashMap<String, Object>>) recipe.get("ingredients");
                     if (recipeIngredients != null) {
@@ -122,7 +134,6 @@ public class ShoppingListController {
                         });
                     }
                 });
-
             });
             s.f(mealPlanItemsDataList);
         });

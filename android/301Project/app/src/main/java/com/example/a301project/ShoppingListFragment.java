@@ -190,11 +190,16 @@ ShoppingListController.ingredientItemSuccessHandler, ShoppingListController.shop
     @Override
     public void f(ArrayList<ShoppingItem> r) {
         listCount++;
+        if (listCount == 1) {
+
+        }
         if (listCount == 2) {
-            //controller.getShoppingItems(this);
-            shoppingItemDataList = r;
+            controller.getShoppingItems(this);
+
         } else if (listCount == 3) {
             //shoppingItemDataList = r;
+            shoppingItemDataList.addAll(r);
+            shoppingItemArrayAdapter.notifyDataSetChanged();
         }
     }
 }
