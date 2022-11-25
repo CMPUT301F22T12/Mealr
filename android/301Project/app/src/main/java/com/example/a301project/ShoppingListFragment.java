@@ -36,9 +36,10 @@ import java.util.Date;
  *  handles sorting
  *  @return void
  */
-public class ShoppingListFragment extends Fragment implements ShoppingListAdapter.ShoppingListAdapterListener, AddEditIngredientFragment.OnFragmentInteractionListener {
+public class ShoppingListFragment extends Fragment implements ShoppingListAdapter.ShoppingListAdapterListener, AddEditIngredientFragment.OnFragmentInteractionListener,
+ShoppingListController.ingredientItemSuccessHandler, ShoppingListController.shoppingItemSuccessHandler, ShoppingListController.mealPlanSuccessHandler {
     private ArrayAdapter<ShoppingItem> shoppingItemArrayAdapter;
-    private final ArrayList<ShoppingItem> shoppingItemDataList = new ArrayList<>();
+    private ArrayList<ShoppingItem> shoppingItemDataList = new ArrayList<>();
     private final ArrayList<MealPlan> mealPlanItemDataList = new ArrayList<>();
     private final ShoppingListController controller = new ShoppingListController();
     private ListView shoppingListView;
@@ -47,6 +48,7 @@ public class ShoppingListFragment extends Fragment implements ShoppingListAdapte
     private Switch sortSwitch;
     private int selectedShoppingItem;
     private IngredientController ingredientController;
+    private int listCount = 0;
 
     public ShoppingListFragment() {
         super(R.layout.activity_shopping_list);
@@ -71,7 +73,9 @@ public class ShoppingListFragment extends Fragment implements ShoppingListAdapte
 
         // Fetch the data
         //controller.getShoppingItems(res -> setShoppingItemDataList(res));
-        controller.getIngredientStorageItems(res -> setShoppingItemDataList(res)); // use thise for NOW
+        //controller.getIngredientStorageItems(res -> setShoppingItemDataList(res)); // use this for NOW
+        controller.getIngredientStorageItems(this);
+        controller.getMealPlanItems(this);
 
         // Attach to shoppingListView
         shoppingItemArrayAdapter = new ShoppingListAdapter(getContext(), shoppingItemDataList, ShoppingListFragment.this);
@@ -173,8 +177,6 @@ public class ShoppingListFragment extends Fragment implements ShoppingListAdapte
 
     }
 
-
-
     @Override
     public void onButtonPressed(int position) {
         // one of the shopping list items was checked
@@ -183,5 +185,16 @@ public class ShoppingListFragment extends Fragment implements ShoppingListAdapte
 
         // open the add/edit fragment but the "SHOPPING" tag
         AddEditIngredientFragment.newInstance(selected,false, ShoppingListFragment.this).show(getChildFragmentManager(),"SHOPPING");
+    }
+
+    @Override
+    public void f(ArrayList<ShoppingItem> r) {
+        listCount++;
+        if (listCount == 2) {
+            //controller.getShoppingItems(this);
+            shoppingItemDataList = r;
+        } else if (listCount == 3) {
+            //shoppingItemDataList = r;
+        }
     }
 }

@@ -6,6 +6,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This {@link ShoppingListController} class allows the {@link ShoppingListFragment} to communicate with
@@ -57,9 +58,6 @@ public class ShoppingListController {
         ingredient_cr.get().addOnSuccessListener(queryDocumentSnapshots -> {
             ArrayList<ShoppingItem> shoppingItemDataList = new ArrayList<>();
 
-            getIngredientStorageItems(res -> setIngredientStorageItemsDataList(res));
-            getMealPlanItems(res -> setMealItemDataList(res));
-
             mealPlanItemsDataList.forEach(item -> {
                 ingredientStorageItemsDataList.forEach(item2 -> {
                     if(item.getName().equalsIgnoreCase(item2.getName())) {
@@ -93,37 +91,40 @@ public class ShoppingListController {
      *          the ArrayList of Shopping Item
      */
     public void getMealPlanItems(ShoppingListController.mealPlanSuccessHandler s) {
-        ingredient_cr.get().addOnSuccessListener(queryDocumentSnapshots -> {
-            ArrayList<ShoppingItem> res = new ArrayList<>();
+        mealplan_cr.get().addOnSuccessListener(queryDocumentSnapshots -> {
+            mealPlanItemsDataList = new ArrayList<>();
 
             queryDocumentSnapshots.forEach(doc -> {
-                ArrayList<Ingredient> ingredients = (ArrayList<Ingredient>) doc.get("Ingredients");
-                ingredients.forEach(ingredient -> {
-                    ShoppingItem item = new ShoppingItem(
-                            ingredient.getName(),
-                            ingredient.getAmount(),
-                            ingredient.getUnit(),
-                            ingredient.getCategory()
+                ArrayList<HashMap<String, Object>> values = (ArrayList<HashMap<String, Object>>) doc.get("Ingredients");
+                values.forEach(value -> {
+                    ShoppingItem ingredient = new ShoppingItem(
+                            String.valueOf(value.get("name")),
+                            (double) value.get("amount"),
+                            String.valueOf(value.get("unit")),
+                            String.valueOf(value.get("category"))
                     );
-                    res.add(item);
+                    mealPlanItemsDataList.add(ingredient);
                 });
-                ArrayList<Recipe> recipes = (ArrayList<Recipe>) doc.get("Recipes");
-                recipes.forEach(recipe -> {
-                    ArrayList<Ingredient> recipeIngredients = recipe.getIngredients();
-                    recipeIngredients.forEach(rIngredient -> {
-                        ShoppingItem item2 = new ShoppingItem(
-                                rIngredient.getName(),
-                                rIngredient.getAmount(),
-                                rIngredient.getUnit(),
-                                rIngredient.getCategory()
-                        );
-                        res.add(item2);
-                    });
 
+                ArrayList<HashMap<String, Object>> recipes = (ArrayList<HashMap<String, Object>>) doc.get("Recipes");
+                System.out.println(recipes);
+                recipes.forEach(recipe -> {
+                    ArrayList<HashMap<String, Object>> recipeIngredients = (ArrayList<HashMap<String, Object>>) recipe.get("ingredients");
+                    if (recipeIngredients != null) {
+                        recipeIngredients.forEach(rIngredient -> {
+                            ShoppingItem item2 = new ShoppingItem(
+                                    String.valueOf(rIngredient.get("name")),
+                                    (double) rIngredient.get("amount"),
+                                    String.valueOf(rIngredient.get("unit")),
+                                    String.valueOf(rIngredient.get("category"))
+                            );
+                            mealPlanItemsDataList.add(item2);
+                        });
+                    }
                 });
 
             });
-            s.f(res);
+            s.f(mealPlanItemsDataList);
         });
     }
 
@@ -135,7 +136,7 @@ public class ShoppingListController {
      */
     public void getIngredientStorageItems(ShoppingListController.ingredientItemSuccessHandler s) {
         ingredient_cr.get().addOnSuccessListener(queryDocumentSnapshots -> {
-            ArrayList<ShoppingItem> res = new ArrayList<>();
+            ingredientStorageItemsDataList = new ArrayList<>();
 
             queryDocumentSnapshots.forEach(doc -> {
                 ShoppingItem item = new ShoppingItem(
@@ -144,28 +145,9 @@ public class ShoppingListController {
                         doc.getString("Unit"),
                         doc.getString("Category")
                 );
-                res.add(item);
+                ingredientStorageItemsDataList.add(item);
             });
-            s.f(res);
+            s.f(ingredientStorageItemsDataList);
         });
     }
-
-    /**
-     * Sets the internal meal plan shopping items
-     * @param a ArrayList of shopping items to set the data list to
-     */
-    private void setMealItemDataList(ArrayList<ShoppingItem> a) {
-        mealPlanItemsDataList.clear();
-        mealPlanItemsDataList.addAll(a);
-    }
-
-    /**
-     * Sets the internal ingredient storage shopping item
-     * @param a ArrayList of shopping items to set the data list to
-     */
-    private void setIngredientStorageItemsDataList(ArrayList<ShoppingItem> a) {
-        ingredientStorageItemsDataList.clear();
-        ingredientStorageItemsDataList.addAll(a);
-    }
-
 }
