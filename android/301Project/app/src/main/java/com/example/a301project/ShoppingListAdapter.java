@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
@@ -41,7 +42,7 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingItem> {
     }
 
     public interface ShoppingListAdapterListener {
-        public void  onCheckedButtonChanged(int position);
+        public void  onButtonPressed(int position);
     }
 
     /**
@@ -63,17 +64,13 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingItem> {
         }
 
         // if the purchased button is checked
-        CheckBox shoppingItemCheckBox = view.findViewById(R.id.shoppingItemCheckbox);
-        shoppingItemCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        Button shoppingItemPurchasedButton = view.findViewById(R.id.shoppingItemPurchasedButton);
+        shoppingItemPurchasedButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
-                    // then add the ingredient to storage
-                    listener.onCheckedButtonChanged(position);
-                }
+            public void onClick(View v) {
+                listener.onButtonPressed(position);
             }
         });
-
 
 
         // list view to attributes of each shopping item object

@@ -236,8 +236,4 @@ public class IngredientFragment extends Fragment implements AddEditIngredientFra
         ingredientAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void onCancelPressed() {
-
-    }
 }

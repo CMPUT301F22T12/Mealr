@@ -1,5 +1,6 @@
 package com.example.a301project;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +13,20 @@ import android.widget.Spinner;
 import android.widget.Switch;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 
 /**
  * /**
@@ -28,11 +39,14 @@ import java.util.Collections;
 public class ShoppingListFragment extends Fragment implements ShoppingListAdapter.ShoppingListAdapterListener, AddEditIngredientFragment.OnFragmentInteractionListener {
     private ArrayAdapter<ShoppingItem> shoppingItemArrayAdapter;
     private final ArrayList<ShoppingItem> shoppingItemDataList = new ArrayList<>();
+    private final ArrayList<MealPlan> mealPlanItemDataList = new ArrayList<>();
     private final ShoppingListController controller = new ShoppingListController();
     private ListView shoppingListView;
     private final String[] sortOptions = {"Name", "Category"};
     private Spinner sortSpinner;
     private Switch sortSwitch;
+    private int selectedShoppingItem;
+    private IngredientController ingredientController;
 
     public ShoppingListFragment() {
         super(R.layout.activity_shopping_list);
@@ -48,30 +62,21 @@ public class ShoppingListFragment extends Fragment implements ShoppingListAdapte
         super.onCreate(savedInstanceState);
         getActivity().setTitle("My Shopping List");
 
+        selectedShoppingItem = -1;
+        ingredientController = new IngredientController();
+
         // We have to put our layout in the space for the content
         ViewGroup content = view.findViewById(R.id.nav_content);
         getLayoutInflater().inflate(R.layout.activity_shopping_list, content, true);
 
         // Fetch the data
-        controller.getShoppingItems(res -> setShoppingItemDataList(res));
+        //controller.getShoppingItems(res -> setShoppingItemDataList(res));
+        controller.getIngredientStorageItems(res -> setShoppingItemDataList(res)); // use thise for NOW
 
         // Attach to shoppingListView
         shoppingItemArrayAdapter = new ShoppingListAdapter(getContext(), shoppingItemDataList, ShoppingListFragment.this);
         shoppingListView= view.findViewById(R.id.shoppingItemListView);
         shoppingListView.setAdapter(shoppingItemArrayAdapter);
-
-        shoppingListView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                CheckBox checkBox = view.findViewById(R.id.shoppingItemCheckbox);
-                checkBox.setChecked(false);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
 
         // Setup sorting
         sortSpinner = view.findViewById(R.id.shoppingSortSpinner);
@@ -116,8 +121,6 @@ public class ShoppingListFragment extends Fragment implements ShoppingListAdapte
             }
         });
         sortDataBySpinner();
-
-
     }
 
     /**
@@ -159,33 +162,23 @@ public class ShoppingListFragment extends Fragment implements ShoppingListAdapte
 
     @Override
     public void onConfirmPressed(Ingredient currentIngredient, boolean createNewIngredient) {
-        /*
-        if (createNewIngredient) {
-            addIngredient(currentIngredient);
-        }
-        else {
-            ingredientController.notifyUpdate(currentIngredient);
-        }
-        ingredientAdapter.notifyDataSetChanged();
+        // add the ingredient and remove from shopping list
+        ingredientController.addIngredient(currentIngredient);
 
-        */
-    }
-
-    @Override
-    public void onCancelPressed() {
-        // if cancel pressed when trying to add from shopping list
-        shoppingListView.setSelection(1);
-        shoppingListView.
-        CheckBox checkBox = (CheckBox) shoppingListView.findViewById(R.id.shoppingItemCheckbox);
-        if (checkBox.isChecked()) {
-           // checkBox.setChecked(false);
+        if (selectedShoppingItem >= 0) {
+            shoppingItemDataList.remove(selectedShoppingItem);
+            shoppingItemArrayAdapter.notifyDataSetChanged();
+            selectedShoppingItem = -1;
         }
 
     }
 
+
+
     @Override
-    public void onCheckedButtonChanged(int position) {
+    public void onButtonPressed(int position) {
         // one of the shopping list items was checked
+        selectedShoppingItem = position;
         Ingredient selected = (Ingredient) shoppingItemArrayAdapter.getItem(position);
 
         // open the add/edit fragment but the "SHOPPING" tag

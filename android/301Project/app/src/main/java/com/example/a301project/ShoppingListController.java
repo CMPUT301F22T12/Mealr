@@ -16,23 +16,36 @@ import java.util.ArrayList;
  */
 public class ShoppingListController {
     private final FirebaseFirestore db;
-    private final CollectionReference cr;
-
+    private final CollectionReference ingredient_cr;
+    private final CollectionReference mealplan_cr;
+    private ArrayList<ShoppingItem> mealPlanItemsDataList;
+    private ArrayList<ShoppingItem> ingredientStorageItemsDataList;
     /**
-     * The constructor for the {@link ShoppingListController}. Sets up the {@link #db} and {@link #cr}
+     * The constructor for the {@link ShoppingListController}. Sets up the {@link #db} and {@link #ingredient_cr}
      */
     public ShoppingListController() {
         this.db = FirebaseFirestore.getInstance();
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         assert user.getEmail() != null;
-        String collectionName = "Ingredient";
-        cr = db.collection("User").document(user.getEmail()).collection(collectionName);
+        String ingredientCollectionName = "Ingredient";
+        ingredient_cr = db.collection("User").document(user.getEmail()).collection(ingredientCollectionName);
+        String mealplanCollectionName = "MealPlan";
+        mealplan_cr = db.collection("User").document(user.getEmail()).collection(mealplanCollectionName);
     }
 
-    public interface successHandler {
+    public interface shoppingItemSuccessHandler {
         void f(ArrayList<ShoppingItem> r);
     }
+
+    public interface ingredientItemSuccessHandler {
+        void f(ArrayList<ShoppingItem> r);
+    }
+
+    public interface mealPlanSuccessHandler {
+        void f(ArrayList<ShoppingItem> r);
+    }
+
 
     /**
      * Gets all ingredients from Firebase and filter ones
@@ -40,10 +53,89 @@ public class ShoppingListController {
      * @param s successHandler function to be called on success with
      *          the ArrayList of Recipes
      */
-    public void getShoppingItems(ShoppingListController.successHandler s) {
-        cr.get().addOnSuccessListener(queryDocumentSnapshots -> {
+    public void getShoppingItems(ShoppingListController.shoppingItemSuccessHandler s) {
+        ingredient_cr.get().addOnSuccessListener(queryDocumentSnapshots -> {
+            ArrayList<ShoppingItem> shoppingItemDataList = new ArrayList<>();
+
+            getIngredientStorageItems(res -> setIngredientStorageItemsDataList(res));
+            getMealPlanItems(res -> setMealItemDataList(res));
+
+            mealPlanItemsDataList.forEach(item -> {
+                ingredientStorageItemsDataList.forEach(item2 -> {
+                    if(item.getName().equalsIgnoreCase(item2.getName())) {
+                        double amount1 = item.getAmount();
+                        double amount2 = item2.getAmount();
+                        if (amount2 >= amount1) {
+                            item2.setAmount(amount2-amount1);
+                            amount1 = 0;
+                            mealPlanItemsDataList.remove(item);
+                        } else {
+                            amount1-=amount2;
+                            ingredientStorageItemsDataList.remove(item2);
+                            ShoppingItem newItem = new ShoppingItem(
+                                    item.getName(),
+                                    amount1,
+                                    item.getUnit(),
+                                    item.getCategory()
+                            );
+                            shoppingItemDataList.add(newItem);
+                        }
+                    }
+                });
+            });
+            s.f(shoppingItemDataList);
+        });
+    }
+
+    /**
+     * Gets all ingredients from MealPlan in Firebase
+     * @param s successHandler function to be called on success with
+     *          the ArrayList of Shopping Item
+     */
+    public void getMealPlanItems(ShoppingListController.mealPlanSuccessHandler s) {
+        ingredient_cr.get().addOnSuccessListener(queryDocumentSnapshots -> {
             ArrayList<ShoppingItem> res = new ArrayList<>();
 
+            queryDocumentSnapshots.forEach(doc -> {
+                ArrayList<Ingredient> ingredients = (ArrayList<Ingredient>) doc.get("Ingredients");
+                ingredients.forEach(ingredient -> {
+                    ShoppingItem item = new ShoppingItem(
+                            ingredient.getName(),
+                            ingredient.getAmount(),
+                            ingredient.getUnit(),
+                            ingredient.getCategory()
+                    );
+                    res.add(item);
+                });
+                ArrayList<Recipe> recipes = (ArrayList<Recipe>) doc.get("Recipes");
+                recipes.forEach(recipe -> {
+                    ArrayList<Ingredient> recipeIngredients = recipe.getIngredients();
+                    recipeIngredients.forEach(rIngredient -> {
+                        ShoppingItem item2 = new ShoppingItem(
+                                rIngredient.getName(),
+                                rIngredient.getAmount(),
+                                rIngredient.getUnit(),
+                                rIngredient.getCategory()
+                        );
+                        res.add(item2);
+                    });
+
+                });
+
+            });
+            s.f(res);
+        });
+    }
+
+    /**
+     * Gets all ingredients from Firebase and filter ones
+     *
+     * @param s successHandler function to be called on success with
+     *          the ArrayList of Shopping Items
+     */
+    public void getIngredientStorageItems(ShoppingListController.ingredientItemSuccessHandler s) {
+        ingredient_cr.get().addOnSuccessListener(queryDocumentSnapshots -> {
+            ArrayList<ShoppingItem> res = new ArrayList<>();
 
             queryDocumentSnapshots.forEach(doc -> {
                 ShoppingItem item = new ShoppingItem(
@@ -57,4 +149,23 @@ public class ShoppingListController {
             s.f(res);
         });
     }
+
+    /**
+     * Sets the internal meal plan shopping items
+     * @param a ArrayList of shopping items to set the data list to
+     */
+    private void setMealItemDataList(ArrayList<ShoppingItem> a) {
+        mealPlanItemsDataList.clear();
+        mealPlanItemsDataList.addAll(a);
+    }
+
+    /**
+     * Sets the internal ingredient storage shopping item
+     * @param a ArrayList of shopping items to set the data list to
+     */
+    private void setIngredientStorageItemsDataList(ArrayList<ShoppingItem> a) {
+        ingredientStorageItemsDataList.clear();
+        ingredientStorageItemsDataList.addAll(a);
+    }
+
 }

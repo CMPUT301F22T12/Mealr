@@ -65,7 +65,6 @@ public class AddEditIngredientFragment extends DialogFragment {
      */
     public interface OnFragmentInteractionListener {
         void onConfirmPressed(Ingredient currentIngredient, boolean createNewIngredient);
-        void onCancelPressed();
     }
 
 
@@ -137,7 +136,14 @@ public class AddEditIngredientFragment extends DialogFragment {
         else if (this.getTag().equals("EDIT")) {
             title = "Edit Entry";
         } else if (this.getTag().equals("SHOPPING")) {
+            // if adding an ingredient from the shoppping list
             title = "Purchased";
+            ingredientName.setEnabled(false);
+            unitName.setEnabled(false);
+            categoryName.setEnabled(false);
+            bbdName.setHint("Select a date");
+            locationName.setPrompt("Select a location");
+            deleteButton.setVisibility(View.GONE);
         }
 
 
@@ -575,7 +581,7 @@ public class AddEditIngredientFragment extends DialogFragment {
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        listener.onCancelPressed();
+
                     }
                 })
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
