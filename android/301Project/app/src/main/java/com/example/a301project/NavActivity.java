@@ -139,6 +139,10 @@ public class NavActivity extends AppCompatActivity {
         }
 
         fragmentManager.beginTransaction()
+                .setCustomAnimations(
+                        R.anim.slide_in,  // enter
+                        R.anim.fade_out  // exit
+                )
                 .replace(R.id.nav_content, f, null, tag)
                 .setReorderingAllowed(true)
                 .addToBackStack(tag)
