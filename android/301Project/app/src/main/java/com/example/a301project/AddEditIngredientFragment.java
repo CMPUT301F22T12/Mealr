@@ -65,6 +65,7 @@ public class AddEditIngredientFragment extends DialogFragment {
      */
     public interface OnFragmentInteractionListener {
         void onConfirmPressed(Ingredient currentIngredient, boolean createNewIngredient);
+        void onCancelPressed();
     }
 
 
@@ -128,13 +129,15 @@ public class AddEditIngredientFragment extends DialogFragment {
 
 
         // sets title of the fragment depending on whether the tag is ADD or EDIT
-        String title;
+        String title = "";
         if (this.getTag().equals("ADD")) {
             title = "Add Entry";
             deleteButton.setVisibility(View.GONE);
         }
-        else {
+        else if (this.getTag().equals("EDIT")) {
             title = "Edit Entry";
+        } else if (this.getTag().equals("SHOPPING")) {
+            title = "Purchased";
         }
 
 
@@ -569,7 +572,12 @@ public class AddEditIngredientFragment extends DialogFragment {
         builder
                 .setView(view)
                 .setTitle(title)
-                .setNegativeButton("Cancel",null)
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        listener.onCancelPressed();
+                    }
+                })
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     /**
                      * Method for getting and setting attributes of current ingredient

@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -24,10 +25,11 @@ import java.util.Collections;
  *  handles sorting
  *  @return void
  */
-public class ShoppingListFragment extends Fragment {
+public class ShoppingListFragment extends Fragment implements ShoppingListAdapter.ShoppingListAdapterListener, AddEditIngredientFragment.OnFragmentInteractionListener {
     private ArrayAdapter<ShoppingItem> shoppingItemArrayAdapter;
     private final ArrayList<ShoppingItem> shoppingItemDataList = new ArrayList<>();
     private final ShoppingListController controller = new ShoppingListController();
+    private ListView shoppingListView;
     private final String[] sortOptions = {"Name", "Category"};
     private Spinner sortSpinner;
     private Switch sortSwitch;
@@ -53,10 +55,23 @@ public class ShoppingListFragment extends Fragment {
         // Fetch the data
         controller.getShoppingItems(res -> setShoppingItemDataList(res));
 
-        // Attach to listView
-        shoppingItemArrayAdapter = new ShoppingListAdapter(getContext(), shoppingItemDataList);
-        ListView listView = view.findViewById(R.id.shoppingItemListView);
-        listView.setAdapter(shoppingItemArrayAdapter);
+        // Attach to shoppingListView
+        shoppingItemArrayAdapter = new ShoppingListAdapter(getContext(), shoppingItemDataList, ShoppingListFragment.this);
+        shoppingListView= view.findViewById(R.id.shoppingItemListView);
+        shoppingListView.setAdapter(shoppingItemArrayAdapter);
+
+        shoppingListView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                CheckBox checkBox = view.findViewById(R.id.shoppingItemCheckbox);
+                checkBox.setChecked(false);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         // Setup sorting
         sortSpinner = view.findViewById(R.id.shoppingSortSpinner);
@@ -101,6 +116,8 @@ public class ShoppingListFragment extends Fragment {
             }
         });
         sortDataBySpinner();
+
+
     }
 
     /**
@@ -138,5 +155,40 @@ public class ShoppingListFragment extends Fragment {
         );
 
         shoppingItemArrayAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onConfirmPressed(Ingredient currentIngredient, boolean createNewIngredient) {
+        /*
+        if (createNewIngredient) {
+            addIngredient(currentIngredient);
+        }
+        else {
+            ingredientController.notifyUpdate(currentIngredient);
+        }
+        ingredientAdapter.notifyDataSetChanged();
+
+        */
+    }
+
+    @Override
+    public void onCancelPressed() {
+        // if cancel pressed when trying to add from shopping list
+        shoppingListView.setSelection(1);
+        shoppingListView.
+        CheckBox checkBox = (CheckBox) shoppingListView.findViewById(R.id.shoppingItemCheckbox);
+        if (checkBox.isChecked()) {
+           // checkBox.setChecked(false);
+        }
+
+    }
+
+    @Override
+    public void onCheckedButtonChanged(int position) {
+        // one of the shopping list items was checked
+        Ingredient selected = (Ingredient) shoppingItemArrayAdapter.getItem(position);
+
+        // open the add/edit fragment but the "SHOPPING" tag
+        AddEditIngredientFragment.newInstance(selected,false, ShoppingListFragment.this).show(getChildFragmentManager(),"SHOPPING");
     }
 }
