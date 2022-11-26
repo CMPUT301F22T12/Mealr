@@ -123,7 +123,8 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="Comments"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            android:maxLength="30"/>
 
         <EditText
             android:id="@+id/edit_comments"

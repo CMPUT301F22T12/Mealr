@@ -577,7 +577,7 @@ public class AddEditRecipeFragment extends DialogFragment {
                         if (hasEmpty) {
                             return;
                         }
-
+                        
                         Long Servings = Long.valueOf(servings);
                         Long PrepTime = Long.valueOf(prepTime);
 
@@ -585,6 +585,7 @@ public class AddEditRecipeFragment extends DialogFragment {
                         currentRecipe.setComments(comments);
                         currentRecipe.setServings(Servings);
                         currentRecipe.setPrepTime(PrepTime);
+
                         if (photoUrl != null && !photoUrl.isEmpty()) {
                             currentRecipe.setPhoto(photoUrl);
                         }
