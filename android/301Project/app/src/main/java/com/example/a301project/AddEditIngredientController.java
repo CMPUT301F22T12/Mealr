@@ -16,6 +16,8 @@ import java.util.Map;
 @SuppressWarnings("unchecked")
 public class AddEditIngredientController {
 
+    private final String collectionName = "Customization";
+    private final String documentName = "IngredientCustomization";
     private final FirebaseFirestore db;
     private final CollectionReference collectionReference;
     private final DocumentReference documentReference;
@@ -30,12 +32,19 @@ public class AddEditIngredientController {
         assert user.getEmail() != null;
 
         // connect to firebase and handle adding spinner items
-        String collectionName = "Customization";
         collectionReference = db.collection("User").document(user.getEmail()).collection(collectionName);
-        String documentName = "IngredientCustomization";
         documentReference = collectionReference.document(documentName);
     }
 
+    /**
+     * Constructor for injecting a db for testing purposes
+     * @param db the database
+     */
+    public AddEditIngredientController(FirebaseFirestore db) {
+        this.db = db;
+        collectionReference = db.collection(collectionName);
+        documentReference = collectionReference.document(documentName);
+    }
 
     /**
      * A {@link AddEditIngredientController} getter for the {@link #documentReference
