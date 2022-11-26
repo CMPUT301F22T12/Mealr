@@ -13,14 +13,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+@SuppressWarnings("unchecked")
 public class AddEditIngredientController {
 
-    // connect to firebase and handle adding spinner items
-    private String collectionName = "Customization";
-    private String documentName = "IngredientCustomization";
-    private FirebaseFirestore db;
-    private CollectionReference collectionReference;
-    private DocumentReference documentReference;
+    private final FirebaseFirestore db;
+    private final CollectionReference collectionReference;
+    private final DocumentReference documentReference;
 
     /**
      * The constructor for the {@link AddEditIngredientController}. Sets up the {@link #db} and {@link #collectionReference}
@@ -31,7 +29,10 @@ public class AddEditIngredientController {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         assert user.getEmail() != null;
 
+        // connect to firebase and handle adding spinner items
+        String collectionName = "Customization";
         collectionReference = db.collection("User").document(user.getEmail()).collection(collectionName);
+        String documentName = "IngredientCustomization";
         documentReference = collectionReference.document(documentName);
     }
 
@@ -93,7 +94,7 @@ public class AddEditIngredientController {
                 Iterator<CharSequence> listIterator = customizationOptions.iterator();
                 Boolean exists = false;
                 while (listIterator.hasNext()) {
-                    if (listIterator.next().toString().toLowerCase().equals(valueToAdd.toLowerCase())) {
+                    if (listIterator.next().toString().equalsIgnoreCase(valueToAdd)) {
                         exists = true;
                         break;
                     }

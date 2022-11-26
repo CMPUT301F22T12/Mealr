@@ -45,6 +45,11 @@ public class MealPlanFragment extends Fragment implements AddEditMealPlanFragmen
 
         addMealButton = view.findViewById(R.id.add_meal_button);
 
+        // Attach to listview
+        mealPlanArrayAdapter = new MealPlanListAdapter(getContext(), mealPlanDataList);
+        ListView listView = view.findViewById(R.id.mealPlanListView);
+        listView.setAdapter(mealPlanArrayAdapter);
+
         // Fetch the data
         controller.getMealPlan(meal -> setMealPlanDataList(meal));
 
@@ -52,11 +57,6 @@ public class MealPlanFragment extends Fragment implements AddEditMealPlanFragmen
         ViewGroup content = view.findViewById(R.id.nav_content);
         getLayoutInflater().inflate(R.layout.activity_meal_plan, content, true);
 
-
-        // Attach to listview
-        mealPlanArrayAdapter = new MealPlanListAdapter(getContext(), mealPlanDataList);
-        listView = view.findViewById(R.id.mealPlanListView);
-        listView.setAdapter(mealPlanArrayAdapter);
 
         // to add a meal plan
         addMealButton.setOnClickListener(new View.OnClickListener() {

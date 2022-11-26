@@ -7,6 +7,7 @@ import java.util.ArrayList;
  * Represents an individual meal plan with ingredients and recipes.
  * MealPlanFragment contains multiple instances of these.
  */
+
 public class MealPlan implements Serializable {
     private ArrayList<Ingredient> ingredients;
     private ArrayList<Recipe> recipes;
@@ -88,6 +89,5 @@ public class MealPlan implements Serializable {
         this.startDate = startDate;
         this.endDate = endDate;
     }
-
 
 }

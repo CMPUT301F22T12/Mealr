@@ -17,8 +17,8 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 
 public class RecipeIngredientListAdapter extends ArrayAdapter<Ingredient> {
-    private ArrayList<Ingredient> ingredients;
-    private Context context;
+    private final ArrayList<Ingredient> ingredients;
+    private final Context context;
 
     public RecipeIngredientListAdapter(Context context, ArrayList<Ingredient> ingredients) {
         super(context, 0, ingredients);

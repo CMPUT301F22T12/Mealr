@@ -23,10 +23,10 @@ import java.util.Map;
  *
  * This class should be used exclusively by the {@link RecipeFragment} class to handle database communication.
  */
+@SuppressWarnings("unchecked")
 public class RecipeController {
-    private FirebaseFirestore db;
-    private CollectionReference collectionReference;
-    private final String collectionName = "Recipe";
+    private final FirebaseFirestore db;
+    private final CollectionReference collectionReference;
 
     /**
      * The constructor for the {@link RecipeController}. Sets up the {@link #db} and {@link #collectionReference}
@@ -36,6 +36,7 @@ public class RecipeController {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         assert user.getEmail() != null;
+        String collectionName = "Recipe";
         collectionReference = db.collection("User").document(user.getEmail()).collection(collectionName);
 
     }

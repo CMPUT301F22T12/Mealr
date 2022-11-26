@@ -18,8 +18,8 @@ import java.util.ArrayList;
  */
 public class CustomList extends ArrayAdapter<Ingredient> {
     // custom array list containing Ingredient
-    private ArrayList<Ingredient> ingredients;
-    private Context context;
+    private final ArrayList<Ingredient> ingredients;
+    private final Context context;
 
     /**
      * Makes a Custom list from an array list of ingredients

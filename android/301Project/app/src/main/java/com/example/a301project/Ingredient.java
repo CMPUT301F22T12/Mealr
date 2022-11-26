@@ -6,6 +6,7 @@ import java.io.Serializable;
  * This is a class that holds the data which makes up an ingredient. This class consists mostly of
  * getters and setters to make retrieving its parameters easier.
  */
+@SuppressWarnings("SpellCheckingInspection")
 public class Ingredient implements Serializable {
     private String id = null;
     private String name;

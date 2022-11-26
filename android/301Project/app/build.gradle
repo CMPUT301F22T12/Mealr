@@ -49,5 +49,7 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test:rules:1.2.0'
     androidTestImplementation 'com.jayway.android.robotium:robotium-solo:5.3.1'
+    def lottieVersion = '5.2.0'
+    implementation "com.airbnb.android:lottie:$lottieVersion"
 
 }

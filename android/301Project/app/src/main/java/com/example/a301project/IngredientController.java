@@ -2,6 +2,7 @@ package com.example.a301project;
 
 import static android.content.ContentValues.TAG;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -25,16 +26,16 @@ import java.util.Map;
 
 /**
  * This {@link IngredientController} class allows the {@link IngredientFragment} to communicate with
- * the Firestore database backend. This class contains methods to add or remove {@link Ingredient} objects to the
+ * the FireStore database backend. This class contains methods to add or remove {@link Ingredient} objects to the
  * database, as well as edit functionality.
  *
  * This class should be used exclusively by the {@link IngredientFragment} class to handle database communication.
  */
 public class IngredientController {
     // connect to firebase and handles add and delete
-    private String collectionName = "Ingredient";
-    private FirebaseFirestore db;
-    private CollectionReference collectionReference;
+    private final String collectionName = "Ingredient";
+    private final FirebaseFirestore db;
+    private final CollectionReference collectionReference;
 
     /**
      * The constructor for the {@link IngredientController}. Sets up the {@link #db} and {@link #collectionReference}
@@ -49,7 +50,7 @@ public class IngredientController {
 
     /**
      * Constructor for injecting a db for testing purposes
-     * @param db
+     * @param db the database
      */
     public IngredientController(FirebaseFirestore db) {
         this.db = db;
@@ -62,7 +63,7 @@ public class IngredientController {
      * @return A {@link Timestamp} object
      */
     public static Timestamp convertStringToTimestamp(String bestBefore) {
-        SimpleDateFormat sdf     = new SimpleDateFormat("yyyy-MM-dd");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf     = new SimpleDateFormat("yyyy-MM-dd");
         Date date = null;
         try {
             date = sdf.parse(bestBefore);
@@ -120,7 +121,7 @@ public class IngredientController {
                 .addOnFailureListener(new OnFailureListener() {
                     /**
                      * Method invoked when failed to add to database
-                     * @param e {@link Exception} the error that occured
+                     * @param e {@link Exception} the error that occurred
                      */
                     @Override
                     public void onFailure(@NonNull Exception e) {
@@ -152,7 +153,7 @@ public class IngredientController {
     }
 
     /**
-     * Notifies the Firestore database of an update to an ingredient. The database then updates the
+     * Notifies the FireStore database of an update to an ingredient. The database then updates the
      * ingredient's values with the provided {@link Ingredient} object
      * @param ingredient The {@link Ingredient} object to update in the database
      */
@@ -186,7 +187,7 @@ public class IngredientController {
             queryDocumentSnapshots.forEach(doc -> {
                 Date date = doc.getDate("BestBeforeDate");
                 String pattern = "yyyy-MM-dd";
-                DateFormat df = new SimpleDateFormat(pattern);
+                @SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat(pattern);
                 String bbd = df.format(date);
 
                 Ingredient i = new Ingredient(
