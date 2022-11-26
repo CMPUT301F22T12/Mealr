@@ -12,6 +12,9 @@ import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -127,7 +130,7 @@ public class AddEditIngredientFragment extends DialogFragment {
         };
 
 
-        // sets title of the fragment depending on whether the tag is ADD or EDIT
+        // sets title of the fragment depending on whether the tag is ADD or EDIT or SHOPPING
         String title = "";
         if (this.getTag().equals("ADD")) {
             title = "Add Entry";
@@ -139,10 +142,20 @@ public class AddEditIngredientFragment extends DialogFragment {
             // if adding an ingredient from the shoppping list
             title = "Purchased";
             ingredientName.setEnabled(false);
-            unitName.setEnabled(false);
-            categoryName.setEnabled(false);
+
+            // if the values are already set -> then don't allow editing
+            if (currentIngredient.getUnit() != "null") {
+                unitName.setEnabled(false);
+            }
+            if (currentIngredient.getCategory() != "null") {
+                categoryName.setEnabled(false);
+            }
+
+            // set prompts for bbd and location
             bbdName.setHint("Select a date");
             locationName.setPrompt("Select a location");
+
+            // since this is adding an ingredient -> remove the delete button
             deleteButton.setVisibility(View.GONE);
         }
 
@@ -640,6 +653,7 @@ public class AddEditIngredientFragment extends DialogFragment {
                 });
             }
         });
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         return dialog;
     }
 
