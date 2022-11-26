@@ -11,7 +11,10 @@ import android.widget.Spinner;
 import android.widget.Switch;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+
+import com.airbnb.lottie.LottieAnimationView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,6 +40,9 @@ ShoppingListController.ingredientItemSuccessHandler, ShoppingListController.shop
     private IngredientController ingredientController;
     private int selectedShoppingItem;
     private int listCount;
+    private ConstraintLayout shoppingSort;
+    private LottieAnimationView shoppingAnimation;
+
 
     public ShoppingListFragment() {
         super(R.layout.activity_shopping_list);
@@ -56,6 +62,10 @@ ShoppingListController.ingredientItemSuccessHandler, ShoppingListController.shop
         listCount = 0;
         selectedShoppingItem = -1;
         ingredientController = new IngredientController();
+
+        // get the layout item
+        shoppingSort = view.findViewById(R.id.shoppingSort);
+        shoppingAnimation = view.findViewById(R.id.shoppingAnimationView);
 
         // We have to put our layout in the space for the content
         ViewGroup content = view.findViewById(R.id.nav_content);
@@ -161,6 +171,11 @@ ShoppingListController.ingredientItemSuccessHandler, ShoppingListController.shop
             if (currentIngredient.getAmount() >= amountNeeded) {
                 // purchased enough -> remove ingredient from shopping list
                 shoppingItemDataList.remove(selectedShoppingItem);
+                if (shoppingItemDataList.size() == 0) {
+                    shoppingSort.setVisibility(View.GONE);
+                    shoppingListView.setVisibility(View.GONE);
+                    shoppingAnimation.setVisibility(View.VISIBLE);
+                }
             } else {
                 // update amount needed to purchase
                 shoppingItem.setAmount(amountNeeded - currentIngredient.getAmount());
@@ -210,6 +225,11 @@ ShoppingListController.ingredientItemSuccessHandler, ShoppingListController.shop
             // this adds the calculated ShoppingItem ArrayList to the list to display on the screen
             shoppingItemDataList.addAll(r);
             shoppingListArrayAdapter.notifyDataSetChanged();
+            if (r.size()>0) {
+                shoppingSort.setVisibility(View.VISIBLE);
+                shoppingListView.setVisibility(View.VISIBLE);
+                shoppingAnimation.setVisibility(View.GONE);
+            }
         }
     }
 }
