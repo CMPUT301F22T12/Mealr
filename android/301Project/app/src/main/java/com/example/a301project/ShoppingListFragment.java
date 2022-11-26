@@ -1,32 +1,20 @@
 package com.example.a301project;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Switch;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 
 /**
  * /**
@@ -38,17 +26,17 @@ import java.util.Date;
  */
 public class ShoppingListFragment extends Fragment implements ShoppingListAdapter.ShoppingListAdapterListener, AddEditIngredientFragment.OnFragmentInteractionListener,
 ShoppingListController.ingredientItemSuccessHandler, ShoppingListController.shoppingItemSuccessHandler, ShoppingListController.mealPlanSuccessHandler {
-    private ArrayAdapter<ShoppingItem> shoppingItemArrayAdapter;
-    private ArrayList<ShoppingItem> shoppingItemDataList = new ArrayList<>();
-    private final ArrayList<MealPlan> mealPlanItemDataList = new ArrayList<>();
+
+    private ArrayAdapter<ShoppingItem> shoppingListArrayAdapter;
+    private ArrayList<ShoppingItem> shoppingItemDataList;
     private final ShoppingListController controller = new ShoppingListController();
     private ListView shoppingListView;
     private final String[] sortOptions = {"Name", "Category"};
     private Spinner sortSpinner;
     private Switch sortSwitch;
-    private int selectedShoppingItem;
     private IngredientController ingredientController;
-    private int listCount = 0;
+    private int selectedShoppingItem;
+    private int listCount;
 
     public ShoppingListFragment() {
         super(R.layout.activity_shopping_list);
@@ -64,6 +52,8 @@ ShoppingListController.ingredientItemSuccessHandler, ShoppingListController.shop
         super.onCreate(savedInstanceState);
         getActivity().setTitle("My Shopping List");
 
+        // used when reading data from firebase
+        listCount = 0;
         selectedShoppingItem = -1;
         ingredientController = new IngredientController();
 
@@ -71,16 +61,15 @@ ShoppingListController.ingredientItemSuccessHandler, ShoppingListController.shop
         ViewGroup content = view.findViewById(R.id.nav_content);
         getLayoutInflater().inflate(R.layout.activity_shopping_list, content, true);
 
-        // Fetch the data
-        //controller.getShoppingItems(res -> setShoppingItemDataList(res));
-        //controller.getIngredientStorageItems(res -> setShoppingItemDataList(res)); // use this for NOW
+        // Fetch the data -> get the Ingredients from both the Storage and the MealPlan -> used to calculate shopping list items
         controller.getIngredientStorageItems(this);
         controller.getMealPlanItems(this);
 
         // Attach to shoppingListView
-        shoppingItemArrayAdapter = new ShoppingListAdapter(getContext(), shoppingItemDataList, ShoppingListFragment.this);
+        shoppingItemDataList = new ArrayList<>();
+        shoppingListArrayAdapter = new ShoppingListAdapter(getContext(), shoppingItemDataList, ShoppingListFragment.this);
         shoppingListView= view.findViewById(R.id.shoppingItemListView);
-        shoppingListView.setAdapter(shoppingItemArrayAdapter);
+        shoppingListView.setAdapter(shoppingListArrayAdapter);
 
         // Setup sorting
         sortSpinner = view.findViewById(R.id.shoppingSortSpinner);
@@ -128,16 +117,6 @@ ShoppingListController.ingredientItemSuccessHandler, ShoppingListController.shop
     }
 
     /**
-     * Sets the internal shopping items list the new one.
-     * @param a ArrayList of shopping items to set the data list to
-     */
-    private void setShoppingItemDataList(ArrayList<ShoppingItem> a) {
-        shoppingItemDataList.clear();
-        shoppingItemDataList.addAll(a);
-        shoppingItemArrayAdapter.notifyDataSetChanged();
-    }
-
-    /**
      * Sorts internal recipe list by selected parameters defined the sortOptions attribute
      * Sort by parameters: Title, Category
      */
@@ -160,46 +139,77 @@ ShoppingListController.ingredientItemSuccessHandler, ShoppingListController.shop
                     }
                 }
         );
-
-        shoppingItemArrayAdapter.notifyDataSetChanged();
+        // notify the list adapter that the order of the data has changed
+        shoppingListArrayAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Called when the confirm button is pressed on the AddEditIngredientFragment
+     * when a user is trying to add an Ingredient from the shopping list
+     * @param currentIngredient The ingredient to add
+     * @param createNewIngredient Whether to create a new ingredient or update a previous one
+     */
     @Override
     public void onConfirmPressed(Ingredient currentIngredient, boolean createNewIngredient) {
         // add the ingredient and remove from shopping list
         ingredientController.addIngredient(currentIngredient);
 
         if (selectedShoppingItem >= 0) {
-            shoppingItemDataList.remove(selectedShoppingItem);
-            shoppingItemArrayAdapter.notifyDataSetChanged();
+            // check if that amount of the ingredient purchased >= amount needed
+            ShoppingItem shoppingItem =  shoppingListArrayAdapter.getItem(selectedShoppingItem);
+            double amountNeeded = shoppingItem.getAmount();
+            if (currentIngredient.getAmount() >= amountNeeded) {
+                // purchased enough -> remove ingredient from shopping list
+                shoppingItemDataList.remove(selectedShoppingItem);
+            } else {
+                // update amount needed to purchase
+                shoppingItem.setAmount(amountNeeded - currentIngredient.getAmount());
+                shoppingItemDataList.set(selectedShoppingItem, shoppingItem);
+            }
+            shoppingListArrayAdapter.notifyDataSetChanged();
             selectedShoppingItem = -1;
         }
-
     }
 
+    /**
+     * Called when the "purchased" button is pressed on one of the shopping items in the listview
+     * @param position The position of the {@link ShoppingItem} in the {@link ArrayAdapter} shoppingItemArrayAdapter
+     */
     @Override
     public void onButtonPressed(int position) {
         // one of the shopping list items was checked
         selectedShoppingItem = position;
-        Ingredient selected = (Ingredient) shoppingItemArrayAdapter.getItem(position);
+        ShoppingItem shoppingItem = shoppingListArrayAdapter.getItem(position);
+        Ingredient selected = new Ingredient(
+                shoppingItem.getName(),
+                shoppingItem.getAmount(),
+                shoppingItem.getbbd(),
+                shoppingItem.getLocation(),
+                shoppingItem.getUnit(),
+                shoppingItem.getCategory()
+        );
 
         // open the add/edit fragment but the "SHOPPING" tag
         AddEditIngredientFragment.newInstance(selected,false, ShoppingListFragment.this).show(getChildFragmentManager(),"SHOPPING");
     }
 
+    /**
+     * Called when the {@link ShoppingListController} is done reading a list from Firebase
+     * After both Ingredients and MealPlan are done being read from Firebase, then
+     * this method calls the {@link ShoppingListController} to calculate the items for the
+     * shopping list
+     * @param r The ArrayList of {@link ShoppingItem} that was read from Firebase
+     */
     @Override
     public void f(ArrayList<ShoppingItem> r) {
         listCount++;
-        if (listCount == 1) {
-
-        }
+        // after both Ingredients and MealPlan have been read from Firebase
         if (listCount == 2) {
             controller.getShoppingItems(this);
-
         } else if (listCount == 3) {
-            //shoppingItemDataList = r;
+            // this adds the calculated ShoppingItem ArrayList to the list to display on the screen
             shoppingItemDataList.addAll(r);
-            shoppingItemArrayAdapter.notifyDataSetChanged();
+            shoppingListArrayAdapter.notifyDataSetChanged();
         }
     }
 }

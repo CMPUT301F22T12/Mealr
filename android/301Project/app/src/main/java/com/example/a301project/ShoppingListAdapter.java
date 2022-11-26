@@ -6,8 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -41,6 +39,10 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingItem> {
         this.listener = listener;
     }
 
+    /**
+     * An interface that is to be implemented as a listener for when interactions occur
+     * to individual items in the listView
+     */
     public interface ShoppingListAdapterListener {
         public void  onButtonPressed(int position);
     }
@@ -57,7 +59,7 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingItem> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         ShoppingItem s = shoppingItems.get(position);
 
-
+        // create each list view from the defined shopping_row_layout
         View view = convertView;
         if (view == null) {
             view = LayoutInflater.from(context).inflate(R.layout.shopping_row_layout, parent, false);
@@ -66,6 +68,10 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingItem> {
         // if the purchased button is checked
         Button shoppingItemPurchasedButton = view.findViewById(R.id.shoppingItemPurchasedButton);
         shoppingItemPurchasedButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Sets the onClick method for the {@link Button} shoppingItemPurchasedButton for each item in the list
+             * @param v the view being clicked
+             */
             @Override
             public void onClick(View v) {
                 listener.onButtonPressed(position);
@@ -73,8 +79,7 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingItem> {
         });
 
 
-        // list view to attributes of each shopping item object
-        // by finding view text boxes to their ID
+        // list view to attributes of each shopping item object- by finding view text boxes to their ID
         TextView shoppingItemName = view.findViewById(R.id.s_nameText);
         TextView amountName = view.findViewById(R.id.s_amountText);
         TextView unitName = view.findViewById(R.id.s_unitText);
