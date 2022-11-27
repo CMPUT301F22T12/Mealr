@@ -55,13 +55,26 @@ public class MealPlanListAdapter extends ArrayAdapter<MealPlan> {
         TextView name = view.findViewById(R.id.mp_nameText);
         TextView startDate = view.findViewById(R.id.startDateTextView);
         TextView endDate = view.findViewById(R.id.endDateTextView);
-        ListView ingrientList = view.findViewById(R.id.mp_ingredientList);
-        ListView recipeList = view.findViewById(R.id.mp_recipeList);
+        ListView ingredientListView = view.findViewById(R.id.mp_ingredientList);
+        ListView recipeListView = view.findViewById(R.id.mp_recipeList);
+
+        // get the recipes of the meal plan selected
+        ArrayList<Recipe> recipeDataList = mp.getRecipes();
+            // filter recipe by name
+        // get the ingredients of the meal plan selected
+        ArrayList<Ingredient> ingredientDataList = mp.getIngredients();
 
         // set the text to each field
         name.setText(mp.getName());
         startDate.setText(mp.getStartDate());
         endDate.setText(mp.getEndDate());
+
+        // attach recipe list adapter to recipe list view
+        //ArrayAdapter<Recipe> recipeArrayAdapter = new RecipeListAdapter(getContext(), recipeDataList);
+        //recipeListView.setAdapter(recipeArrayAdapter);
+        // attach ingredient list adapter to ingredient list view
+        ArrayAdapter<Ingredient> ingredientArrayAdapter = new CustomList(getContext(),ingredientDataList);
+        ingredientListView.setAdapter(ingredientArrayAdapter);
 
 
         return view;

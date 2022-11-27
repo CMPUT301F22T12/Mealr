@@ -97,7 +97,7 @@
             android:orientation="horizontal">
             <ListView
                 android:textColor="@color/white"
-                android:layout_width="match_parent"
+                android:layout_width="300dp"
                 android:layout_height="match_parent"
                 android:id="@+id/mp_recipeList"/>
         </LinearLayout>
@@ -123,7 +123,7 @@
             android:orientation="horizontal">
             <ListView
                 android:textColor="@color/white"
-                android:layout_width="match_parent"
+                android:layout_width="300dp"
                 android:layout_height="match_parent"
                 android:id="@+id/mp_ingredientList"/>
         </LinearLayout>

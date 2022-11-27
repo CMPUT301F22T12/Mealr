@@ -47,7 +47,7 @@ public class MealPlanFragment extends Fragment implements AddEditMealPlanFragmen
 
         // Attach to listview
         mealPlanArrayAdapter = new MealPlanListAdapter(getContext(), mealPlanDataList);
-        ListView listView = view.findViewById(R.id.mealPlanListView);
+        listView = view.findViewById(R.id.mealPlanListView);
         listView.setAdapter(mealPlanArrayAdapter);
 
         // Fetch the data
@@ -83,7 +83,7 @@ public class MealPlanFragment extends Fragment implements AddEditMealPlanFragmen
              */
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                // when a Recipe item is clicked, open Edit Recipe fragment
+                // when a MealPlan item is clicked, open Edit Recipe fragment
                 position = i;
                 AddEditMealPlanFragment.newInstance(mealPlanArrayAdapter.getItem(position), false, MealPlanFragment.this).show(getChildFragmentManager(), "EDIT");
             }
