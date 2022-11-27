@@ -225,11 +225,9 @@ ShoppingListController.ingredientItemSuccessHandler, ShoppingListController.shop
             // this adds the calculated ShoppingItem ArrayList to the list to display on the screen
             shoppingItemDataList.addAll(r);
             shoppingListArrayAdapter.notifyDataSetChanged();
-            if (r.size()>0) {
-                shoppingSort.setVisibility(View.VISIBLE);
-                shoppingListView.setVisibility(View.VISIBLE);
-                shoppingAnimation.setVisibility(View.GONE);
-            }
+            shoppingSort.setVisibility(View.VISIBLE);
+            shoppingListView.setVisibility(View.VISIBLE);
+            shoppingAnimation.setVisibility(View.GONE);
         }
     }
 }
