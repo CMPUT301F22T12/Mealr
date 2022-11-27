@@ -76,7 +76,7 @@ public class AddEditMealPlanFragment extends DialogFragment {
      * Method to clear ingredient,
      * Resets the internal meal plan list the new one.
      *
-     * @param r {@link ArrayList} list of recipes to set the data list to
+     * @param r {@link ArrayList} list of ingredients to set the data list to
      */
     private void setIngredientDataList(ArrayList<Ingredient> r) {
         ingredientAutoCompleteList.clear();
@@ -230,7 +230,7 @@ public class AddEditMealPlanFragment extends DialogFragment {
             return false;
         });
 
-        // Load ingredients
+        // Load ingredients to auto complete once selected
         ingredientsDataList = new ArrayList<>();
         ingredientsDataList.addAll(currentMealPlan.getIngredients());
         ingredientArrayAdapter = new RecipeIngredientListAdapter(getContext(), ingredientsDataList);
