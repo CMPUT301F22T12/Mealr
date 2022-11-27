@@ -577,7 +577,7 @@ public class AddEditRecipeFragment extends DialogFragment {
                         if (hasEmpty) {
                             return;
                         }
-                        
+
                         Long Servings = Long.valueOf(servings);
                         Long PrepTime = Long.valueOf(prepTime);
 
