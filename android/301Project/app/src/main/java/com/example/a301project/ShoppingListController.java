@@ -42,7 +42,7 @@ public class ShoppingListController {
      */
     public ShoppingListController(FirebaseFirestore db) {
         this.db = db;
-        mealplan_cr = db.collection(collectionName);
+        //mealplan_cr = db.collection(collectionName);
     }
 
 
