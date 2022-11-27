@@ -59,7 +59,8 @@ public class MealPlanListAdapter extends ArrayAdapter<MealPlan> {
         ListView recipeListView = view.findViewById(R.id.mp_recipeList);
 
         // get the recipes of the meal plan selected
-        //ArrayList<Recipe> recipeDataList = mp.getRecipes();
+        ArrayList<Recipe> recipeDataList = mp.getRecipes();
+            // filter recipe by name
         // get the ingredients of the meal plan selected
         ArrayList<Ingredient> ingredientDataList = mp.getIngredients();
 
