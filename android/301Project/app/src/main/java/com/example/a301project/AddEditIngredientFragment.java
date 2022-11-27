@@ -637,6 +637,7 @@ public class AddEditIngredientFragment extends DialogFragment {
                         if (hasEmpty) {
                             return;
                         } else {
+                            amount = String.format("%.1f", Double.parseDouble(amount));
                             doubleAmount = Double.parseDouble(amount);
                         }
 
