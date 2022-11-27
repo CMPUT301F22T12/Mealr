@@ -17,7 +17,8 @@ import java.util.HashMap;
  */
 public class ShoppingListController {
     private final FirebaseFirestore db;
-    private final CollectionReference ingredient_cr;
+    private CollectionReference ingredient_cr;
+    private final String collectionName = "ShoppingList";
     private final CollectionReference mealplan_cr;
     private ArrayList<ShoppingItem> mealPlanItemsDataList;
     private ArrayList<ShoppingItem> ingredientStorageItemsDataList;
@@ -34,6 +35,17 @@ public class ShoppingListController {
         String mealplanCollectionName = "MealPlan";
         mealplan_cr = db.collection("User").document(user.getEmail()).collection(mealplanCollectionName);
     }
+
+    /**
+     * Constructor for injecting a db for testing purposes
+     * @param db the database
+     */
+    public ShoppingListController(FirebaseFirestore db) {
+        this.db = db;
+        //mealplan_cr = db.collection(collectionName);
+    }
+
+
 
     /**
      * A simple listener for when the calculated list of {@link ShoppingItem} is completed

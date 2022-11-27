@@ -30,7 +30,8 @@
             android:gravity="right"
             android:inputType="number"
             android:text="Amount"
-            android:textSize="15dp"/>
+            android:textSize="15dp"
+            android:maxLength="5"/>
         <Space
             android:layout_width="0dp"
             android:layout_height="1dp"

@@ -67,7 +67,8 @@ public class RecipeIngredientListAdapter extends ArrayAdapter<Ingredient> {
             @Override
             public void onTextChanged(CharSequence charSequence, int i_, int i1, int i2) {
                 try {
-                    Double d = Double.parseDouble(editAmount.getText().toString());
+                    String amount = editAmount.getText().toString();
+                    Double d = Double.parseDouble(String.format("%.1f", Double.parseDouble(amount)));
                     i.setAmount(d);
                 } catch (NumberFormatException e) {
                     editAmount.setText(i.getAmount().toString());
