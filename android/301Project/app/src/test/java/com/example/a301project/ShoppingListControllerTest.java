@@ -15,20 +15,18 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 
 public class ShoppingListControllerTest {
-    'private ShoppingListController controller;'
-    private RecipeController RecipeController;
+    private ShoppingListController controller;
     private FirebaseFirestore mockFirestore;
     private CollectionReference mockCollectionRef;
 
 
-    private ArrayList<Ingredient> pizza_list=new ArrayList<Ingredient>();
+    private ArrayList<ShoppingItem> shoppinglist = mock(ArrayList.class);
 
-    private Ingredient mockIngredient() {
-        return new Ingredient("carrot",3,"2022-11-30","pantry","lbs","vegetable");
+    private ShoppingItem mockShoppingItem() {
+        return new ShoppingItem("carrot", 3.00, "2022-11-30", "pantry");
     }
 
     @Before
@@ -40,32 +38,26 @@ public class ShoppingListControllerTest {
         when(mockFirestore.collection(anyString()))
                 .thenReturn(mockCollectionRef);
 
-        this.RecipeController = new RecipeController(mockFirestore);
+        this.controller = new ShoppingListController(mockFirestore);
     }
 
     @Test
-    public void testAddIngredient() {
+    public void testAddShoppingItem() {
         // Create a mock ingredient
-        pizza_list.add(mockIngredient());
-        Recipe pizza= new Recipe("pizza", "fastfood", "food", "", 1L, 1L, pizza_list);
+        ShoppingItem shoppingItem = mockShoppingItem();
+        shoppinglist.add(shoppingItem);
 
+        ArgumentCaptor<ShoppingItem> argumentCaptor = ArgumentCaptor.forClass(ShoppingItem.class);
 
-        // Call our method
-        RecipeController.addRecipe(pizza);
+        verify(shoppinglist)
+                .add(argumentCaptor.capture());
 
-        // Capture the data value
-        ArgumentCaptor<Map<String, Object>> dataCaptor = ArgumentCaptor.forClass(Map.class);
+        ShoppingItem data = argumentCaptor.getValue();
 
-        verify(mockCollectionRef)
-                .add(dataCaptor.capture());
-        Map<String, Object> data = dataCaptor.getValue();
-
-//        // Make sure the correct data was passed
-//        assertEquals(data.get("Amount"), pizza.getAmount());
-//        assertEquals(data.get("BestBeforeDate"), IngredientController.convertStringToTimestamp(i.getbbd()));
-//        assertEquals(data.get("Category"), pizza.getCategory());
-//        assertEquals(data.get("Location"), pizza.getLocation());
-//        assertEquals(data.get("Name"), pizza.getName());
-//        assertEquals(data.get("Unit"), pizza.getUnit());
+        // Make sure the correct data was passed
+        assertEquals(data.getAmount(), shoppingItem.getAmount());
+        assertEquals(data.getCategory(), shoppingItem.getCategory());
+        assertEquals(data.getName(), shoppingItem.getName());
+        assertEquals(data.getUnit(), shoppingItem.getUnit());
     }
 }

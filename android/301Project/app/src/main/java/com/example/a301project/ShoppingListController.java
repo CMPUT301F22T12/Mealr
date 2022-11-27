@@ -17,7 +17,7 @@ import java.util.HashMap;
  */
 public class ShoppingListController {
     private final FirebaseFirestore db;
-    private final CollectionReference ingredient_cr;
+    private CollectionReference ingredient_cr;
     private final String collectionName = "ShoppingList";
     private final CollectionReference mealplan_cr;
     private ArrayList<ShoppingItem> mealPlanItemsDataList;
