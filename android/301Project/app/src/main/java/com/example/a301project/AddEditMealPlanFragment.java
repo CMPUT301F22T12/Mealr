@@ -54,6 +54,8 @@ public class AddEditMealPlanFragment extends DialogFragment {
     private ArrayList<Recipe> recipesDataList;
     private IngredientController ingredientController = new IngredientController();
     private ArrayList<String> ingredientAutoCompleteList = new ArrayList<>();
+    private ArrayList<Ingredient> ingredientFetchList = new ArrayList<>();
+    private ArrayAdapter<Ingredient> ingredientFetchAdapter;
     private ArrayAdapter<String> ingredientAutoCompleteAdapter;
     private RecipeController recipeController = new RecipeController();
     private ArrayList<String> recipeAutoCompleteList = new ArrayList<>();
@@ -76,7 +78,7 @@ public class AddEditMealPlanFragment extends DialogFragment {
      * Method to clear ingredient,
      * Resets the internal meal plan list the new one.
      *
-     * @param r {@link ArrayList} list of recipes to set the data list to
+     * @param r {@link ArrayList} list of ingredients to set the data list to
      */
     private void setIngredientDataList(ArrayList<Ingredient> r) {
         ingredientAutoCompleteList.clear();
@@ -87,6 +89,13 @@ public class AddEditMealPlanFragment extends DialogFragment {
         }
         ingredientAutoCompleteAdapter.notifyDataSetChanged();
     }
+
+    private void setIngredientFetchList(ArrayList<Ingredient> r) {
+        ingredientFetchList.clear();
+        for (Ingredient i : r) {
+            ingredientFetchList.add(i);
+            }
+        }
 
 
     /**
@@ -230,7 +239,7 @@ public class AddEditMealPlanFragment extends DialogFragment {
             return false;
         });
 
-        // Load ingredients
+        // Load ingredients to auto complete once selected
         ingredientsDataList = new ArrayList<>();
         ingredientsDataList.addAll(currentMealPlan.getIngredients());
         ingredientArrayAdapter = new RecipeIngredientListAdapter(getContext(), ingredientsDataList);
@@ -238,10 +247,17 @@ public class AddEditMealPlanFragment extends DialogFragment {
 
         addIngredientButton.setOnClickListener(view_ -> {
             String ingredientName = ingredientAutoText.getText().toString();
+            // get all ingredients in Firebase storage and set them to fetch list
+            ingredientController.getIngredients(res -> setIngredientFetchList(res));
             if (!ingredientName.isEmpty()) {
-                ingredientsDataList.add(0, new Ingredient(ingredientName, 1));
-                ingredientArrayAdapter.notifyDataSetChanged();
-                ingredientAutoText.setText("");
+                // for each ingredient in the fetch list, compare names and add to dataList
+                for (Ingredient i: ingredientFetchList) {
+                    if (i.getName().compareTo(ingredientName) == 0) {
+                        ingredientsDataList.add(0,i);
+                        ingredientArrayAdapter.notifyDataSetChanged();
+                        ingredientAutoText.setText("");
+                    }
+                }
 
                 // Hide the keyboard now
                 InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
