@@ -22,6 +22,7 @@ public class ShoppingListController {
     private CollectionReference mealplan_cr;
     private CollectionReference recipe_cr;
     private ArrayList<ShoppingItem> mealPlanItemsDataList;
+    private ArrayList<Recipe> mealPlanRecipesDataList;
     private ArrayList<ShoppingItem> ingredientStorageItemsDataList;
     private ArrayList<Recipe> recipeItemsDataList;
     /**
@@ -91,6 +92,45 @@ public class ShoppingListController {
         ingredient_cr.get().addOnSuccessListener(queryDocumentSnapshots -> {
             ArrayList<ShoppingItem> shoppingItemDataList = new ArrayList<>();
 
+            // loop through mealplanrecipes and get all the ingredients currently in the recipe and multiply it by serving#
+            if (mealPlanRecipesDataList != null) {
+                mealPlanRecipesDataList.forEach(recipe -> {
+                    Long servings = recipe.getServings();
+                    String title = recipe.getTitle();
+
+
+                    // loop through the actual recipes and look for a match
+                    for (int i = 0; i < recipeItemsDataList.size(); i++) {
+                        System.out.println(i);
+                        if (recipeItemsDataList.get(i).getTitle().equalsIgnoreCase(title)) {
+                            System.out.println(title);
+                            // found a match -> get all ingredients in the recipe
+                            ArrayList<Ingredient> ingredients = recipeItemsDataList.get(i).getIngredients();
+
+
+
+                            // add each ingredient to the mealPlanItemsDataList with the correct serving
+                            if (ingredients != null) {
+                                ingredients.forEach(ingredient -> {
+                                    System.out.println(ingredient);
+                                    System.out.println(ingredient.getName());
+                                    mealPlanItemsDataList.add(new ShoppingItem(
+                                            ingredient.getName(),
+                                            ingredient.getAmount() * servings.doubleValue(),
+                                            ingredient.getUnit(),
+                                            ingredient.getCategory()
+                                    ));
+                                });
+                            }
+                        }
+                    }
+                });
+            }
+
+            recipeItemsDataList.clear();
+            mealPlanRecipesDataList.clear();
+
+
             // if there actually is ShoppingItems in the MealPlan
             if (mealPlanItemsDataList != null) {
                 // loop through each ShoppingItem from MealPlan
@@ -102,6 +142,7 @@ public class ShoppingListController {
                         // compare the MealPlan shoppingItem to all the items from the IngredientStorage
                         ShoppingItem item2 = ingredientStorageItemsDataList.get(j);
                         // if the MealPlan item is found in the IngredientStorage
+                        System.out.println(item2.getName());
                         if(item.getName().equalsIgnoreCase(item2.getName())) {
                             matches = true;
                             double amount1 = item.getAmount();
@@ -176,6 +217,7 @@ public class ShoppingListController {
     public void getMealPlanItems(ShoppingListController.mealPlanSuccessHandler s) {
         mealplan_cr.get().addOnSuccessListener(queryDocumentSnapshots -> {
             mealPlanItemsDataList = new ArrayList<>();
+            mealPlanRecipesDataList = new ArrayList<>();
 
             // for each MealPlan read from Firebase
             queryDocumentSnapshots.forEach(doc -> {
@@ -200,6 +242,16 @@ public class ShoppingListController {
                     // if there is some Recipes then loop through one-by-one
                     recipes.forEach(recipe -> {
                         // for each Recipe, get the list of Ingredients
+                        mealPlanRecipesDataList.add(new Recipe(
+                                String.valueOf(recipe.get("title")),
+                                null,
+                                null,
+                                null,
+                                null,
+                                (Long) recipe.get("servings"),
+                                null
+                        ));
+                        /*
                         ArrayList<HashMap<String, Object>> recipeIngredients = (ArrayList<HashMap<String, Object>>) recipe.get("ingredients");
                         if (recipeIngredients != null) {
                             // if there is Ingredients then create an equivalent shoppingItem for each
@@ -212,7 +264,7 @@ public class ShoppingListController {
                                 );
                                 mealPlanItemsDataList.add(item2);
                             });
-                        }
+                        }*/
                     });
                 }
             });
@@ -260,9 +312,15 @@ public class ShoppingListController {
                 if (recipeIngredients != null) {
                     // if there is Ingredients then create an equivalent shoppingItem for each
                     recipeIngredients.forEach(rIngredient -> {
+                        double amount = 0;
+                        try {
+                            amount = ((Long) rIngredient.get("amount")).doubleValue();
+                        } catch (Exception e) {
+                            amount = (double) rIngredient.get("amount");
+                        }
                         Ingredient ingredient = new Ingredient(
                                 String.valueOf(rIngredient.get("name")),
-                                (double) rIngredient.get("amount"),
+                                amount,
                                 String.valueOf(rIngredient.get("bbd")),
                                 String.valueOf(rIngredient.get("location")),
                                 String.valueOf(rIngredient.get("unit")),
@@ -283,7 +341,6 @@ public class ShoppingListController {
                 );
                 recipe.setId(id);
                 recipeItemsDataList.add(recipe);
-                System.out.println(recipe.getIngredients());
             });
             s.r(recipeItemsDataList);
         });
