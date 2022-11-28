@@ -18,15 +18,12 @@ import java.util.ArrayList;
 
 
 public class ShoppingListControllerTest {
-    private ShoppingListController controller;
     private FirebaseFirestore mockFirestore;
     private CollectionReference mockCollectionRef;
-
-
-    private ArrayList<ShoppingItem> shoppinglist = mock(ArrayList.class);
+    private ShoppingListController controller;
 
     private ShoppingItem mockShoppingItem() {
-        return new ShoppingItem("carrot", 3.00, "2022-11-30", "pantry");
+        return new ShoppingItem("Carrot", 3.00, "2022-11-30", "Vegetable");
     }
 
     @Before
@@ -42,22 +39,7 @@ public class ShoppingListControllerTest {
     }
 
     @Test
-    public void testAddShoppingItem() {
-        // Create a mock ingredient
-        ShoppingItem shoppingItem = mockShoppingItem();
-        shoppinglist.add(shoppingItem);
-
-        ArgumentCaptor<ShoppingItem> argumentCaptor = ArgumentCaptor.forClass(ShoppingItem.class);
-
-        verify(shoppinglist)
-                .add(argumentCaptor.capture());
-
-        ShoppingItem data = argumentCaptor.getValue();
-
-        // Make sure the correct data was passed
-        assertEquals(data.getAmount(), shoppingItem.getAmount());
-        assertEquals(data.getCategory(), shoppingItem.getCategory());
-        assertEquals(data.getName(), shoppingItem.getName());
-        assertEquals(data.getUnit(), shoppingItem.getUnit());
+    public void testGetShoppingItems() {
+        // Test with lambda expressions
     }
 }
