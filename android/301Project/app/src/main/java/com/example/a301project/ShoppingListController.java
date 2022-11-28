@@ -46,8 +46,15 @@ public class ShoppingListController {
      * Constructor for injecting a db for testing purposes
      * @param db the database
      */
-    public ShoppingListController(FirebaseFirestore db) {
+    public ShoppingListController(FirebaseFirestore db, ArrayList<ShoppingItem> mealPlanItemsDataList,
+                                  ArrayList<ShoppingItem> ingredientStorageItemsDataList,
+                                  ArrayList<Recipe> mealPlanRecipesDataList,
+                                  ArrayList<Recipe> recipeItemsDataList) {
         this.db = db;
+        this.mealPlanItemsDataList = mealPlanItemsDataList;
+        this.ingredientStorageItemsDataList = ingredientStorageItemsDataList;
+        this.mealPlanRecipesDataList = mealPlanRecipesDataList;
+        this.recipeItemsDataList = recipeItemsDataList;
         //mealplan_cr = db.collection(collectionName);
     }
 

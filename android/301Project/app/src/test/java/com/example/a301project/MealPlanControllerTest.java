@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.checkerframework.checker.units.qual.A;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -17,12 +18,12 @@ import org.mockito.ArgumentCaptor;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class RecipeControllerTest {
-    private RecipeController controller;
+public class MealPlanControllerTest {
+    private MealPlanController controller;
     private CollectionReference mockCollectionRef;
 
-    private Recipe mockRecipe() {
-        return new Recipe("Pizza", "Fastfood", "Food", "", 1L, 1L, new ArrayList<Ingredient>());
+    private MealPlan mockMealPlan() {
+        return new MealPlan(new ArrayList<Ingredient>(), new ArrayList<Recipe>(), "Healthy Meal Plan", "2022-11-28", "2022-12-05");
     }
 
     @Before
@@ -34,36 +35,34 @@ public class RecipeControllerTest {
         when(mockFirestore.collection(anyString()))
                 .thenReturn(mockCollectionRef);
 
-        this.controller = new RecipeController(mockFirestore);
+        this.controller = new MealPlanController(mockFirestore);
     }
 
     @Test
-    public void testAddRecipe() {
-        Recipe i = mockRecipe();
-        controller.addRecipe(i);
+    public void testAddMealPlan() {
+        MealPlan i = mockMealPlan();
+        controller.addMealPlan(i);
         ArgumentCaptor<Map<String, Object>> dataCaptor = ArgumentCaptor.forClass(Map.class);
 
         verify(mockCollectionRef)
                 .add(dataCaptor.capture());
         Map<String, Object> data = dataCaptor.getValue();
 
-        assertEquals(data.get("Title"), i.getTitle());
-        assertEquals(data.get("Category"), i.getCategory());
-        assertEquals(data.get("Comments"), i.getComments());
-        assertEquals(data.get("Photo"), i.getPhoto());
-        assertEquals(data.get("PrepTime"), i.getPrepTime());
-        assertEquals(data.get("Servings"), i.getServings());
+        assertEquals(data.get("Title"), i.getName());
+        assertEquals(data.get("Start Date"), i.getStartDate());
+        assertEquals(data.get("End Date"), i.getEndDate());
         assertEquals(data.get("Ingredients"), i.getIngredients());
+        assertEquals(data.get("Recipes"), i.getRecipes());
     }
 
     @Test
-    public void testRemoveRecipe() {
-        Recipe i = mockRecipe();
+    public void testRemoveMealPlan() {
+        MealPlan i = mockMealPlan();
         i.setId("TEST_ID");
 
         // add, then remove ingredient
-        controller.addRecipe(i);
-        controller.removeRecipe(i);
+        controller.addMealPlan(i);
+        controller.removeMealPlan(i);
 
         // verify delete was called with the correct ID
         assertEquals(i.getId(), "TEST_ID");
@@ -72,11 +71,12 @@ public class RecipeControllerTest {
 
     @Test
     public void testNotifyUpdate() {
-        Recipe i = mockRecipe();
+        MealPlan i = mockMealPlan();
         i.setId("TEST_ID");
-        controller.addRecipe(i);
+        controller.addMealPlan(i);
         ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
-        Recipe u = new Recipe("Pizza", "Health Food", "It got healthier", "", 1L, 1L, ingredients);
+        ArrayList<Recipe> recipes = new ArrayList<Recipe>();
+        MealPlan u = new MealPlan(new ArrayList<Ingredient>(), new ArrayList<Recipe>(), "Fun Meal Plan", "2022-11-28", "2022-12-20");
         u.setId("TEST_ID");
 
         controller.notifyUpdate(u);
@@ -85,16 +85,14 @@ public class RecipeControllerTest {
 
         verify(mockCollectionRef.document(i.getId())).update(dataCaptor.capture());
 
-        Map<String, Object> updatedRecipe = dataCaptor.getValue();
+        Map<String, Object> updatedMealPlan = dataCaptor.getValue();
 
         // check to see if all values have been updated
         assertEquals("TEST_ID", u.getId());
-        assertEquals("Pizza", updatedRecipe.get("Title"));
-        assertEquals("Health Food", updatedRecipe.get("Category"));
-        assertEquals("It got healthier", updatedRecipe.get("Comments"));
-        assertEquals(ingredients, updatedRecipe.get("Ingredients"));
-        assertEquals("", updatedRecipe.get("Photo"));
-        assertEquals(1L, updatedRecipe.get("Servings"));
-        assertEquals(1L, updatedRecipe.get("PrepTime"));
+        assertEquals("Fun Meal Plan", updatedMealPlan.get("Title"));
+        assertEquals(ingredients, updatedMealPlan.get("Ingredients"));
+        assertEquals(recipes, updatedMealPlan.get("Recipes"));
+        assertEquals("2022-11-28", updatedMealPlan.get("Start Start"));
+        assertEquals("2022-12-20", updatedMealPlan.get("End Start"));
     }
 }

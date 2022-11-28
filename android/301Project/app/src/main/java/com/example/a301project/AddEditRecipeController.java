@@ -19,6 +19,7 @@ public class AddEditRecipeController {
 
     // connect to firebase and handle adding spinner items
     private final String collectionName = "Customization";
+    private final String documentName = "RecipeCustomization";
     private final FirebaseFirestore db;
     private final CollectionReference collectionReference;
     private final DocumentReference documentReference;
@@ -33,8 +34,13 @@ public class AddEditRecipeController {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         assert user.getEmail() != null;
         collectionReference = db.collection("User").document(user.getEmail()).collection(collectionName);
-        String documentName = "RecipeCustomization";
         documentReference = collectionReference.document(documentName);
+    }
+
+    public AddEditRecipeController(FirebaseFirestore db) {
+        this.db = db;
+        collectionReference = db.collection(collectionName);
+        documentReference = db.document(documentName);
     }
 
     /**
