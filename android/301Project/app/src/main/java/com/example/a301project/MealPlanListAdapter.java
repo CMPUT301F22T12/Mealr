@@ -55,27 +55,21 @@ public class MealPlanListAdapter extends ArrayAdapter<MealPlan> {
         TextView name = view.findViewById(R.id.mp_nameText);
         TextView startDate = view.findViewById(R.id.startDateTextView);
         TextView endDate = view.findViewById(R.id.endDateTextView);
-        ListView ingredientListView = view.findViewById(R.id.mp_ingredientList);
-        ListView recipeListView = view.findViewById(R.id.mp_recipeList);
+        TextView nIngredients = view.findViewById(R.id.nIngredients);
+        TextView nRecipes = view.findViewById(R.id.nRecipes);
 
-        // get the recipes of the meal plan selected
-        ArrayList<Recipe> recipeDataList = mp.getRecipes();
-            // filter recipe by name
-        // get the ingredients of the meal plan selected
-        ArrayList<Ingredient> ingredientDataList = mp.getIngredients();
+//        ListView ingrientList = view.findViewById(R.id.mp_ingredientList);
+//        ListView recipeList = view.findViewById(R.id.mp_recipeList);
 
         // set the text to each field
         name.setText(mp.getName());
         startDate.setText(mp.getStartDate());
         endDate.setText(mp.getEndDate());
 
-        // attach recipe list adapter to recipe list view
-        //ArrayAdapter<Recipe> recipeArrayAdapter = new RecipeListAdapter(getContext(), recipeDataList);
-        //recipeListView.setAdapter(recipeArrayAdapter);
-        // attach ingredient list adapter to ingredient list view
-        ArrayAdapter<Ingredient> ingredientArrayAdapter = new CustomList(getContext(),ingredientDataList);
-        ingredientListView.setAdapter(ingredientArrayAdapter);
-
+        int ingredientSize =  mp.getIngredients().size();
+        nIngredients.setText(ingredientSize + " Ingredient" + (ingredientSize > 1 ? "s" : ""));
+        int recipeSize = mp.getRecipes().size();
+        nRecipes.setText(recipeSize + " Recipe" + (recipeSize > 1 ? "s" : ""));
 
         return view;
     }
