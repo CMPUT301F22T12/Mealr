@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -61,6 +62,7 @@ public class AddEditIngredientFragment extends DialogFragment {
     private ArrayList<CharSequence> locationOptions;
     private AddEditIngredientController addEditIngredientController;
     private Resources res;
+    private String TAG;
 
     /**
      * Method that responds when the fragment has been interacted with
@@ -143,16 +145,17 @@ public class AddEditIngredientFragment extends DialogFragment {
             return source.subSequence(start, end-1);
         };
 
+        TAG = this.getTag();
 
         // sets title of the fragment depending on whether the tag is ADD or EDIT or SHOPPING
         String title = "";
-        if (this.getTag().equals("ADD")) {
+        if (TAG.equalsIgnoreCase("ADD")) {
             title = "Add Entry";
             deleteButton.setVisibility(View.GONE);
         }
-        else if (this.getTag().equals("EDIT")) {
+        else if (TAG.equalsIgnoreCase("EDIT")) {
             title = "Edit Entry";
-        } else if (this.getTag().equals("SHOPPING")) {
+        } else if (TAG.equalsIgnoreCase("SHOPPING")) {
             // if adding an ingredient from the shoppping list
             title = "Purchased";
             ingredientName.setEnabled(false);
@@ -651,6 +654,7 @@ public class AddEditIngredientFragment extends DialogFragment {
                         if (hasEmpty) {
                             return;
                         } else {
+                            amount = String.format("%.1f", Double.parseDouble(amount));
                             doubleAmount = Double.parseDouble(amount);
                         }
 
@@ -663,6 +667,38 @@ public class AddEditIngredientFragment extends DialogFragment {
 
                         // close the dialog
                         dialog.dismiss();
+                    }
+                });
+                alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // if the user presses cancel button when adding from Shopping List
+                        if (TAG.equalsIgnoreCase("SHOPPING")) {
+                            // build the alert dialog -> this will warn user that if they cancel -> it won't be purchased
+                            TextView alertMessage = new TextView(getContext());
+                            alertMessage.setTextSize(18);
+                            alertMessage.setPadding(10, 0, 10, 0);
+                            alertMessage.setText("You are cancelling the purchase. Press 'CANCEL' to go back and continue the purchase");
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                            builder.setView(alertMessage);
+                            builder.setMessage("WARNING")
+                                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            dialogInterface.cancel();
+                                        }
+                                    })
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            AlertDialog alertDialog1 = builder.create();
+                            alertDialog1.show();
+                        } else {
+                            dialog.dismiss();
+                        }
                     }
                 });
             }
