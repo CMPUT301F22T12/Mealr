@@ -7,43 +7,38 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
-public class IngredientExpandableListAdapter extends BaseExpandableListAdapter {
+public class RecipeExpandableListAdapter extends BaseExpandableListAdapter {
     private Context context;
-    private ArrayList<Ingredient> ingredientExpandable;
+    private ArrayList<Recipe> recipeExpandable;
     private HashMap<String, ArrayList<String>> expandableListDetail;
 
-    public IngredientExpandableListAdapter(Context context, ArrayList<Ingredient> ingredientExpandable,HashMap<String, ArrayList<String>> expandableListDetail ) {
+    public RecipeExpandableListAdapter(Context context, ArrayList<Recipe> recipeExpandable,HashMap<String, ArrayList<String>> expandableListDetail ) {
         this.context = context;
-        this.ingredientExpandable = ingredientExpandable;
+        this.recipeExpandable = recipeExpandable;
         this.expandableListDetail = expandableListDetail;
     }
 
     @Override
     public int getGroupCount() {
-        return ingredientExpandable.size();
+        return recipeExpandable.size();
     }
 
     @Override
     public int getChildrenCount(int i) {
-        return expandableListDetail.get(ingredientExpandable.get(i).getName()).size();
+        return expandableListDetail.get(recipeExpandable.get(i).getTitle()).size();
     }
 
     @Override
     public Object getGroup(int i) {
-        return ingredientExpandable.get(i);
+        return recipeExpandable.get(i);
     }
 
     @Override
     public Object getChild(int i, int i1) {
-        return this.expandableListDetail.get(ingredientExpandable.get(i).getName())
+        return this.expandableListDetail.get(recipeExpandable.get(i).getTitle())
                 .get(i1);
     }
 
@@ -69,12 +64,12 @@ public class IngredientExpandableListAdapter extends BaseExpandableListAdapter {
             view = LayoutInflater.from(context).inflate(R.layout.expandable_group, parent, false);
         }
 
-        Ingredient ingredient = ingredientExpandable.get(i);
+        Recipe recipe = recipeExpandable.get(i);
         TextView ingredientName = view.findViewById(R.id.mealplan_expandablegroup_title);
         TextView amount = view.findViewById(R.id.mealplan_expandablegroup_number);
 
-        ingredientName.setText(ingredient.getName());
-        amount.setText(ingredient.getAmount().toString());
+        ingredientName.setText(recipe.getTitle());
+        amount.setText(recipe.getServings().toString());
         return view;
     }
 

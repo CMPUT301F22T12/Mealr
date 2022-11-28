@@ -28,12 +28,12 @@
 
         <TextView
             android:id="@+id/mealplan_expandablegroup_number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
+            android:layout_marginLeft="160dp"
             android:maxLines="1"
             android:padding="2dp"
-            android:layout_marginLeft="180dp"
             android:text="Number"
             android:textSize="30dp" />
     </LinearLayout>

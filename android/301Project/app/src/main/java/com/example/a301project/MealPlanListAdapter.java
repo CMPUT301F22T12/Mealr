@@ -26,6 +26,7 @@ public class MealPlanListAdapter extends ArrayAdapter<MealPlan> {
     private final ArrayList<MealPlan> mealPlans;
     private final Context context;
     private HashMap<String, ArrayList<String>> ingredientHashMap;
+    private HashMap<String, ArrayList<String>> recipeHashMap;
 
     /**
      * Constructor for the adapter, takes context and ArrayList of MealPlan
@@ -64,7 +65,7 @@ public class MealPlanListAdapter extends ArrayAdapter<MealPlan> {
 
         // get the recipes of the meal plan selected
         ArrayList<Recipe> recipeDataList = mp.getRecipes();
-            // filter recipe by name
+
         // get the ingredients of the meal plan selected
         ArrayList<Ingredient> ingredientDataList = mp.getIngredients();
 
@@ -73,14 +74,16 @@ public class MealPlanListAdapter extends ArrayAdapter<MealPlan> {
         startDate.setText(mp.getStartDate());
         endDate.setText(mp.getEndDate());
 
-        // attach recipe list adapter to recipe list view
-//        ArrayAdapter<Recipe> recipeArrayAdapter = new RecipeListAdapter(getContext(), recipeDataList);
-        //recipeListView.setAdapter(recipeArrayAdapter);
+
         // attach ingredient list adapter to ingredient list view
         ingredientHashMap = IngredientExpandablePump.getData(ingredientDataList);
         ExpandableListAdapter ingredientArrayAdapter =  new IngredientExpandableListAdapter(getContext(),ingredientDataList, ingredientHashMap);
         ingredientListView.setAdapter(ingredientArrayAdapter);
 
+        // attach recipe list adapter to recipe list view
+        recipeHashMap = RecipeExpandablePump.getData(recipeDataList);
+        ExpandableListAdapter recipeArrayAdapter =  new RecipeExpandableListAdapter(getContext(),recipeDataList, recipeHashMap);
+        recipeListView.setAdapter(recipeArrayAdapter);
 
         return view;
     }

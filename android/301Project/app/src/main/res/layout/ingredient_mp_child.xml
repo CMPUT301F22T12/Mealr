@@ -13,27 +13,8 @@
             android:layout_weight="1" />
 
         <TextView
-            android:id="@+id/i_locationText"
-            android:layout_width="110dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/rounded_rect"
-            android:backgroundTint="#1a459522"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:maxLines="1"
-            android:textStyle="bold"
-            android:text="Location"
-            android:textSize="20dp" />
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1" />
-
-        <TextView
-            android:id="@+id/i_categoryText"
-            android:layout_width="110dp"
+            android:id="@+id/i_childText"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:background="@drawable/rounded_rect"
@@ -41,7 +22,7 @@
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="1"
-            android:text="Category"
+            android:text="text"
             android:textSize="20dp"
             android:textStyle="bold" />
 
@@ -49,22 +30,6 @@
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_weight="1" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/i_bbdText"
-            android:layout_width="150dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:backgroundTint="#1a036ED9"
-            android:gravity="center_vertical|right"
-            android:text="Expiry"
-            android:textSize="15dp" />
     </LinearLayout>
 
 </LinearLayout>
