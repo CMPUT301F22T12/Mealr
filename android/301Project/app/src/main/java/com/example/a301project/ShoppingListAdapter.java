@@ -94,11 +94,20 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingItem> {
         categoryName.setText(s.getCategory());
 
         // if the test is null -> don't display the text
+        System.out.println(s.getName());
+        System.out.println(s.getUnit());
+        System.out.println(s.getCategory());
+
+        // don't display the unit and category if they haven't been entered by user yet
         if (s.getUnit() == "null") {
             unitName.setVisibility(View.INVISIBLE);
+        } else {
+            unitName.setVisibility(View.VISIBLE);
         }
         if (s.getCategory() == "null") {
             categoryName.setVisibility(View.INVISIBLE);
+        } else {
+            categoryName.setVisibility(View.VISIBLE);
         }
 
         return view;
