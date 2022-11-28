@@ -66,7 +66,7 @@ public class Ingredient implements Serializable {
 
     /**
      * Gets the {@link Ingredient} object's amount
-     * @return The amount of the object (as an {@link Integer}
+     * @return The amount of the object (as an {@link Double}
      */
     public Double getAmount() {return this.amount;}
 
@@ -118,12 +118,12 @@ public class Ingredient implements Serializable {
      * Sets the {@link Ingredient} object's unit
      * @param unit {@link String }The unit of the {@link Ingredient}
      */
-    protected void setUnit(String unit) {
+    public void setUnit(String unit) {
         this.unit = unit;
     }
 
     /**
-     * Sets the {@link Ingredient} object's amount (as an integer)
+     * Sets the {@link Ingredient} object's amount (as an double)
      * @param amount The {@link Ingredient} object's amount is set to this value
      */
     public void setAmount(Double amount) {

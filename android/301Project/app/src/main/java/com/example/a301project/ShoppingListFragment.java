@@ -9,6 +9,7 @@ import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -28,7 +29,8 @@ import java.util.Collections;
  *  @return void
  */
 public class ShoppingListFragment extends Fragment implements ShoppingListAdapter.ShoppingListAdapterListener, AddEditIngredientFragment.OnFragmentInteractionListener,
-ShoppingListController.ingredientItemSuccessHandler, ShoppingListController.shoppingItemSuccessHandler, ShoppingListController.mealPlanSuccessHandler {
+    ShoppingListController.ingredientItemSuccessHandler, ShoppingListController.shoppingItemSuccessHandler, ShoppingListController.mealPlanSuccessHandler,
+    ShoppingListController.recipeItemSuccessHandler {
 
     private ArrayAdapter<ShoppingItem> shoppingListArrayAdapter;
     private ArrayList<ShoppingItem> shoppingItemDataList;
@@ -42,6 +44,7 @@ ShoppingListController.ingredientItemSuccessHandler, ShoppingListController.shop
     private int listCount;
     private ConstraintLayout shoppingSort;
     private LottieAnimationView shoppingAnimation;
+    private TextView emptyShoppingListText;
 
 
     public ShoppingListFragment() {
@@ -66,6 +69,8 @@ ShoppingListController.ingredientItemSuccessHandler, ShoppingListController.shop
         // get the layout item
         shoppingSort = view.findViewById(R.id.shoppingSort);
         shoppingAnimation = view.findViewById(R.id.shoppingAnimationView);
+        shoppingAnimation.playAnimation();
+        emptyShoppingListText = view.findViewById(R.id.emptyListTextView);
 
         // We have to put our layout in the space for the content
         ViewGroup content = view.findViewById(R.id.nav_content);
@@ -74,6 +79,7 @@ ShoppingListController.ingredientItemSuccessHandler, ShoppingListController.shop
         // Fetch the data -> get the Ingredients from both the Storage and the MealPlan -> used to calculate shopping list items
         controller.getIngredientStorageItems(this);
         controller.getMealPlanItems(this);
+        controller.getRecipeItems(this);
 
         // Attach to shoppingListView
         shoppingItemDataList = new ArrayList<>();
@@ -175,6 +181,7 @@ ShoppingListController.ingredientItemSuccessHandler, ShoppingListController.shop
                     shoppingSort.setVisibility(View.GONE);
                     shoppingListView.setVisibility(View.GONE);
                     shoppingAnimation.setVisibility(View.VISIBLE);
+                    emptyShoppingListText.setVisibility(View.VISIBLE);
                 }
             } else {
                 // update amount needed to purchase
@@ -198,8 +205,8 @@ ShoppingListController.ingredientItemSuccessHandler, ShoppingListController.shop
         Ingredient selected = new Ingredient(
                 shoppingItem.getName(),
                 shoppingItem.getAmount(),
-                shoppingItem.getbbd(),
-                shoppingItem.getLocation(),
+                null,
+                null,
                 shoppingItem.getUnit(),
                 shoppingItem.getCategory()
         );
@@ -229,7 +236,13 @@ ShoppingListController.ingredientItemSuccessHandler, ShoppingListController.shop
                 shoppingSort.setVisibility(View.VISIBLE);
                 shoppingListView.setVisibility(View.VISIBLE);
                 shoppingAnimation.setVisibility(View.GONE);
+                emptyShoppingListText.setVisibility(View.GONE);
             }
         }
+    }
+
+    @Override
+    public void r(ArrayList<Recipe> r) {
+
     }
 }

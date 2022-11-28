@@ -16,12 +16,14 @@ import java.util.HashMap;
  * This class should be used exclusively by the {@link ShoppingListFragment} class to handle database communication.
  */
 public class ShoppingListController {
+    private final String collectionName = "ShoppingList";
     private final FirebaseFirestore db;
     private CollectionReference ingredient_cr;
-    private final String collectionName = "ShoppingList";
-    private final CollectionReference mealplan_cr;
+    private CollectionReference mealplan_cr;
+    private CollectionReference recipe_cr;
     private ArrayList<ShoppingItem> mealPlanItemsDataList;
     private ArrayList<ShoppingItem> ingredientStorageItemsDataList;
+    private ArrayList<Recipe> recipeItemsDataList;
     /**
      * The constructor for the {@link ShoppingListController}. Sets up the {@link #db} and {@link #ingredient_cr}
      */
@@ -32,6 +34,8 @@ public class ShoppingListController {
         assert user.getEmail() != null;
         String ingredientCollectionName = "Ingredient";
         ingredient_cr = db.collection("User").document(user.getEmail()).collection(ingredientCollectionName);
+        String recipeCollectionName = "Recipe";
+        recipe_cr = db.collection("User").document(user.getEmail()).collection(recipeCollectionName);
         String mealplanCollectionName = "MealPlan";
         mealplan_cr = db.collection("User").document(user.getEmail()).collection(mealplanCollectionName);
     }
@@ -46,7 +50,6 @@ public class ShoppingListController {
     }
 
 
-
     /**
      * A simple listener for when the calculated list of {@link ShoppingItem} is completed
      */
@@ -59,6 +62,13 @@ public class ShoppingListController {
      */
     public interface ingredientItemSuccessHandler {
         void f(ArrayList<ShoppingItem> r);
+    }
+
+    /**
+     * A simple listener for when the Recipes is done being read from Firebase
+     */
+    public interface recipeItemSuccessHandler {
+        void r(ArrayList<Recipe> r);
     }
 
     /**
@@ -105,6 +115,7 @@ public class ShoppingListController {
                                 // then item does not need to be added to shopping list
                                 mealPlanItemsDataList.remove(item);
                                 i--;
+                                break;
                             } else {
                                 // if there isn't enough of the Ingredient in the Storage
                                 amount1-=amount2;
@@ -116,7 +127,18 @@ public class ShoppingListController {
                     }
                     // if the ShoppingItem from MealPlan was not in IngredientStorage -> then add it to ShoppingList
                     if (!matches) {
-                        shoppingItemDataList.add(item);
+                        // check if there is already an item with that name in the shopping list
+                        final boolean[] nameMatch = {false};
+                        shoppingItemDataList.forEach(shoppingItem -> {
+                            if (shoppingItem.getName().equalsIgnoreCase(item.getName())) {
+                                // then combine the amount
+                                shoppingItem.setAmount(shoppingItem.getAmount() + item.getAmount());
+                                nameMatch[0] = true;
+                            }
+                        });
+                        if (!nameMatch[0]) {
+                            shoppingItemDataList.add(item);
+                        }
                     } else {
                         if (mealPlanItemsDataList.contains(item)) {
                             // also if there is not enough of the Ingredient in the Storage then add the difference to the ShoppingList
@@ -126,7 +148,17 @@ public class ShoppingListController {
                                     item.getUnit(),
                                     item.getCategory()
                             );
-                            shoppingItemDataList.add(newItem);
+                            final boolean[] nameMatch = {false};
+                            shoppingItemDataList.forEach(shoppingItem -> {
+                                if (shoppingItem.getName().equalsIgnoreCase(newItem.getName())) {
+                                    // then combine the amount
+                                    shoppingItem.setAmount(shoppingItem.getAmount() + newItem.getAmount());
+                                    nameMatch[0] = true;
+                                }
+                            });
+                            if (!nameMatch[0]) {
+                                shoppingItemDataList.add(newItem);
+                            }
                         }
                     }
                 }
@@ -208,6 +240,52 @@ public class ShoppingListController {
                 ingredientStorageItemsDataList.add(item);
             });
             s.f(ingredientStorageItemsDataList);
+        });
+    }
+
+    /**
+     * Reads all the {@link Recipe} from Firebase
+     * @param s successHandler function to be called on success with
+     *          the ArrayList of Shopping Items
+     */
+    public void getRecipeItems(ShoppingListController.recipeItemSuccessHandler s) {
+        recipe_cr.get().addOnSuccessListener(queryDocumentSnapshots -> {
+            recipeItemsDataList = new ArrayList<>();
+
+            // for each Recipe that is read
+            queryDocumentSnapshots.forEach(doc -> {
+                String id = doc.getId();
+                ArrayList<Ingredient> ingredients = new ArrayList<>();
+                ArrayList<HashMap<String, Object>> recipeIngredients = (ArrayList<HashMap<String, Object>>) doc.get("Ingredients");
+                if (recipeIngredients != null) {
+                    // if there is Ingredients then create an equivalent shoppingItem for each
+                    recipeIngredients.forEach(rIngredient -> {
+                        Ingredient ingredient = new Ingredient(
+                                String.valueOf(rIngredient.get("name")),
+                                (double) rIngredient.get("amount"),
+                                String.valueOf(rIngredient.get("bbd")),
+                                String.valueOf(rIngredient.get("location")),
+                                String.valueOf(rIngredient.get("unit")),
+                                String.valueOf(rIngredient.get("category"))
+                        );
+                        ingredients.add(ingredient);
+                    });
+                }
+                Recipe recipe = new Recipe(
+                        // String title, String category, String comments, String photo, Long prepTime, Long servings, ArrayList<Ingredient> ingredient
+                        doc.getString("Title"),
+                        doc.getString("Category"),
+                        doc.getString("Comments"),
+                        doc.getString("Photo"),
+                        doc.get("PrepTime", Long.class),
+                        doc.get("Servings", Long.class),
+                        ingredients
+                );
+                recipe.setId(id);
+                recipeItemsDataList.add(recipe);
+                System.out.println(recipe.getIngredients());
+            });
+            s.r(recipeItemsDataList);
         });
     }
 }
