@@ -31,25 +31,25 @@ public class ShoppingItem{
      * Gets the {@link ShoppingItem} object's name
      * @return The name of the object
      */
-    public String getName() {return this.getName();}
+    public String getName() {return this.name;}
 
     /**
      * Gets the {@link ShoppingItem} object's amount
      * @return The amount of the object (as an {@link Double}
      */
-    public Double getAmount() {return this.getAmount();}
+    public Double getAmount() {return this.amount;}
 
     /**
      * Gets the {@link ShoppingItem} object's unit
      * @return The unit of the object
      */
-    public String getUnit() {return this.getUnit();}
+    public String getUnit() {return this.unit;}
 
     /**
      * Gets the {@link ShoppingItem} object's category
      * @return The category of the object
      */
-    public String getCategory() {return this.getCategory();}
+    public String getCategory() {return this.category;}
 
     // setters used to edit attributes for existing food object
 
@@ -58,7 +58,7 @@ public class ShoppingItem{
      * @param name The {@link ShoppingItem} object's name is set to this value
      */
     public void setName(String name) {
-        this.setName(name);
+        this.name = name;
     }
 
     /**
@@ -66,7 +66,7 @@ public class ShoppingItem{
      * @param unit {@link String }The unit of the {@link ShoppingItem}
      */
     public void setUnit(String unit) {
-        this.setUnit(unit);
+        this.unit = unit;
     }
 
     /**
@@ -74,7 +74,7 @@ public class ShoppingItem{
      * @param amount The {@link ShoppingItem} object's amount is set to this value
      */
     public void setAmount(Double amount) {
-        this.setAmount(amount);
+        this.amount = amount;
     }
 
     /**
@@ -82,7 +82,7 @@ public class ShoppingItem{
      * @param category The {@link ShoppingItem} object's category is set to this value
      */
     public void setCategory(String category) {
-        this.setCategory(category);
+        this.category = category;
     }
 
 }
