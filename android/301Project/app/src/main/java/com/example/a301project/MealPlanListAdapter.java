@@ -55,14 +55,21 @@ public class MealPlanListAdapter extends ArrayAdapter<MealPlan> {
         TextView name = view.findViewById(R.id.mp_nameText);
         TextView startDate = view.findViewById(R.id.startDateTextView);
         TextView endDate = view.findViewById(R.id.endDateTextView);
-        ListView ingrientList = view.findViewById(R.id.mp_ingredientList);
-        ListView recipeList = view.findViewById(R.id.mp_recipeList);
+        TextView nIngredients = view.findViewById(R.id.nIngredients);
+        TextView nRecipes = view.findViewById(R.id.nRecipes);
+
+//        ListView ingrientList = view.findViewById(R.id.mp_ingredientList);
+//        ListView recipeList = view.findViewById(R.id.mp_recipeList);
 
         // set the text to each field
         name.setText(mp.getName());
         startDate.setText(mp.getStartDate());
         endDate.setText(mp.getEndDate());
 
+        int ingredientSize =  mp.getIngredients().size();
+        nIngredients.setText(ingredientSize + " Ingredient" + (ingredientSize > 1 ? "s" : ""));
+        int recipeSize = mp.getRecipes().size();
+        nRecipes.setText(recipeSize + " Recipe" + (recipeSize > 1 ? "s" : ""));
 
         return view;
     }
