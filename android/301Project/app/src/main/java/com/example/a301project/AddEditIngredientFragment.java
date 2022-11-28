@@ -157,7 +157,7 @@ public class AddEditIngredientFragment extends DialogFragment {
             title = "Edit Entry";
         } else if (TAG.equalsIgnoreCase("SHOPPING")) {
             // if adding an ingredient from the shoppping list
-            title = "Purchased";
+            title = "Purchase";
             ingredientName.setEnabled(false);
 
             // if the values are already set -> then don't allow editing
