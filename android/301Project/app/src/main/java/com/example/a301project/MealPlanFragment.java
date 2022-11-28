@@ -107,9 +107,9 @@ public class MealPlanFragment extends Fragment implements AddEditMealPlanFragmen
      * @return void
      */
     public void addMealPlan(MealPlan mealplan) {
+        controller.addMealPlan(mealplan);
         mealPlanArrayAdapter.add(mealplan);
         mealPlanArrayAdapter.notifyDataSetChanged();
-        controller.addMealPlan(mealplan);
     }
 
     @Override
@@ -120,6 +120,7 @@ public class MealPlanFragment extends Fragment implements AddEditMealPlanFragmen
         else {
             controller.notifyUpdate(currentMealPlan);
         }
+        mealPlanArrayAdapter.notifyDataSetChanged();
     }
 
     /**

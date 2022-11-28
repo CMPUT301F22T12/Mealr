@@ -32,7 +32,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="5"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        >
         <Space
             android:layout_width="0dp"
             android:layout_height="1dp"
@@ -84,7 +85,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingTop="15dp">
+        android:paddingTop="10dp"
+        android:paddingBottom="5dp">
         <Space
             android:layout_width="0dp"
             android:layout_height="1dp"
