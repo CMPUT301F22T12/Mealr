@@ -7,7 +7,10 @@ package com.example.a301project;
  */
 public class ShoppingItem{
 
-    private Ingredient ingredient;
+    private String name;
+    private double amount;
+    private String unit;
+    private String category;
 
     /**
      * Makes an {@link ShoppingItem} object from the given parameters
@@ -18,32 +21,35 @@ public class ShoppingItem{
      * @param category The object's category
      */
     public ShoppingItem(String name, double amount, String unit, String category) {
-        ingredient = new Ingredient(name, amount, null, null, unit, category);
+        this.name = name;
+        this.amount = amount;
+        this.unit = unit;
+        this.category = category;
     }
 
     /**
      * Gets the {@link ShoppingItem} object's name
      * @return The name of the object
      */
-    public String getName() {return ingredient.getName();}
+    public String getName() {return this.name;}
 
     /**
      * Gets the {@link ShoppingItem} object's amount
      * @return The amount of the object (as an {@link Double}
      */
-    public Double getAmount() {return ingredient.getAmount();}
+    public Double getAmount() {return this.amount;}
 
     /**
      * Gets the {@link ShoppingItem} object's unit
      * @return The unit of the object
      */
-    public String getUnit() {return ingredient.getUnit();}
+    public String getUnit() {return this.unit;}
 
     /**
      * Gets the {@link ShoppingItem} object's category
      * @return The category of the object
      */
-    public String getCategory() {return ingredient.getCategory();}
+    public String getCategory() {return this.category;}
 
     // setters used to edit attributes for existing food object
 
@@ -52,7 +58,7 @@ public class ShoppingItem{
      * @param name The {@link ShoppingItem} object's name is set to this value
      */
     public void setName(String name) {
-        ingredient.setName(name);
+        this.name = name;
     }
 
     /**
@@ -60,7 +66,7 @@ public class ShoppingItem{
      * @param unit {@link String }The unit of the {@link ShoppingItem}
      */
     public void setUnit(String unit) {
-        ingredient.setUnit(unit);
+        this.unit = unit;
     }
 
     /**
@@ -68,7 +74,7 @@ public class ShoppingItem{
      * @param amount The {@link ShoppingItem} object's amount is set to this value
      */
     public void setAmount(Double amount) {
-        ingredient.setAmount(amount);
+        this.amount = amount;
     }
 
     /**
@@ -76,7 +82,7 @@ public class ShoppingItem{
      * @param category The {@link ShoppingItem} object's category is set to this value
      */
     public void setCategory(String category) {
-        ingredient.setCategory(category);
+        this.category = category;
     }
 
 }

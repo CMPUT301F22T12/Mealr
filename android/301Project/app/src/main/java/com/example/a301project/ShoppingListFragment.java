@@ -225,10 +225,10 @@ public class ShoppingListFragment extends Fragment implements ShoppingListAdapte
     @Override
     public void f(ArrayList<ShoppingItem> r) {
         listCount++;
-        // after both Ingredients and MealPlan have been read from Firebase
-        if (listCount == 2) {
+        // after both Ingredients and MealPlan and Recipes have been read from Firebase
+        if (listCount == 3) {
             controller.getShoppingItems(this);
-        } else if (listCount == 3) {
+        } else if (listCount == 4) {
             // this adds the calculated ShoppingItem ArrayList to the list to display on the screen
             shoppingItemDataList.addAll(r);
             shoppingListArrayAdapter.notifyDataSetChanged();
@@ -243,6 +243,6 @@ public class ShoppingListFragment extends Fragment implements ShoppingListAdapte
 
     @Override
     public void r(ArrayList<Recipe> r) {
-
+        f(null);
     }
 }
