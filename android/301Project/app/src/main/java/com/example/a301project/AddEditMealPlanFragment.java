@@ -472,7 +472,13 @@ public class AddEditMealPlanFragment extends DialogFragment {
                             AddEditMealPlanFragment.this.endDate.setError("Can't be empty");
                         }
 
-                        if (hasEmpty) {
+                        // check if the start date is before (or equal to) the end date
+                        boolean startBeforeEnd = MealPlan.isStartDateBeforeEndDate(startDate, endDate);
+                        if (!startBeforeEnd) {
+                            AddEditMealPlanFragment.this.endDate.setError("End date must be before start date");
+                        }
+
+                        if (hasEmpty || !startBeforeEnd) {
                             return;
                         }
 

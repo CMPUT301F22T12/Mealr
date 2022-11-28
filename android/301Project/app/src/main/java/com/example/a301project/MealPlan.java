@@ -1,7 +1,10 @@
 package com.example.a301project;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Represents an individual meal plan with ingredients and recipes.
@@ -73,6 +76,34 @@ public class MealPlan implements Serializable {
      */
     public String getId() {
         return this.id;
+    }
+
+    /**
+     *
+     * @param startDate The start date in the format "yyyy-MM-dd"
+     * @param endDate The end date in the format "yyyy-MM-dd"
+     * @return Returns {@link Boolean} true if the start date is before (or equal to) the end date,
+     * false otherwise
+     */
+    public static boolean isStartDateBeforeEndDate(String startDate, String endDate) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date sDate = null;
+        Date eDate = null;
+
+        try {
+            sDate = sdf.parse(startDate);
+            eDate = sdf.parse(endDate);
+
+            if (sDate.equals(eDate)) {
+                return true;
+            }
+            else {
+                return sDate.before(eDate);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 
