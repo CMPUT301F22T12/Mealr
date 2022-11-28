@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_marginHorizontal="20dp"
     android:layout_marginVertical="50dp"
     android:background="@drawable/rounded_rect"
     android:orientation="vertical"
-    android:padding="10dp"
-    android:weightSum="100">
+    android:padding="10dp">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="10">
+        android:layout_weight="10"
+        android:paddingBottom="10dp">
         <TextView
             android:id="@+id/mp_nameText"
             android:layout_width="match_parent"
@@ -21,6 +21,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:padding="3dp"
+
             android:text="Title"
             android:textSize="35dp"
 
@@ -31,7 +32,13 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="5"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        >
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"/>
+
         <TextView
             android:id="@+id/startDateTextView"
             android:text="Start time"
@@ -47,8 +54,8 @@
             android:textSize="15dp" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_width="35dp"
+            android:layout_height="32dp"
             android:id="@+id/to_mealplan"
             android:text="  to  "
             android:layout_gravity="center"
@@ -68,64 +75,109 @@
             android:maxLines="1"
 
             android:textSize="15dp" />
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"/>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="90"
-        android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_vertical"
-                android:padding="3dp"
-                android:text="Recipes"
-                android:textSize="25dp" />
-        </LinearLayout>
-        <LinearLayout
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:paddingBottom="5dp">
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"/>
+        <TextView
+            android:id="@+id/nIngredients"
+            android:text="N Ingredients"
+            android:layout_width="110dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:background="@drawable/rounded_rect"
+            android:backgroundTint="#1a036ED9"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="15dp" />
 
-            android:id="@+id/mp_recipeContainer"
-            android:layout_width="match_parent"
-            android:layout_height="230dp"
+        <Space
+            android:layout_width="35dp"
+            android:layout_height="1dp" />
+
+        <TextView
+            android:id="@+id/nRecipes"
+            android:text="N Recipes"
+            android:layout_width="110dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
             android:background="@drawable/rounded_rect"
-            android:backgroundTint="#1aC9BAB0"
-            android:orientation="horizontal">
-            <ListView
-                android:textColor="@color/white"
-                android:layout_width="300dp"
-                android:layout_height="match_parent"
-                android:id="@+id/mp_recipeList"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_vertical"
-                android:padding="3dp"
-                android:text="Ingredients"
-                android:textSize="25dp" />
-        </LinearLayout>
-        <LinearLayout
-            android:textColor="@color/white"
-            android:id="@+id/mp_IngredientContainer"
-            android:layout_width="match_parent"
-            android:layout_height="230dp"
-            android:background="@drawable/rounded_rect"
-            android:backgroundTint="#1aC9BAB0"
-            android:orientation="horizontal">
-            <ListView
-                android:textColor="@color/white"
-                android:layout_width="300dp"
-                android:layout_height="match_parent"
-                android:id="@+id/mp_ingredientList"/>
-        </LinearLayout>
+            android:backgroundTint="#1a036ED9"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="15dp" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
     </LinearLayout>
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="40dp">-->
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_gravity="center_vertical"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:padding="3dp"-->
+<!--                android:text="Recipes"-->
+<!--                android:textSize="25dp" />-->
+<!--        </LinearLayout>-->
+<!--        <LinearLayout-->
+
+<!--            android:id="@+id/mp_recipeContainer"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="230dp"-->
+<!--            android:background="@drawable/rounded_rect"-->
+<!--            android:backgroundTint="#1aC9BAB0"-->
+<!--            android:orientation="horizontal">-->
+<!--            <ListView-->
+<!--                android:textColor="@color/white"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:id="@+id/mp_recipeList"/>-->
+<!--        </LinearLayout>-->
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="40dp">-->
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_gravity="center_vertical"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:padding="3dp"-->
+<!--                android:text="Ingredients"-->
+<!--                android:textSize="25dp" />-->
+<!--        </LinearLayout>-->
+<!--        <LinearLayout-->
+<!--            android:textColor="@color/white"-->
+<!--            android:id="@+id/mp_IngredientContainer"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="230dp"-->
+<!--            android:background="@drawable/rounded_rect"-->
+<!--            android:backgroundTint="#1aC9BAB0"-->
+<!--            android:orientation="horizontal">-->
+<!--            <ListView-->
+<!--                android:textColor="@color/white"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:id="@+id/mp_ingredientList"/>-->
+<!--        </LinearLayout>-->
 </LinearLayout>
