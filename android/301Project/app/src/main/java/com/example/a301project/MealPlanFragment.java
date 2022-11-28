@@ -20,7 +20,6 @@ import java.util.Locale;
  * Class for MealPlan activity that contains a listview
  * an ArrayAdapter for the meal plan
  * renders MealPlan for user and allows them to add, delete, modify it
- * currently incomplete
  */
 public class MealPlanFragment extends Fragment implements AddEditMealPlanFragment.OnFragmentInteractionListener{
     private ListView listView;
@@ -90,7 +89,7 @@ public class MealPlanFragment extends Fragment implements AddEditMealPlanFragmen
         });
     }
     /**
-     * Method to clear recipeDataList,
+     * Method to clear mealPlanDataList,
      * Resets the internal recipe list the new one.
      * @param m {@link ArrayList} list of recipes to set the data list to
      */
@@ -101,7 +100,7 @@ public class MealPlanFragment extends Fragment implements AddEditMealPlanFragmen
     }
 
     /**
-     * Method for adding recipes
+     * Method for adding meal plans
      * trigger when Add button clicked
      * @param mealplan {@link MealPlan} a Meal plan to be added
      * @return void
@@ -112,6 +111,11 @@ public class MealPlanFragment extends Fragment implements AddEditMealPlanFragmen
         mealPlanArrayAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Method called when the confirm button is pressed in add/edit menu
+     * @param currentMealPlan {@Link MealPlan} the current meal plan being selected, a new empty one if TAG is EDIT
+     * @param createNewMeal {@Link boolean} boolean to determine whether to create new meal plan
+     */
     @Override
     public void onConfirmPressed(MealPlan currentMealPlan, boolean createNewMeal) {
         if (createNewMeal) {
@@ -124,7 +128,7 @@ public class MealPlanFragment extends Fragment implements AddEditMealPlanFragmen
     }
 
     /**
-     * Method for deleting a recipe when confirm is clicked
+     * Method for deleting a meal plan when confirm is clicked
      * @param currentMealPlan {@link MealPlan} the current meal plan to be deleted
      */
     @Override
