@@ -15,6 +15,7 @@ import android.provider.MediaStore;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -154,6 +155,22 @@ public class AddEditRecipeFragment extends DialogFragment {
                 cameraButton.setEnabled(true);
             }
         });
+    }
+
+    /**
+     * Called on start to set make the dialog fullscreen
+     */
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        Dialog dialog = getDialog();
+        if (dialog != null)
+        {
+            int width = ViewGroup.LayoutParams.MATCH_PARENT;
+            int height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            dialog.getWindow().setLayout(width, height);
+        }
     }
 
     /**

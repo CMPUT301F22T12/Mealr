@@ -72,7 +72,21 @@ public class AddEditIngredientFragment extends DialogFragment {
         void onConfirmPressed(Ingredient currentIngredient, boolean createNewIngredient);
     }
 
-
+    /**
+     * Called on start to set make the dialog fullscreen
+     */
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        Dialog dialog = getDialog();
+        if (dialog != null)
+        {
+            int width = ViewGroup.LayoutParams.MATCH_PARENT;
+            int height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            dialog.getWindow().setLayout(width, height);
+        }
+    }
 
     /**
      * Method to set the fragment attributes
