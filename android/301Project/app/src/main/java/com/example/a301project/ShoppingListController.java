@@ -101,6 +101,7 @@ public class ShoppingListController {
                 for (int i = 0; i < mealPlanItemsDataList.size(); i++) {
                     ShoppingItem item = mealPlanItemsDataList.get(i);
                     boolean matches = false;
+                    boolean enoughIngredient = false;
                     // then loop through each ShoppingItem from IngredientStorage
                     for (int j = 0; j < ingredientStorageItemsDataList.size(); j++) {
                         // compare the MealPlan shoppingItem to all the items from the IngredientStorage
@@ -115,17 +116,16 @@ public class ShoppingListController {
                             // if there is enough of the Ingredient in the Storage
                             if (amount2 >= amount1) {
                                 item2.setAmount(amount2-amount1);
-                                amount1 = 0;
                                 // then item does not need to be added to shopping list
                                 mealPlanItemsDataList.remove(item);
+                                enoughIngredient = true;
                                 i--;
                                 break;
                             } else {
                                 // if there isn't enough of the Ingredient in the Storage
                                 amount1-=amount2;
                                 item.setAmount(amount1);
-                                ingredientStorageItemsDataList.remove(item2);
-                                j--;
+                                item2.setAmount(0.0);
                             }
                         }
                     }
@@ -147,11 +147,17 @@ public class ShoppingListController {
                                 nameMatch = true;
                             }
                         }
+                        // if there isn't already that ingredient in the shopping list then add a new one
                         if (!nameMatch) {
-                            shoppingItemDataList.add(item);
+                            shoppingItemDataList.add(new ShoppingItem(
+                                    item.getName(),
+                                    item.getAmount(),
+                                    item.getUnit(),
+                                    item.getCategory()
+                            ));
                         }
                     } else {
-                        if (mealPlanItemsDataList.contains(item)) {
+                        if (!enoughIngredient) {
                             // also if there is not enough of the Ingredient in the Storage then add the difference to the ShoppingList
                             ShoppingItem newItem = new ShoppingItem(
                                     item.getName(),
@@ -159,15 +165,24 @@ public class ShoppingListController {
                                     item.getUnit(),
                                     item.getCategory()
                             );
-                            final boolean[] nameMatch = {false};
-                            shoppingItemDataList.forEach(shoppingItem -> {
-                                if (shoppingItem.getName().equalsIgnoreCase(newItem.getName())) {
-                                    // then combine the amount
-                                    shoppingItem.setAmount(shoppingItem.getAmount() + newItem.getAmount());
-                                    nameMatch[0] = true;
+                            // check if that ingredient is already in the shopping list
+                            boolean nameMatch = false;
+                            for (int k = 0; k < shoppingItemDataList.size(); k++) {
+                                ShoppingItem item3 = shoppingItemDataList.get(k);
+                                if (item3.getName().equalsIgnoreCase(newItem.getName())) {
+                                    // then combine the amount (combine the ingredient and the shopping list item)
+                                    item3.setAmount(item3.getAmount() + newItem.getAmount());
+                                    shoppingItemDataList.set(k, new ShoppingItem(
+                                            item3.getName(),
+                                            item3.getAmount(),
+                                            item3.getUnit(),
+                                            item3.getCategory()
+                                    ));
+                                    nameMatch = true;
                                 }
-                            });
-                            if (!nameMatch[0]) {
+                            }
+                            // if the ingredient wasn't already in shoppinglist -> add it
+                            if (!nameMatch) {
                                 shoppingItemDataList.add(newItem);
                             }
                         }
@@ -177,6 +192,10 @@ public class ShoppingListController {
             s.f(shoppingItemDataList);
     }
 
+    /**
+     * From the recipes read from Firebase -> go through all of them and check if they are in MealPlan
+     * If the recipe is in meal plan add it's Ingredient to mealPlanItemsDataList (which is the list of needed Ingredients)
+     */
     private void getIngredientsFromMealPlanRecipes() {
 
         // loop through mealplanrecipes and get all the ingredients currently in the recipe and multiply it by serving#
@@ -185,25 +204,23 @@ public class ShoppingListController {
                 Long servings = recipe.getServings();
                 String title = recipe.getTitle();
 
-
                 // loop through the actual recipes and look for a match
                 for (int i = 0; i < recipeItemsDataList.size(); i++) {
                     if (recipeItemsDataList.get(i).getTitle().equalsIgnoreCase(title)) {
                         // found a match -> get all ingredients in the recipe
                         ArrayList<Ingredient> ingredients = recipeItemsDataList.get(i).getIngredients();
 
-
-
                         // add each ingredient to the mealPlanItemsDataList with the correct serving
                         if (ingredients != null) {
-                            ingredients.forEach(ingredient -> {
+                            for (int j = 0; j < ingredients.size(); j++) {
+                                Ingredient ingredient = ingredients.get(j);
                                 mealPlanItemsDataList.add(new ShoppingItem(
                                         ingredient.getName(),
                                         ingredient.getAmount() * servings.doubleValue(),
                                         ingredient.getUnit(),
                                         ingredient.getCategory()
                                 ));
-                            });
+                            }
                         }
                     }
                 }
@@ -228,7 +245,8 @@ public class ShoppingListController {
                 ArrayList<HashMap<String, Object>> values = (ArrayList<HashMap<String, Object>>) doc.get("Ingredients");
                 if (values != null) {
                     // if there is Ingredients then create an equivalent ShoppingItem for each
-                    values.forEach(value -> {
+                    for (int i = 0; i < values.size(); i++) {
+                        HashMap<String,Object> value = values.get(i);
                         double amount = 0;
                         try {
                             amount = ((Long) value.get("amount")).doubleValue();
@@ -242,14 +260,15 @@ public class ShoppingListController {
                                 String.valueOf(value.get("category"))
                         );
                         mealPlanItemsDataList.add(ingredient);
-                    });
+                    }
                 }
 
                 // get the Recipes list from the MealPlan
                 ArrayList<HashMap<String, Object>> recipes = (ArrayList<HashMap<String, Object>>) doc.get("Recipes");
                 if (recipes != null) {
                     // if there is some Recipes then loop through one-by-one
-                    recipes.forEach(recipe -> {
+                    for (int j = 0; j < recipes.size(); j++) {
+                        HashMap<String, Object> recipe = recipes.get(j);
                         // for each Recipe, get the list of Ingredients
                         mealPlanRecipesDataList.add(new Recipe(
                                 String.valueOf(recipe.get("title")),
@@ -260,21 +279,7 @@ public class ShoppingListController {
                                 (Long) recipe.get("servings"),
                                 null
                         ));
-                        /*
-                        ArrayList<HashMap<String, Object>> recipeIngredients = (ArrayList<HashMap<String, Object>>) recipe.get("ingredients");
-                        if (recipeIngredients != null) {
-                            // if there is Ingredients then create an equivalent shoppingItem for each
-                            recipeIngredients.forEach(rIngredient -> {
-                                ShoppingItem item2 = new ShoppingItem(
-                                        String.valueOf(rIngredient.get("name")),
-                                        (double) rIngredient.get("amount"),
-                                        String.valueOf(rIngredient.get("unit")),
-                                        String.valueOf(rIngredient.get("category"))
-                                );
-                                mealPlanItemsDataList.add(item2);
-                            });
-                        }*/
-                    });
+                    }
                 }
             });
             s.f(mealPlanItemsDataList);
@@ -317,10 +322,12 @@ public class ShoppingListController {
             queryDocumentSnapshots.forEach(doc -> {
                 String id = doc.getId();
                 ArrayList<Ingredient> ingredients = new ArrayList<>();
+                // get the Ingredients for that recipe
                 ArrayList<HashMap<String, Object>> recipeIngredients = (ArrayList<HashMap<String, Object>>) doc.get("Ingredients");
                 if (recipeIngredients != null) {
-                    // if there is Ingredients then create an equivalent shoppingItem for each
-                    recipeIngredients.forEach(rIngredient -> {
+                    // for each ingredient read from the recipe -> created an Ingredient Object
+                    for (int i = 0; i < recipeIngredients.size(); i++) {
+                        HashMap<String, Object> rIngredient = recipeIngredients.get(i);
                         double amount = 0;
                         try {
                             amount = ((Long) rIngredient.get("amount")).doubleValue();
@@ -336,10 +343,10 @@ public class ShoppingListController {
                                 String.valueOf(rIngredient.get("category"))
                         );
                         ingredients.add(ingredient);
-                    });
+                    }
                 }
+                // create a Recipe object for each recipe read from Firebase
                 Recipe recipe = new Recipe(
-                        // String title, String category, String comments, String photo, Long prepTime, Long servings, ArrayList<Ingredient> ingredient
                         doc.getString("Title"),
                         doc.getString("Category"),
                         doc.getString("Comments"),
