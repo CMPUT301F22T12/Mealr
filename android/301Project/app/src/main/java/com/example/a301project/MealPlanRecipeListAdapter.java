@@ -16,6 +16,9 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
+/***
+ * A class for rendering custom Array Adapters to display when a recipe is selected in meal plan's add fragment
+ */
 public class MealPlanRecipeListAdapter extends ArrayAdapter<Recipe> {
     private ArrayList<Recipe> recipes;
     private Context context;
@@ -59,11 +62,26 @@ public class MealPlanRecipeListAdapter extends ArrayAdapter<Recipe> {
         });
 
         editServings.addTextChangedListener(new TextWatcher() {
+            /**
+             * method for when text changes before, on, and after in editServings text box
+             * nothing happens in this method because nothing needs to happen before text changes
+             * @param charSequence {@link CharSequence} the text charSequence
+             * @param i
+             * @param i1
+             * @param i2
+             */
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                // nothing happens
             }
 
+            /**
+             * Method for when the text of editServings is changed, change the text to reference the new one
+             * @param charSequence {@link CharSequence} the text charSequence
+             * @param i_ {@link int} position index
+             * @param i1
+             * @param i2
+             */
             @Override
             public void onTextChanged(CharSequence charSequence, int i_, int i1, int i2) {
                 try {
@@ -74,9 +92,13 @@ public class MealPlanRecipeListAdapter extends ArrayAdapter<Recipe> {
                 }
             }
 
+            /**
+             * method for after the text has been changed
+             * @param editable {@link Editable} the Edit text box containing new text
+             */
             @Override
             public void afterTextChanged(Editable editable) {
-
+                // nothing happens
             }
         });
         return view;

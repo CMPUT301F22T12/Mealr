@@ -118,7 +118,7 @@ public class MealPlanController {
      * Gets all mealplans from Firebase
      *
      * @param s successHandler function to be called on success with
-     *          the ArrayList of Recipes
+     *          the ArrayList of MealPlans
      */
     public void getMealPlan(MealPlanController.successHandler s) {
         cr.get().addOnSuccessListener(queryDocumentSnapshots -> {
@@ -155,8 +155,8 @@ public class MealPlanController {
     }
 
     /**
-     * Notifies the Firestore database of an update to an recipe. The database then updates the
-     * recipe's values with the provided {@link MealPlan} object
+     * Notifies the Firestore database of an update to a meal plan. The database then updates the
+     * meal plan's values with the provided {@link MealPlan} object
      * @param mealplan The {@link MealPlan} object to update in the database
      */
     public void notifyUpdate(MealPlan mealplan) {
