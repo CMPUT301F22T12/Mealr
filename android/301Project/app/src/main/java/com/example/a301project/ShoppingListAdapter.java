@@ -87,7 +87,9 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingItem> {
 
         // sets the text
         shoppingItemName.setText(s.getName());
-        amountName.setText("Need: " + s.getAmount().toString());
+        String amount = String.format("%.1f",s.getAmount());
+        s.setAmount(Double.parseDouble(amount));
+        amountName.setText("Need: " + amount);
         unitName.setText(s.getUnit());
         categoryName.setText(s.getCategory());
 
