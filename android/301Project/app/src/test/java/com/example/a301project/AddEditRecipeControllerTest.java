@@ -39,24 +39,22 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-@SuppressWarnings("SpellCheckingInspection")
-public class AddEditIngredientControllerTest {
-    private AddEditIngredientController controller;
-    private DocumentReference mockDocumentRef;
-    private CollectionReference mockCollectionRef;
-    private Task<DocumentSnapshot> mockTask;
-    private DocumentSnapshot mockDocumentSnap;
+public class AddEditRecipeControllerTest {
+    CollectionReference mockCollectionRef;
+    DocumentReference mockDocumentRef;
+    AddEditRecipeController controller;
+    Task<DocumentSnapshot> mockTask;
+    DocumentSnapshot mockDocumentSnap;
     Map<String, Object> result;
 
     @Before
     public void setUp() {
-        // Add our mock classes
-        result = new HashMap<String, Object>();
-        FirebaseFirestore mockFirestore = mock(FirebaseFirestore.class);
-        mockDocumentRef = mock(DocumentReference.class, RETURNS_DEEP_STUBS);
+        FirebaseFirestore mockFirestore = mock(FirebaseFirestore.class, RETURNS_DEEP_STUBS);
         mockCollectionRef = mock(CollectionReference.class, RETURNS_DEEP_STUBS);
+        mockDocumentRef = mock(DocumentReference.class, RETURNS_DEEP_STUBS);
         mockTask = mock(Task.class, RETURNS_DEEP_STUBS);
         mockDocumentSnap = mock(DocumentSnapshot.class, RETURNS_DEEP_STUBS);
+        result = new HashMap<String, Object>();
 
         when(mockFirestore.collection(anyString()))
                 .thenReturn(mockCollectionRef);
@@ -67,20 +65,21 @@ public class AddEditIngredientControllerTest {
         when(mockDocumentRef.get())
                 .thenReturn(mockTask);
 
-        when(mockDocumentSnap.getData()).thenReturn(result);
+        when(mockDocumentSnap.getData())
+                .thenReturn(result);
 
-        this.controller = new AddEditIngredientController(mockFirestore);
+        controller = new AddEditRecipeController(mockFirestore);
     }
 
     @Test
     public void testGetDocumentReference() {
-        assertEquals(controller.getDocumentReference(), mockDocumentRef);
+        assertEquals(mockDocumentRef, controller.getDocumentReference());
     }
 
     @Test
-    public void testAddIngredientCategory() {
-        String category = "Vegetables";
-        controller.addIngredientCategory(category);
+    public void testAddRecipeCategory() {
+        String category = "Healthy";
+        controller.addRecipeCategory(category);
 
         ArgumentCaptor<OnSuccessListener<DocumentSnapshot>> dataCaptor = ArgumentCaptor.forClass(OnSuccessListener.class);
 
@@ -88,43 +87,9 @@ public class AddEditIngredientControllerTest {
         OnSuccessListener<DocumentSnapshot> objUnderTest = dataCaptor.getValue();
 
         objUnderTest.onSuccess(mockDocumentSnap);
-        ArrayList<String> categories = (ArrayList<String>) result.get("IngredientCategories");
+        ArrayList<String> categories = (ArrayList<String>) result.get("RecipeCategories");
 
         assertEquals(categories.get(0), category);
-        verify(mockDocumentRef).set(result, SetOptions.merge());
-    }
-
-    @Test
-    public void testAddIngredientLocation() {
-        String location = "Freezer";
-        controller.addIngredientLocation(location);
-
-        ArgumentCaptor<OnSuccessListener<DocumentSnapshot>> dataCaptor = ArgumentCaptor.forClass(OnSuccessListener.class);
-
-        verify(mockTask).addOnSuccessListener(dataCaptor.capture());
-        OnSuccessListener<DocumentSnapshot> objUnderTest = dataCaptor.getValue();
-
-        objUnderTest.onSuccess(mockDocumentSnap);
-        ArrayList<String> locations = (ArrayList<String>) result.get("IngredientLocations");
-
-        assertEquals(locations.get(0), location);
-        verify(mockDocumentRef).set(result, SetOptions.merge());
-    }
-
-    @Test
-    public void testAddIngredientUnit() {
-        String unit = "Grams";
-        controller.addIngredientUnit(unit);
-
-        ArgumentCaptor<OnSuccessListener<DocumentSnapshot>> dataCaptor = ArgumentCaptor.forClass(OnSuccessListener.class);
-
-        verify(mockTask).addOnSuccessListener(dataCaptor.capture());
-        OnSuccessListener<DocumentSnapshot> objUnderTest = dataCaptor.getValue();
-
-        objUnderTest.onSuccess(mockDocumentSnap);
-        ArrayList<String> units = (ArrayList<String>) result.get("IngredientUnits");
-
-        assertEquals(units.get(0), unit);
         verify(mockDocumentRef).set(result, SetOptions.merge());
     }
 }

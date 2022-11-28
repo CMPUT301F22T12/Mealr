@@ -23,20 +23,7 @@ public class MealPlanControllerTest {
     private CollectionReference mockCollectionRef;
 
     private MealPlan mockMealPlan() {
-        Ingredient ing1 = new Ingredient("Carrot", 5.0, "2022-12-01", "Cupboard", "lbs", "Vegetables");
-        Ingredient ing2 = new Ingredient("Cucumber", 2.5, "2022-12-02", "Fridge", "kg", "Vegetables");
-        Ingredient ing3 = new Ingredient("Pineapple", 1.5, "2022-12-15", "Fridge", "lbs", "Fruits");
-        ArrayList<Ingredient> ingredients1 = new ArrayList<>();
-        ArrayList<Ingredient> ingredients2 = new ArrayList<>();
-        ingredients1.add(ing1);
-        ingredients1.add(ing2);
-        ingredients2.add(ing3);
-
-        Recipe rec1 = new Recipe("Salad", "Health Food", "Make sure ingredients are fresh!", null, 5L, 2L, ingredients2);
-        ArrayList<Recipe> recipes1 = new ArrayList<>();
-        recipes1.add(rec1);
-
-        return new MealPlan(ingredients1, recipes1, "Healthy Meal Plan", "2022-11-28", "2022-12-05");
+        return new MealPlan(new ArrayList<Ingredient>(), new ArrayList<Recipe>(), "Healthy Meal Plan", "2022-11-28", "2022-12-05");
     }
 
     @Before
@@ -52,7 +39,7 @@ public class MealPlanControllerTest {
     }
 
     @Test
-    public void testAddRecipe() {
+    public void testAddMealPlan() {
         MealPlan i = mockMealPlan();
         controller.addMealPlan(i);
         ArgumentCaptor<Map<String, Object>> dataCaptor = ArgumentCaptor.forClass(Map.class);
@@ -66,5 +53,46 @@ public class MealPlanControllerTest {
         assertEquals(data.get("End Date"), i.getEndDate());
         assertEquals(data.get("Ingredients"), i.getIngredients());
         assertEquals(data.get("Recipes"), i.getRecipes());
+    }
+
+    @Test
+    public void testRemoveMealPlan() {
+        MealPlan i = mockMealPlan();
+        i.setId("TEST_ID");
+
+        // add, then remove ingredient
+        controller.addMealPlan(i);
+        controller.removeMealPlan(i);
+
+        // verify delete was called with the correct ID
+        assertEquals(i.getId(), "TEST_ID");
+        verify(mockCollectionRef.document(i.getId())).delete();
+    }
+
+    @Test
+    public void testNotifyUpdate() {
+        MealPlan i = mockMealPlan();
+        i.setId("TEST_ID");
+        controller.addMealPlan(i);
+        ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
+        ArrayList<Recipe> recipes = new ArrayList<Recipe>();
+        MealPlan u = new MealPlan(new ArrayList<Ingredient>(), new ArrayList<Recipe>(), "Fun Meal Plan", "2022-11-28", "2022-12-20");
+        u.setId("TEST_ID");
+
+        controller.notifyUpdate(u);
+
+        ArgumentCaptor<Map<String, Object>> dataCaptor = ArgumentCaptor.forClass(Map.class);
+
+        verify(mockCollectionRef.document(i.getId())).update(dataCaptor.capture());
+
+        Map<String, Object> updatedMealPlan = dataCaptor.getValue();
+
+        // check to see if all values have been updated
+        assertEquals("TEST_ID", u.getId());
+        assertEquals("Fun Meal Plan", updatedMealPlan.get("Title"));
+        assertEquals(ingredients, updatedMealPlan.get("Ingredients"));
+        assertEquals(recipes, updatedMealPlan.get("Recipes"));
+        assertEquals("2022-11-28", updatedMealPlan.get("Start Start"));
+        assertEquals("2022-12-20", updatedMealPlan.get("End Start"));
     }
 }

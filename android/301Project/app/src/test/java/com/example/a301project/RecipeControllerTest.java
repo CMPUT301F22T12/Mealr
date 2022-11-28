@@ -22,7 +22,7 @@ public class RecipeControllerTest {
     private CollectionReference mockCollectionRef;
 
     private Recipe mockRecipe() {
-        return new Recipe("pizza", "fastfood", "food", "", 1L, 1L, new ArrayList<Ingredient>());
+        return new Recipe("Pizza", "Fastfood", "Food", "", 1L, 1L, new ArrayList<Ingredient>());
     }
 
     @Before
@@ -54,5 +54,47 @@ public class RecipeControllerTest {
         assertEquals(data.get("PrepTime"), i.getPrepTime());
         assertEquals(data.get("Servings"), i.getServings());
         assertEquals(data.get("Ingredients"), i.getIngredients());
+    }
+
+    @Test
+    public void testRemoveRecipe() {
+        Recipe i = mockRecipe();
+        i.setId("TEST_ID");
+
+        // add, then remove ingredient
+        controller.addRecipe(i);
+        controller.removeRecipe(i);
+
+        // verify delete was called with the correct ID
+        assertEquals(i.getId(), "TEST_ID");
+        verify(mockCollectionRef.document(i.getId())).delete();
+    }
+
+    @Test
+    public void testNotifyUpdate() {
+        Recipe i = mockRecipe();
+        i.setId("TEST_ID");
+        controller.addRecipe(i);
+        ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
+        Recipe u = new Recipe("Pizza", "Health Food", "It got healthier", "", 1L, 1L, ingredients);
+        u.setId("TEST_ID");
+
+        controller.notifyUpdate(u);
+
+        ArgumentCaptor<Map<String, Object>> dataCaptor = ArgumentCaptor.forClass(Map.class);
+
+        verify(mockCollectionRef.document(i.getId())).update(dataCaptor.capture());
+
+        Map<String, Object> updatedRecipe = dataCaptor.getValue();
+
+        // check to see if all values have been updated
+        assertEquals("TEST_ID", u.getId());
+        assertEquals("Pizza", updatedRecipe.get("Title"));
+        assertEquals("Health Food", updatedRecipe.get("Category"));
+        assertEquals("It got healthier", updatedRecipe.get("Comments"));
+        assertEquals(ingredients, updatedRecipe.get("Ingredients"));
+        assertEquals("", updatedRecipe.get("Photo"));
+        assertEquals(1L, updatedRecipe.get("Servings"));
+        assertEquals(1L, updatedRecipe.get("PrepTime"));
     }
 }

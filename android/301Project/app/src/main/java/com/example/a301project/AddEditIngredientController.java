@@ -43,7 +43,7 @@ public class AddEditIngredientController {
     public AddEditIngredientController(FirebaseFirestore db) {
         this.db = db;
         collectionReference = db.collection(collectionName);
-        documentReference = collectionReference.document(documentName);
+        documentReference = db.document(documentName);
     }
 
     /**
