@@ -241,7 +241,7 @@ public class AddEditMealPlanFragment extends DialogFragment {
 
         // Load ingredients to auto complete once selected
         ingredientsDataList = new ArrayList<>();
-        ingredientsDataList.addAll(currentMealPlan.getIngredients());
+        //ingredientsDataList.addAll(currentMealPlan.getIngredients());
         ingredientArrayAdapter = new RecipeIngredientListAdapter(getContext(), ingredientsDataList);
         ingredientList.setAdapter(ingredientArrayAdapter);
 

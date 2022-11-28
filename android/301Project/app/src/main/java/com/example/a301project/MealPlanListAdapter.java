@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -14,6 +16,7 @@ import androidx.annotation.Nullable;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Class for an ArrayAdapter that renders MealPlan objects for use
@@ -22,6 +25,7 @@ import java.util.ArrayList;
 public class MealPlanListAdapter extends ArrayAdapter<MealPlan> {
     private final ArrayList<MealPlan> mealPlans;
     private final Context context;
+    private HashMap<String, ArrayList<String>> ingredientHashMap;
 
     /**
      * Constructor for the adapter, takes context and ArrayList of MealPlan
@@ -55,8 +59,8 @@ public class MealPlanListAdapter extends ArrayAdapter<MealPlan> {
         TextView name = view.findViewById(R.id.mp_nameText);
         TextView startDate = view.findViewById(R.id.startDateTextView);
         TextView endDate = view.findViewById(R.id.endDateTextView);
-        ListView ingredientListView = view.findViewById(R.id.mp_ingredientList);
-        ListView recipeListView = view.findViewById(R.id.mp_recipeList);
+        ExpandableListView ingredientListView = view.findViewById(R.id.mp_ingredientList);
+        ExpandableListView recipeListView = view.findViewById(R.id.mp_recipeList);
 
         // get the recipes of the meal plan selected
         ArrayList<Recipe> recipeDataList = mp.getRecipes();
@@ -70,10 +74,11 @@ public class MealPlanListAdapter extends ArrayAdapter<MealPlan> {
         endDate.setText(mp.getEndDate());
 
         // attach recipe list adapter to recipe list view
-        //ArrayAdapter<Recipe> recipeArrayAdapter = new RecipeListAdapter(getContext(), recipeDataList);
+//        ArrayAdapter<Recipe> recipeArrayAdapter = new RecipeListAdapter(getContext(), recipeDataList);
         //recipeListView.setAdapter(recipeArrayAdapter);
         // attach ingredient list adapter to ingredient list view
-        ArrayAdapter<Ingredient> ingredientArrayAdapter = new CustomList(getContext(),ingredientDataList);
+        ingredientHashMap = IngredientExpandablePump.getData(ingredientDataList);
+        ExpandableListAdapter ingredientArrayAdapter =  new IngredientExpandableListAdapter(getContext(),ingredientDataList, ingredientHashMap);
         ingredientListView.setAdapter(ingredientArrayAdapter);
 
 

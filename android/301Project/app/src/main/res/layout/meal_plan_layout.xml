@@ -95,10 +95,10 @@
             android:background="@drawable/rounded_rect"
             android:backgroundTint="#1aC9BAB0"
             android:orientation="horizontal">
-            <ListView
+            <ExpandableListView
                 android:textColor="@color/white"
-                android:layout_width="300dp"
-                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/mp_recipeList"/>
         </LinearLayout>
         <LinearLayout
@@ -121,10 +121,10 @@
             android:background="@drawable/rounded_rect"
             android:backgroundTint="#1aC9BAB0"
             android:orientation="horizontal">
-            <ListView
+            <ExpandableListView
                 android:textColor="@color/white"
-                android:layout_width="300dp"
-                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/mp_ingredientList"/>
         </LinearLayout>
     </LinearLayout>
