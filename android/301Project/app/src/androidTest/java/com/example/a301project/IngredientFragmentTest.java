@@ -390,7 +390,6 @@ public class IngredientFragmentTest {
         assertTrue("BBD not able to be entered properly in add/edit popup",
                 solo.waitForText(formattedDate, 1, 2000));
         solo.sleep(100);
-
     }
 
     private void selectLocation(int index, String item) {
