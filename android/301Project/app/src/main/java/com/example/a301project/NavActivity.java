@@ -51,6 +51,8 @@ public class NavActivity extends AppCompatActivity {
                 .createSignInIntentBuilder()
                 .setAvailableProviders(providers)
                 .setIsSmartLockEnabled(false)
+                .setLogo(R.mipmap.ic_launcher_round)
+                .setTheme(R.style.Theme_301Project)
                 .build();
         signInLauncher.launch(signInIntent);
     }
@@ -99,7 +101,7 @@ public class NavActivity extends AppCompatActivity {
         });
 
         // Set this to true for auto login as admin
-        boolean DEBUG = true;
+        boolean DEBUG = false;
         if (DEBUG) {
             FirebaseAuth mAuth = FirebaseAuth.getInstance();
             mAuth.signInWithEmailAndPassword("admin@admin.com", "admin123")
